@@ -11,6 +11,7 @@ using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.Bot.Builder.AI.QnA;
 using Microsoft.Bot.Builder.Azure;
 using Microsoft.Bot.Configuration;
+using Microsoft.Bot.Solutions.Model.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 
 namespace VirtualAssistant
@@ -29,7 +30,9 @@ namespace VirtualAssistant
         /// Initializes a new instance of the <see cref="BotServices"/> class.
         /// </summary>
         /// <param name="botConfiguration">The <see cref="BotConfiguration"/> instance for the bot.</param>
-        public BotServices(BotConfiguration botConfiguration, List<SkillDefinition> skills)
+        /// <param name="skills">The Skill definitions.</param>
+        /// <param name="proactiveScenariosConfig">The configuration for proactive scenarios.</param>
+        public BotServices(BotConfiguration botConfiguration, List<SkillDefinition> skills, List<ProactiveStep> proactiveScenariosConfig)
         {
             foreach (var service in botConfiguration.Services)
             {
@@ -108,6 +111,7 @@ namespace VirtualAssistant
                     CosmosDbOptions = CosmosDbOptions,
                     TelemetryClient = TelemetryClient,
                     LuisServices = LuisServices.Where(l => skill.LuisServiceIds.Contains(l.Key) == true).ToDictionary(l => l.Key, l => l.Value as IRecognizer),
+                    ProactiveSteps = proactiveScenariosConfig
                 };
 
                 if (skill.SupportedProviders != null)
