@@ -6,6 +6,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.Bot.Builder.Azure;
 using Microsoft.Bot.Configuration;
+using Microsoft.Bot.Solutions.Model.Proactive;
 
 namespace Microsoft.Bot.Solutions.Skills
 {
@@ -93,5 +94,7 @@ namespace Microsoft.Bot.Solutions.Skills
         public override Dictionary<string, IRecognizer> LuisServices { get; set; } = new Dictionary<string, IRecognizer>();
 
         public override Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
+
+        public override List<ProactiveStep> ProactiveSteps { get; set; } = new List<ProactiveStep>();
     }
 }

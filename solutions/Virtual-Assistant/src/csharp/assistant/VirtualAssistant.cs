@@ -9,6 +9,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Schema;
+using Microsoft.Bot.Solutions.Model.Proactive;
 
 namespace VirtualAssistant
 {
@@ -21,6 +22,7 @@ namespace VirtualAssistant
         private readonly BotConfiguration _botConfig;
         private readonly ConversationState _conversationState;
         private readonly UserState _userState;
+        private readonly ProactiveState _proactiveState;
         private readonly EndpointService _endpointService;
         private DialogSet _dialogs;
 
@@ -32,16 +34,17 @@ namespace VirtualAssistant
         /// <param name="conversationState">Bot conversation state.</param>
         /// <param name="userState">Bot user state.</param>
         /// <param name="endpointService">Bot endpoint service.</param>
-        public VirtualAssistant(BotServices botServices, BotConfiguration botConfig, ConversationState conversationState, UserState userState, EndpointService endpointService)
+        public VirtualAssistant(BotServices botServices, BotConfiguration botConfig, ConversationState conversationState, UserState userState, ProactiveState proactiveState, EndpointService endpointService)
         {
             _conversationState = conversationState ?? throw new ArgumentNullException(nameof(conversationState));
             _userState = userState ?? throw new ArgumentNullException(nameof(userState));
+            _proactiveState = proactiveState ?? throw new ArgumentNullException(nameof(proactiveState));
             _services = botServices ?? throw new ArgumentNullException(nameof(botServices));
             _endpointService = endpointService ?? throw new ArgumentNullException(nameof(endpointService));
             _botConfig = botConfig;
 
             _dialogs = new DialogSet(_conversationState.CreateProperty<DialogState>(nameof(VirtualAssistant)));
-            _dialogs.Add(new MainDialog(_services, _botConfig, _conversationState, _userState, _endpointService));
+            _dialogs.Add(new MainDialog(_services, _botConfig, _conversationState, _userState, _proactiveState, _endpointService));
         }
 
         /// <summary>

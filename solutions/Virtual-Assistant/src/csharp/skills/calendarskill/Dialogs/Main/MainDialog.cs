@@ -10,10 +10,12 @@ using CalendarSkill.Dialogs.Shared.Resources;
 using Luis;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Solutions;
 using Microsoft.Bot.Solutions.Dialogs;
 using Microsoft.Bot.Solutions.Extensions;
+using Microsoft.Bot.Solutions.Model.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 
 namespace CalendarSkill
@@ -22,28 +24,36 @@ namespace CalendarSkill
     {
         private bool _skillMode;
         private SkillConfiguration _services;
+        private EndpointService _endpointService;
         private UserState _userState;
+        private ProactiveState _proactiveState;
         private ConversationState _conversationState;
         private IServiceManager _serviceManager;
         private IStatePropertyAccessor<CalendarSkillState> _stateAccessor;
+        private IStatePropertyAccessor<ProactiveModel> _proactiveStateAccessor;
         private CalendarSkillResponseBuilder _responseBuilder = new CalendarSkillResponseBuilder();
 
         public MainDialog(
+            EndpointService endpointService,
             SkillConfiguration services,
             ConversationState conversationState,
             UserState userState,
+            ProactiveState proactiveState,
             IServiceManager serviceManager,
             bool skillMode)
             : base(nameof(MainDialog))
         {
+            _endpointService = endpointService;
             _skillMode = skillMode;
             _services = services;
             _userState = userState;
+            _proactiveState = proactiveState;
             _conversationState = conversationState;
             _serviceManager = serviceManager;
 
             // Initialize state accessor
             _stateAccessor = _conversationState.CreateProperty<CalendarSkillState>(nameof(CalendarSkillState));
+            _proactiveStateAccessor = _proactiveState.CreateProperty<ProactiveModel>(nameof(ProactiveModel));
 
             // Register dialogs
             RegisterDialogs();
@@ -202,7 +212,33 @@ namespace CalendarSkill
 
                         break;
                     }
+
+                case Events.ShowDialog:
+                    {
+                        var state = await _proactiveStateAccessor.GetAsync(dc.Context, () => new ProactiveModel());
+                        var userId = dc.Context.Activity.Properties["userId"].ToString();
+                        var dialogId = dc.Context.Activity.Properties["dialogId"].ToString();
+
+                        await dc.Context.Adapter.ContinueConversationAsync(_endpointService.AppId, state[userId.ToString()].Conversation, CreateCallback(userId, dialogId), cancellationToken);
+
+                        break;
+                    }
             }
+        }
+
+        // Creates the turn logic to use for the proactive message.
+        private BotCallbackHandler CreateCallback(string userId, string dialogId)
+        {
+            return async (turnContext, token) =>
+            {
+                //await turnContext.SendActivityAsync("done");
+                //var dialogSet = new DialogSet(_conversationState.CreateProperty<DialogState>(nameof(DialogState)));
+                //dialogSet.Add(new ApproachingMeetingDialog(_services, _stateAccessor, _serviceManager));
+
+                //// Send the user a proactive confirmation message.
+                //var context = await dialogSet.CreateContextAsync(turnContext);
+                //await turnContext.BeginDialogAsync(nameof(dialogId));
+            };
         }
 
         protected override async Task<InterruptionAction> OnInterruptDialogAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
@@ -309,6 +345,7 @@ namespace CalendarSkill
         {
             public const string TokenResponseEvent = "tokens/response";
             public const string SkillBeginEvent = "skillBegin";
+            public const string ShowDialog = "showDialog";
         }
     }
 }

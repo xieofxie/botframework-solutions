@@ -2,6 +2,7 @@
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
+using Microsoft.Bot.Solutions.Model.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 
 namespace EmailSkillTest.Flow.Fakes
@@ -28,5 +29,6 @@ namespace EmailSkillTest.Flow.Fakes
         public override Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 
         public override Dictionary<string, string> AuthenticationConnections { get; set; } = new Dictionary<string, string>();
+        public override List<ProactiveStep> ProactiveSteps { get; set; } = new List<ProactiveStep>();
     }
 }

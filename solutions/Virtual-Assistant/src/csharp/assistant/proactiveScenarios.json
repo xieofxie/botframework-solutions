@@ -1,42 +1,30 @@
 {
   "proactiveSteps": [
     {
+      "event": "ApproachingMeeting",
+      "action": "ShowDialog",
+      "skillId": "l_Calendar",
+      "parameters": {
+        "dialogId": "ApproachingMeetingDialog"
+      }
+    },
+    {
       "event": "CarStart",
-      "next": [
-        {
-          "action": "ServiceBus",
-          "parameters": {
-            "eventName": "FetchApproachingMeeting",
-            "userId": "{UserId}",
-            "token": "{Token}"
-          }
-        }
-      ]
+      "action": "ServiceBus",
+      "parameters": {
+        "eventName": "FetchApproachingMeeting",
+        "userId": "{UserId}",
+        "token": "{Token}"
+      }
     },
     {
       "event": "CarNavStart",
-      "next": [
-        {
-          "action": "ServiceBus",
-          "parameters": {
-            "eventName": "FetchGroceryRoute",
-            "userId": "{userId}",
-            "token": "{token}"
-          }
-        }
-      ]
-    },
-    {
-      "event": "ApproachingMeeting",
-      "next": [
-        {
-          "action": "ShowDialog",
-          "parameters": {
-            "skillId": "CalendarSkill",
-            "dialogId": "ApproachingMeetingDialog"
-          }
-        }
-      ]
+      "action": "ServiceBus",
+      "parameters": {
+        "eventName": "FetchGroceryRoute",
+        "userId": "{userId}",
+        "token": "{token}"
+      }
     }
   ]
 }

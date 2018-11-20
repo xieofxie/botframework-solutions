@@ -2,6 +2,7 @@
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
+using Microsoft.Bot.Solutions.Model.Proactive;
 
 namespace Microsoft.Bot.Solutions.Skills
 {
@@ -18,5 +19,7 @@ namespace Microsoft.Bot.Solutions.Skills
         public abstract Dictionary<string, IRecognizer> LuisServices { get; set; }
 
         public abstract Dictionary<string, object> Properties { get; set; }
+
+        public abstract List<ProactiveStep> ProactiveSteps { get; set; }
     }
 }

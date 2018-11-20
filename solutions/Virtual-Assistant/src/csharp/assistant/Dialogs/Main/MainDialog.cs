@@ -13,6 +13,7 @@ using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Solutions;
 using Microsoft.Bot.Solutions.Dialogs;
+using Microsoft.Bot.Solutions.Model.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 
 namespace VirtualAssistant
@@ -23,6 +24,7 @@ namespace VirtualAssistant
         private BotServices _services;
         private BotConfiguration _botConfig;
         private UserState _userState;
+        private ProactiveState _proactiveState;
         private ConversationState _conversationState;
         private EndpointService _endpointService;
         private IStatePropertyAccessor<OnboardingState> _onboardingState;
@@ -30,13 +32,14 @@ namespace VirtualAssistant
         private MainResponses _responder = new MainResponses();
         private SkillRouter _skillRouter;
 
-        public MainDialog(BotServices services, BotConfiguration botConfig, ConversationState conversationState, UserState userState, EndpointService endpointService)
+        public MainDialog(BotServices services, BotConfiguration botConfig, ConversationState conversationState, UserState userState, ProactiveState proactiveState, EndpointService endpointService)
             : base(nameof(MainDialog))
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _botConfig = botConfig;
             _conversationState = conversationState;
             _userState = userState;
+            _proactiveState = proactiveState;
             _endpointService = endpointService;
             _onboardingState = _userState.CreateProperty<OnboardingState>(nameof(OnboardingState));
             _parametersAccessor = _userState.CreateProperty<Dictionary<string, object>>("userInfo");
@@ -44,7 +47,7 @@ namespace VirtualAssistant
 
             AddDialog(new OnboardingDialog(_services, _onboardingState));
             AddDialog(new EscalateDialog(_services));
-            AddDialog(new CustomSkillDialog(_services.SkillConfigurations, dialogState, endpointService));
+            AddDialog(new CustomSkillDialog(_services.SkillConfigurations, dialogState, _proactiveState, endpointService));
 
             // Initialize skill dispatcher
             _skillRouter = new SkillRouter(_services.SkillDefinitions);
@@ -185,84 +188,106 @@ namespace VirtualAssistant
                 var trace = new Activity(type: ActivityTypes.Trace, text: $"Received event: {ev.Name}");
                 await dc.Context.SendActivityAsync(trace);
 
-                switch (ev.Name)
+                var proactiveSteps = _services.ProactiveSteps;
+                if (proactiveSteps != null && proactiveSteps.ContainsKey(ev.Name))
                 {
-                    case Events.TimezoneEvent:
-                        {
-                            try
-                            {
-                                var timezone = ev.Value.ToString();
-                                var tz = TimeZoneInfo.FindSystemTimeZoneById(timezone);
-
-                                parameters[ev.Name] = tz;
-                            }
-                            catch
-                            {
-                                await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"Timezone passed could not be mapped to a valid Timezone. Property not set."));
-                            }
-
-                            forward = false;
-                            break;
-                        }
-
-                    case Events.LocationEvent:
-                        {
-                            parameters[ev.Name] = ev.Value;
-                            forward = false;
-                            break;
-                        }
-
-                    case Events.TokenResponseEvent:
-                        {
-                            forward = true;
-                            break;
-                        }
-
-                    case Events.ActiveLocationUpdate:
-                    case Events.ActiveRouteUpdate:
-                        {
-                            var matchedSkill = _skillRouter.IdentifyRegisteredSkill(Dispatch.Intent.l_PointOfInterest.ToString());
-
-                            await RouteToSkillAsync(dc, new SkillDialogOptions()
-                            {
-                                SkillDefinition = matchedSkill,
-                            });
-
-                            forward = false;
-                            break;
-                        }
-
-                    case Events.ResetUser:
-                        {
-                            await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"Reset User Event received, clearing down State and Tokens."));
-
-                            // Clear State
-                            await _onboardingState.DeleteAsync(dc.Context, cancellationToken);
-
-                            // Clear Tokens
-                            var adapter = dc.Context.Adapter as BotFrameworkAdapter;
-                            await adapter.SignOutUserAsync(dc.Context, null, dc.Context.Activity.From.Id, cancellationToken);
-
-                            forward = false;
-
-                            break;
-                        }
-
-                    default:
-                        {
-                            await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"Unknown Event {ev.Name} was received but not processed."));
-                            forward = false;
-                            break;
-                        }
-                }
-
-                if (forward)
-                {
-                    var result = await dc.ContinueDialogAsync();
-
-                    if (result.Status == DialogTurnStatus.Complete)
+                    var nextStep = proactiveSteps[ev.Name];
+                    if (nextStep.Action == ProactiveNextStepActionType.ShowDialog)
                     {
-                        await CompleteAsync(dc);
+                        dc.Context.Activity.Type = ActivityTypes.Event;
+                        dc.Context.Activity.Text = "/event:showDialog";
+                        dc.Context.Activity.Value = ev.Value;
+                        var matchedSkill = _skillRouter.IdentifyRegisteredSkill(nextStep.SkillId);
+                        await RouteToSkillAsync(dc, new SkillDialogOptions()
+                        {
+                            SkillDefinition = matchedSkill,
+                        });
+
+                        forward = false;
+                    }
+                }
+                else
+                {
+
+                    switch (ev.Name)
+                    {
+                        case Events.TimezoneEvent:
+                            {
+                                try
+                                {
+                                    var timezone = ev.Value.ToString();
+                                    var tz = TimeZoneInfo.FindSystemTimeZoneById(timezone);
+
+                                    parameters[ev.Name] = tz;
+                                }
+                                catch
+                                {
+                                    await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"Timezone passed could not be mapped to a valid Timezone. Property not set."));
+                                }
+
+                                forward = false;
+                                break;
+                            }
+
+                        case Events.LocationEvent:
+                            {
+                                parameters[ev.Name] = ev.Value;
+                                forward = false;
+                                break;
+                            }
+
+                        case Events.TokenResponseEvent:
+                            {
+                                forward = true;
+                                break;
+                            }
+
+                        case Events.ActiveLocationUpdate:
+                        case Events.ActiveRouteUpdate:
+                            {
+                                var matchedSkill = _skillRouter.IdentifyRegisteredSkill(Dispatch.Intent.l_PointOfInterest.ToString());
+
+                                await RouteToSkillAsync(dc, new SkillDialogOptions()
+                                {
+                                    SkillDefinition = matchedSkill,
+                                });
+
+                                forward = false;
+                                break;
+                            }
+
+                        case Events.ResetUser:
+                            {
+                                await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"Reset User Event received, clearing down State and Tokens."));
+
+                                // Clear State
+                                await _onboardingState.DeleteAsync(dc.Context, cancellationToken);
+
+                                // Clear Tokens
+                                var adapter = dc.Context.Adapter as BotFrameworkAdapter;
+                                await adapter.SignOutUserAsync(dc.Context, null, dc.Context.Activity.From.Id, cancellationToken);
+
+                                forward = false;
+
+                                break;
+                            }
+
+                        default:
+                            {
+                                await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"Unknown Event {ev.Name} was received but not processed."));
+                                forward = false;
+                                break;
+                            }
+                    }
+
+                    if (forward)
+                    {
+                        var result = await dc.ContinueDialogAsync();
+
+                        if (result.Status == DialogTurnStatus.Complete)
+                        {
+                            await CompleteAsync(dc);
+                        }
                     }
                 }
             }

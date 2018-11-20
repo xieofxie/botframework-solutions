@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Luis;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Solutions;
 using Microsoft.Bot.Solutions.Dialogs;
@@ -22,6 +23,7 @@ namespace PointOfInterestSkill
 {
     public class MainDialog : RouterDialog
     {
+        private EndpointService _endpointService;
         private bool _skillMode;
         private SkillConfiguration _services;
         private UserState _userState;
@@ -31,6 +33,7 @@ namespace PointOfInterestSkill
         private PointOfInterestResponseBuilder _responseBuilder = new PointOfInterestResponseBuilder();
 
         public MainDialog(
+            EndpointService endpointService,
             SkillConfiguration services,
             ConversationState conversationState,
             UserState userState,

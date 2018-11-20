@@ -2,6 +2,7 @@
 using Microsoft.ApplicationInsights;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
+using Microsoft.Bot.Solutions.Model.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 
 namespace EmailSkillTest.API.Fakes
@@ -26,5 +27,6 @@ namespace EmailSkillTest.API.Fakes
         public override Dictionary<string, IRecognizer> LuisServices { get; set; } = new Dictionary<string, IRecognizer>();
 
         public override Dictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
+        public override List<ProactiveStep> ProactiveSteps { get; set; } = new List<ProactiveStep>();
     }
 }

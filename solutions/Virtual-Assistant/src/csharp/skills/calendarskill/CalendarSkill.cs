@@ -5,10 +5,11 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CalendarSkill.ServiceClients.GoogleAPI;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Schema;
+using Microsoft.Bot.Solutions.Model.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 
 namespace CalendarSkill
@@ -18,23 +19,27 @@ namespace CalendarSkill
     /// </summary>
     public class CalendarSkill : IBot
     {
+        private readonly EndpointService _endpointService;
         private readonly SkillConfiguration _services;
         private readonly UserState _userState;
+        private readonly ProactiveState _proactiveState;
         private readonly ConversationState _conversationState;
         private readonly IServiceManager _serviceManager;
         private DialogSet _dialogs;
         private bool _skillMode;
 
-        public CalendarSkill(SkillConfiguration services, ConversationState conversationState, UserState userState, IServiceManager serviceManager = null, bool skillMode = false)
+        public CalendarSkill(EndpointService endpointService, SkillConfiguration services, ConversationState conversationState, UserState userState, ProactiveState proactiveState, IServiceManager serviceManager = null, bool skillMode = false)
         {
+            _endpointService = endpointService;
             _skillMode = skillMode;
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _userState = userState ?? throw new ArgumentNullException(nameof(userState));
+            _proactiveState = proactiveState ?? throw new ArgumentNullException(nameof(proactiveState));
             _conversationState = conversationState ?? throw new ArgumentNullException(nameof(conversationState));
             _serviceManager = serviceManager ?? new ServiceManager(_services);
 
             _dialogs = new DialogSet(_conversationState.CreateProperty<DialogState>(nameof(DialogState)));
-            _dialogs.Add(new MainDialog(_services, _conversationState, _userState, _serviceManager, _skillMode));
+            _dialogs.Add(new MainDialog(_endpointService, _services, _conversationState, _userState, _proactiveState, _serviceManager, _skillMode));
         }
 
         /// <summary>

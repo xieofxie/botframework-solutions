@@ -110,8 +110,7 @@ namespace VirtualAssistant
                 {
                     CosmosDbOptions = CosmosDbOptions,
                     TelemetryClient = TelemetryClient,
-                    LuisServices = LuisServices.Where(l => skill.LuisServiceIds.Contains(l.Key) == true).ToDictionary(l => l.Key, l => l.Value as IRecognizer),
-                    ProactiveSteps = proactiveScenariosConfig
+                    LuisServices = LuisServices.Where(l => skill.LuisServiceIds.Contains(l.Key) == true).ToDictionary(l => l.Key, l => l.Value as IRecognizer)
                 };
 
                 if (skill.SupportedProviders != null)
@@ -134,6 +133,7 @@ namespace VirtualAssistant
 
                 SkillDefinitions.Add(skill);
                 SkillConfigurations.Add(skill.Id, skillConfig);
+                ProactiveSteps = proactiveScenariosConfig.ToDictionary(i => i.Event);
             }
         }
 
@@ -186,5 +186,7 @@ namespace VirtualAssistant
         public List<SkillDefinition> SkillDefinitions { get; set; } = new List<SkillDefinition>();
 
         public Dictionary<string, ISkillConfiguration> SkillConfigurations { get; set; } = new Dictionary<string, ISkillConfiguration>();
+
+        public Dictionary<string, ProactiveStep> ProactiveSteps { get; set; } = new Dictionary<string, ProactiveStep>();
     }
 }
