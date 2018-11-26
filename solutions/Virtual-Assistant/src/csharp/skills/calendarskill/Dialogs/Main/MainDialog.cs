@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CalendarSkill.Dialogs.ApproachingMeeting;
 using CalendarSkill.Dialogs.Main.Resources;
 using CalendarSkill.Dialogs.Shared.Resources;
 using Luis;
@@ -231,13 +232,11 @@ namespace CalendarSkill
         {
             return async (turnContext, token) =>
             {
-                //await turnContext.SendActivityAsync("done");
-                //var dialogSet = new DialogSet(_conversationState.CreateProperty<DialogState>(nameof(DialogState)));
-                //dialogSet.Add(new ApproachingMeetingDialog(_services, _stateAccessor, _serviceManager));
+                var dialogSet = new DialogSet(_conversationState.CreateProperty<DialogState>(nameof(DialogState)));
+                dialogSet.Add(new ApproachingMeetingDialog(_services, _stateAccessor, _serviceManager));
 
-                //// Send the user a proactive confirmation message.
-                //var context = await dialogSet.CreateContextAsync(turnContext);
-                //await turnContext.BeginDialogAsync(nameof(dialogId));
+                var context = await dialogSet.CreateContextAsync(turnContext);
+                await context.BeginDialogAsync(nameof(dialogId));
             };
         }
 
