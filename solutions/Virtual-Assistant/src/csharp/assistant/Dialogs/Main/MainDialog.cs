@@ -15,6 +15,7 @@ using Microsoft.Bot.Solutions;
 using Microsoft.Bot.Solutions.Dialogs;
 using Microsoft.Bot.Solutions.Model.Proactive;
 using Microsoft.Bot.Solutions.Skills;
+using Newtonsoft.Json;
 
 namespace VirtualAssistant
 {
@@ -195,8 +196,15 @@ namespace VirtualAssistant
                     if (nextStep.Action == ProactiveNextStepActionType.ShowDialog)
                     {
                         dc.Context.Activity.Type = ActivityTypes.Event;
-                        dc.Context.Activity.Text = "/event:showDialog";
-                        dc.Context.Activity.Value = ev.Value;
+                        dc.Context.Activity.Name = Events.ShowDialog;
+
+                        var value = JsonConvert.DeserializeObject<Dictionary<string, string>>(ev.Value.ToString());
+                        foreach (var param in nextStep.Parameters)
+                        {
+                            value.Add(param.Key, param.Value);
+                        }
+
+                        dc.Context.Activity.Value = value;
                         var matchedSkill = _skillRouter.IdentifyRegisteredSkill(nextStep.SkillId);
                         await RouteToSkillAsync(dc, new SkillDialogOptions()
                         {
@@ -208,7 +216,6 @@ namespace VirtualAssistant
                 }
                 else
                 {
-
                     switch (ev.Name)
                     {
                         case Events.TimezoneEvent:
@@ -349,6 +356,7 @@ namespace VirtualAssistant
             public const string ActiveLocationUpdate = "POI.ActiveLocation";
             public const string ActiveRouteUpdate = "POI.ActiveRoute";
             public const string ResetUser = "IPA.ResetUser";
+            public const string ShowDialog = "showDialog";
         }
     }
 }

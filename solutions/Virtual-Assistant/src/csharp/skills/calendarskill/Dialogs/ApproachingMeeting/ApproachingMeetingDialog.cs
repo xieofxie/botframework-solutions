@@ -41,14 +41,14 @@ namespace CalendarSkill.Dialogs.ApproachingMeeting
             try
             {
                 var state = await Accessor.GetAsync(sc.Context);
-                if (string.IsNullOrEmpty(state.APIToken))
-                {
-                    return await sc.EndDialogAsync(true);
-                }
+                //if (string.IsNullOrEmpty(state.APIToken))
+                //{
+                //    return await sc.EndDialogAsync(true);
+                //}
 
-                var calendarService = ServiceManager.InitCalendarService(state.APIToken, state.EventSource);
+                //var calendarService = ServiceManager.InitCalendarService(state.APIToken, state.EventSource);
 
-                var eventList = await calendarService.GetUpcomingEvents();
+                //var eventList = await calendarService.GetUpcomingEvents();
                 EventModel nextEvent = null;
 
                 // get the first event

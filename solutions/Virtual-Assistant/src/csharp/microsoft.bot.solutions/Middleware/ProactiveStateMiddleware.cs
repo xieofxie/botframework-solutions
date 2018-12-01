@@ -21,7 +21,6 @@ namespace Microsoft.Bot.Solutions.Middleware
         public async Task OnTurnAsync(ITurnContext turnContext, NextDelegate next, CancellationToken cancellationToken = default(CancellationToken))
         {
             var proactiveState = await _proactiveStateAccessor.GetAsync(turnContext, () => new ProactiveModel());
-            var model = new ProactiveModel();
             ProactiveData data;
             var userId = turnContext.Activity.From.Id;
             var conversationReference = turnContext.Activity.GetConversationReference();
@@ -34,8 +33,8 @@ namespace Microsoft.Bot.Solutions.Middleware
                 data = new ProactiveData { Conversation = conversationReference };
             }
 
-            model[userId] = data;
-            await _proactiveStateAccessor.SetAsync(turnContext, model);
+            proactiveState[userId] = data;
+            await _proactiveStateAccessor.SetAsync(turnContext, proactiveState);
             await _proactiveState.SaveChangesAsync(turnContext);
 
             await next(cancellationToken).ConfigureAwait(false);

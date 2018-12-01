@@ -64,15 +64,23 @@ namespace CalendarSkill
 
         protected override async Task<DialogTurnResult> OnBeginDialogAsync(DialogContext dc, object options, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var state = await Accessor.GetAsync(dc.Context);
-            await DigestCalendarLuisResult(dc, state.LuisResult, true);
+            var state = await Accessor.GetAsync(dc.Context, () => new CalendarSkillState());
+            if (state.LuisResult != null)
+            {
+                await DigestCalendarLuisResult(dc, state.LuisResult, true);
+            }
+
             return await base.OnBeginDialogAsync(dc, options, cancellationToken);
         }
 
         protected override async Task<DialogTurnResult> OnContinueDialogAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var state = await Accessor.GetAsync(dc.Context);
-            await DigestCalendarLuisResult(dc, state.LuisResult, false);
+            var state = await Accessor.GetAsync(dc.Context, () => new CalendarSkillState());
+            if (state.LuisResult != null)
+            {
+                await DigestCalendarLuisResult(dc, state.LuisResult, false);
+            }
+
             return await base.OnContinueDialogAsync(dc, cancellationToken);
         }
 
@@ -196,7 +204,7 @@ namespace CalendarSkill
 
         protected async Task<bool> ChoiceValidator(PromptValidatorContext<FoundChoice> pc, CancellationToken cancellationToken)
         {
-            var state = await Accessor.GetAsync(pc.Context);
+            var state = await Accessor.GetAsync(pc.Context, () => new CalendarSkillState());
             var luisResult = state.GeneralLuisResult;
             var topIntent = luisResult?.TopIntent().intent;
 
@@ -320,7 +328,7 @@ namespace CalendarSkill
         {
             try
             {
-                var state = await Accessor.GetAsync(dc.Context);
+                var state = await Accessor.GetAsync(dc.Context, () => new CalendarSkillState());
 
                 var intent = luisResult.TopIntent().intent;
 
@@ -612,7 +620,7 @@ namespace CalendarSkill
             }
             catch
             {
-                var state = await Accessor.GetAsync(dc.Context);
+                var state = await Accessor.GetAsync(dc.Context, () => new CalendarSkillState());
                 state.Clear();
                 await dc.CancelAllDialogsAsync();
                 throw;
@@ -786,7 +794,7 @@ namespace CalendarSkill
         {
             await sc.Context.SendActivityAsync(sc.Context.Activity.CreateReply(CalendarSharedResponses.CalendarErrorMessage));
 
-            var state = await Accessor.GetAsync(sc.Context);
+            var state = await Accessor.GetAsync(sc.Context, () => new CalendarSkillState());
             state.Clear();
             await sc.CancelAllDialogsAsync();
 

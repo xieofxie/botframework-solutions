@@ -18,6 +18,7 @@ using Microsoft.Bot.Solutions.Dialogs;
 using Microsoft.Bot.Solutions.Extensions;
 using Microsoft.Bot.Solutions.Model.Proactive;
 using Microsoft.Bot.Solutions.Skills;
+using Newtonsoft.Json;
 
 namespace CalendarSkill
 {
@@ -217,8 +218,10 @@ namespace CalendarSkill
                 case Events.ShowDialog:
                     {
                         var state = await _proactiveStateAccessor.GetAsync(dc.Context, () => new ProactiveModel());
-                        var userId = dc.Context.Activity.Properties["userId"].ToString();
-                        var dialogId = dc.Context.Activity.Properties["dialogId"].ToString();
+                        var valueDic = dc.Context.Activity.Value as Dictionary<string, string>;
+                        var userId = valueDic["userId"];
+                        var dialogId = valueDic["dialogId"];
+                        var eventId = valueDic["eventId"];
 
                         await dc.Context.Adapter.ContinueConversationAsync(_endpointService.AppId, state[userId.ToString()].Conversation, CreateCallback(userId, dialogId), cancellationToken);
 
@@ -233,10 +236,13 @@ namespace CalendarSkill
             return async (turnContext, token) =>
             {
                 var dialogSet = new DialogSet(_conversationState.CreateProperty<DialogState>(nameof(DialogState)));
-                dialogSet.Add(new ApproachingMeetingDialog(_services, _stateAccessor, _serviceManager));
+                var dialogType = Type.GetType("CalendarSkill.Dialogs.ApproachingMeeting." + dialogId);
+                dialogSet.Add((Dialog)Activator.CreateInstance(dialogType, _services, _stateAccessor, _serviceManager));
 
                 var context = await dialogSet.CreateContextAsync(turnContext);
-                await context.BeginDialogAsync(nameof(dialogId));
+                await context.BeginDialogAsync(dialogId);
+
+                //await turnContext.SendActivityAsync("test");
             };
         }
 
