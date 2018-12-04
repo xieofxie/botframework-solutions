@@ -3,9 +3,9 @@
     {
       "event": "ApproachingMeeting",
       "action": "ShowDialog",
-      "skillId": "l_Calendar",
       "parameters": {
-        "dialogId": "ApproachingMeetingDialog"
+        "dialogId": "ApproachingMeetingDialog",
+        "skillId": "l_Calendar"
       }
     },
     {
@@ -13,8 +13,8 @@
       "action": "ServiceBus",
       "parameters": {
         "eventName": "FetchApproachingMeeting",
-        "userId": "{UserId}",
-        "token": "{Token}"
+        "userId": "{userId}",
+        "token": "{token}"
       }
     },
     {

@@ -199,9 +199,22 @@ namespace VirtualAssistant
                         dc.Context.Activity.Name = Events.ShowDialog;
 
                         var value = JsonConvert.DeserializeObject<Dictionary<string, string>>(ev.Value.ToString());
+                        var skillId = string.Empty;
                         foreach (var param in nextStep.Parameters)
                         {
-                            value.Add(param.Key, param.Value);
+                            if (param.Key.Equals("skillid", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                skillId = param.Value;
+                            }
+                            else
+                            {
+                                value.Add(param.Key, param.Value);
+                            }
+                        }
+
+                        if (string.IsNullOrWhiteSpace(skillId))
+                        {
+                            throw new ArgumentException("SkillId is not defined in the proactive steps. Without it the assistant doesn't know where to route the message to.");
                         }
 
                         dc.Context.Activity.Value = value;
