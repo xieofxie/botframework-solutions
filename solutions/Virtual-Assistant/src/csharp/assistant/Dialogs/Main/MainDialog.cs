@@ -218,7 +218,7 @@ namespace VirtualAssistant
                         }
 
                         dc.Context.Activity.Value = value;
-                        var matchedSkill = _skillRouter.IdentifyRegisteredSkill(nextStep.SkillId);
+                        var matchedSkill = _skillRouter.IdentifyRegisteredSkill(skillId);
                         await RouteToSkillAsync(dc, new SkillDialogOptions()
                         {
                             SkillDefinition = matchedSkill,
