@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Luis;
@@ -16,6 +17,7 @@ using Microsoft.Bot.Solutions;
 using Microsoft.Bot.Solutions.Dialogs;
 using Microsoft.Bot.Solutions.Skills;
 using VirtualAssistant.Dialogs.Main.Resources;
+using VirtualAssistant.ServiceClients;
 
 namespace VirtualAssistant
 {
@@ -78,126 +80,372 @@ namespace VirtualAssistant
             var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             var localeConfig = _services.LocaleConfigurations[locale];
 
-            // No dialog is currently on the stack and we haven't responded to the user
-            // Check dispatch result
-            var dispatchResult = await localeConfig.DispatchRecognizer.RecognizeAsync<Dispatch>(dc, true, CancellationToken.None);
-            var intent = dispatchResult.TopIntent().intent;
+            bool handled = await HandleCommands(dc);
 
-            switch (intent)
+            if (!handled)
             {
-                case Dispatch.Intent.l_General:
-                    {
-                        // If dispatch result is general luis model
-                        var luisService = localeConfig.LuisServices["general"];
-                        var luisResult = await luisService.RecognizeAsync<General>(dc, true, CancellationToken.None);
-                        var luisIntent = luisResult?.TopIntent().intent;
+                // No dialog is currently on the stack and we haven't responded to the user
+                // Check dispatch result
+                var dispatchResult = await localeConfig.DispatchRecognizer.RecognizeAsync<Dispatch>(dc, true, CancellationToken.None);
+                var intent = dispatchResult.TopIntent().intent;
 
-                        // switch on general intents
-                        if (luisResult.TopIntent().score > 0.5)
+                switch (intent)
+                {
+                    case Dispatch.Intent.l_General:
                         {
-                            switch (luisIntent)
+                            // If dispatch result is general luis model
+                            var luisService = localeConfig.LuisServices["general"];
+                            var luisResult = await luisService.RecognizeAsync<General>(dc, true, CancellationToken.None);
+                            var luisIntent = luisResult?.TopIntent().intent;
+
+                            // switch on general intents
+                            if (luisResult.TopIntent().score > 0.5)
                             {
-                                case General.Intent.Greeting:
-                                    {
-                                        // send greeting response
-                                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Greeting);
-                                        break;
-                                    }
-
-                                case General.Intent.Help:
-                                    {
-                                        // send help response
-                                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Help);
-                                        break;
-                                    }
-
-                                case General.Intent.Cancel:
-                                    {
-                                        // if this was triggered, then there is no active dialog
-                                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.NoActiveDialog);
-                                        break;
-                                    }
-
-                                case General.Intent.Escalate:
-                                    {
-                                        // start escalate dialog
-                                        await dc.BeginDialogAsync(nameof(EscalateDialog));
-                                        break;
-                                    }
-
-                                case General.Intent.Logout:
-                                    {
-                                        await LogoutAsync(dc);
-                                        break;
-                                    }
-
-                                case General.Intent.Next:
-                                case General.Intent.Previous:
-                                case General.Intent.ReadMore:
-                                    {
-                                        var lastExecutedIntent = virtualAssistantState.LastIntent;
-                                        if (lastExecutedIntent != null)
+                                switch (luisIntent)
+                                {
+                                    case General.Intent.Greeting:
                                         {
-                                            var matchedSkill = _skillRouter.IdentifyRegisteredSkill(lastExecutedIntent);
-                                            await RouteToSkillAsync(dc, new SkillDialogOptions()
-                                            {
-                                                SkillDefinition = matchedSkill,
-                                                Parameters = parameters,
-                                            });
+                                            // send greeting response
+                                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Greeting);
+                                            break;
                                         }
 
-                                        break;
-                                    }
+                                    case General.Intent.Help:
+                                        {
+                                            // send help response
+                                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Help);
+                                            break;
+                                        }
 
-                                case General.Intent.None:
-                                default:
-                                    {
-                                        // No intent was identified, send confused message
-                                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
-                                        break;
-                                    }
+                                    case General.Intent.Cancel:
+                                        {
+                                            // if this was triggered, then there is no active dialog
+                                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.NoActiveDialog);
+                                            break;
+                                        }
+
+                                    case General.Intent.Escalate:
+                                        {
+                                            // start escalate dialog
+                                            await dc.BeginDialogAsync(nameof(EscalateDialog));
+                                            break;
+                                        }
+
+                                    case General.Intent.Logout:
+                                        {
+                                            await LogoutAsync(dc);
+                                            break;
+                                        }
+
+                                    case General.Intent.Next:
+                                    case General.Intent.Previous:
+                                    case General.Intent.ReadMore:
+                                        {
+                                            var lastExecutedIntent = virtualAssistantState.LastIntent;
+                                            if (lastExecutedIntent != null)
+                                            {
+                                                var matchedSkill = _skillRouter.IdentifyRegisteredSkill(lastExecutedIntent);
+                                                await RouteToSkillAsync(dc, new SkillDialogOptions()
+                                                {
+                                                    SkillDefinition = matchedSkill,
+                                                    Parameters = parameters,
+                                                });
+                                            }
+
+                                            break;
+                                        }
+
+                                    case General.Intent.None:
+                                    default:
+                                        {
+                                            // No intent was identified, send confused message
+                                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                                            break;
+                                        }
+                                }
                             }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                case Dispatch.Intent.l_Calendar:
-                case Dispatch.Intent.l_Email:
-                case Dispatch.Intent.l_ToDo:
-                case Dispatch.Intent.l_PointOfInterest:
-                    {
-                        virtualAssistantState.LastIntent = intent.ToString();
-                        var matchedSkill = _skillRouter.IdentifyRegisteredSkill(intent.ToString());
-
-                        await RouteToSkillAsync(dc, new SkillDialogOptions()
+                    case Dispatch.Intent.l_Calendar:
+                    case Dispatch.Intent.l_Email:
+                    case Dispatch.Intent.l_ToDo:
+                    case Dispatch.Intent.l_PointOfInterest:
                         {
-                            SkillDefinition = matchedSkill,
-                            Parameters = parameters,
-                        });
+                            virtualAssistantState.LastIntent = intent.ToString();
+                            var matchedSkill = _skillRouter.IdentifyRegisteredSkill(intent.ToString());
 
-                        break;
-                    }
+                            await RouteToSkillAsync(dc, new SkillDialogOptions()
+                            {
+                                SkillDefinition = matchedSkill,
+                                Parameters = parameters,
+                            });
 
-                case Dispatch.Intent.q_FAQ:
-                    {
-                        var qnaService = localeConfig.QnAServices["faq"];
-                        var answers = await qnaService.GetAnswersAsync(dc.Context);
-                        if (answers != null && answers.Count() > 0)
-                        {
-                            await dc.Context.SendActivityAsync(answers[0].Answer);
+                            break;
                         }
 
-                        break;
-                    }
+                    case Dispatch.Intent.q_FAQ:
+                        {
+                            var qnaService = localeConfig.QnAServices["faq"];
+                            var answers = await qnaService.GetAnswersAsync(dc.Context);
+                            if (answers != null && answers.Count() > 0)
+                            {
+                                await dc.Context.SendActivityAsync(answers[0].Answer);
+                            }
 
-                case Dispatch.Intent.None:
-                    {
-                        // No intent was identified, send confused message
-                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
-                        break;
-                    }
+                            break;
+                        }
+
+                    case Dispatch.Intent.None:
+                        {
+                            // No intent was identified, send confused message
+                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                            break;
+                        }
+                }
             }
+        }
+
+        private async Task<bool> HandleCommands(DialogContext dc)
+        {
+            var handled = false;
+            var command = dc.Context.Activity.Text;
+            var response = dc.Context.Activity.CreateReply();
+            Coordinate currentLocation = new Coordinate();
+            var parameters = await _parametersAccessor.GetAsync(dc.Context, () => new Dictionary<string, object>()).ConfigureAwait(false);
+            var onboardingData = await _onboardingState.GetAsync(dc.Context, () => new OnboardingState()).ConfigureAwait(false);
+            var currentRegion = onboardingData.Location;
+            if (parameters.ContainsKey("IPA.Location"))
+            {
+                var locationStr = parameters["IPA.Location"].ToString();
+                if (!string.IsNullOrEmpty(locationStr))
+                {
+                    var coords = locationStr.Split(',');
+                    if (coords.Length == 2)
+                    {
+                        if (double.TryParse(coords[0], out var lat) && double.TryParse(coords[1], out var lng))
+                        {
+                            currentLocation.Lat = lat;
+                            currentLocation.Lng = lng;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // If not set in event, hard coded to Suzhou
+                currentLocation.Lat = 31.269764;
+                currentLocation.Lng = 120.740552;
+            }
+
+            if (command.Contains("播放"))
+            {
+                NetEaseMusicClient client = new NetEaseMusicClient();
+                List<Song> list_Song = await client.SearchSongAsync(command).ConfigureAwait(false);
+                if (list_Song != null && list_Song.Count > 0)
+                {
+                    // Create an attachment.
+                    var audioCard = new AudioCard()
+                    {
+                        Image = new ThumbnailUrl
+                        {
+                            Url = list_Song[0].Pic,
+                        },
+                        Media = new List<MediaUrl>
+                        {
+                            new MediaUrl()
+                            {
+                                Url = list_Song[0].Url,
+                            },
+                        },
+                        Title = list_Song[0].Name,
+                        Subtitle = list_Song[0].Singer,
+                        Autostart = true,
+                    };
+                    response.Attachments = new List<Attachment>() { audioCard.ToAttachment() };
+
+                    // send event to update UI
+                    var eventResponse = dc.Context.Activity.CreateReply();
+                    eventResponse.Type = ActivityTypes.Event;
+                    eventResponse.Name = "PlayMusic";
+
+                    var singerPart = !string.IsNullOrWhiteSpace(list_Song[0].Singer) ? list_Song[0].Singer + " - " : string.Empty;
+
+                    eventResponse.Value = singerPart + list_Song[0].Name;
+                    await dc.Context.SendActivityAsync(eventResponse).ConfigureAwait(false);
+                }
+                else
+                {
+                    response.Text = "对不起，没有找到你想要找的歌曲";
+                }
+
+                await dc.Context.SendActivityAsync(response).ConfigureAwait(false);
+                handled = true;
+            }
+            else if (command.Contains("查询"))
+            {
+
+                BaiduMapClient baiduMapClient = new BaiduMapClient();
+                Regex regex = new Regex("查询附近价格(大于|小于)([0-9]*)的(.*)");
+                if (regex.IsMatch(command))
+                {
+                    string compare = regex.Match(command).Groups[1].ToString();
+                    string price = regex.Match(command).Groups[2].ToString();
+                    string querystr = regex.Match(command).Groups[3].ToString();
+
+                    if (compare == "大于")
+                    {
+                        price = price + ",99999999";
+                    }
+                    else
+                    {
+                        price = "0," + price;
+                    }
+
+                    PoiQuery query = new PoiQuery
+                    {
+                        Query = querystr,
+                        Location = currentLocation,
+                        Price_section = price,
+                    };
+                    List<Poi> places = await baiduMapClient.PoiSearchAsync(query).ConfigureAwait(false);
+                    response.Attachments = new List<Attachment>();
+                    response.AttachmentLayout = "carousel";
+                    if (places != null && places.Count > 0)
+                    {
+                        for (var i = 0; i < places.Count && i < 3; ++i)
+                        {
+                            var imageStr = await baiduMapClient.GetLocationImageAsync(places[i].Location, places[i].Name).ConfigureAwait(false);
+                            var card = new HeroCard
+                            {
+                                Title = places[i].Name,
+                                Subtitle = "人均价格：" + places[i].Detail_info.Price.ToString(),
+                                Text = places[i].Address,
+                                Images = new List<CardImage>
+                                {
+                                    new CardImage()
+                                    {
+                                        Url = "data:image/png;base64,"+ imageStr,
+                                    },
+                                },
+                            };
+                            response.Attachments.Add(card.ToAttachment());
+                            response.Speak = card.Title != null ? $"{card.Title} " : string.Empty;
+                            response.Speak += card.Subtitle != null ? $"{card.Subtitle} " : string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        response.Text = "对不起, 没有找到您想要的资源";
+                    }
+                }
+                else
+                {
+                    response.Text = "对不起, 我不明白您在说什么";
+                }
+
+                await dc.Context.SendActivityAsync(response).ConfigureAwait(false);
+                handled = true;
+
+            }
+            else if (command.Contains("导航到"))
+            {
+                // "帮我导航到徐家汇汇港广场"
+                int index = command.IndexOf("导航到");
+                string place = command.Substring(index + 3);
+                BaiduMapClient baiduMapClient = new BaiduMapClient();
+
+                List<Poi> places = await baiduMapClient.PlaceSearchAsync(place, currentRegion).ConfigureAwait(false);
+
+                if (places.Count > 0)
+                {
+                    List<Route> routes = await baiduMapClient.GetDirectionAsync(currentLocation, places[0].Location).ConfigureAwait(false);
+                    if (routes.Count > 0)
+                    {
+                        var imageStr = await baiduMapClient.GetLocationImageAsync(places[0].Location, places[0].Name).ConfigureAwait(false);
+                        var card = new HeroCard
+                        {
+                            Title = "您到" + place + "距离有" + ((double)routes[0].Distance / 1000) + "公里, 需要" + (routes[0].Duration / 60) + "分钟",
+                            Images = new List<CardImage>
+                            {
+                                new CardImage()
+                                {
+                                   Url = "data:image/png;base64," + imageStr,
+                                },
+                            },
+                        };
+                        response.Attachments.Add(card.ToAttachment());
+                    }
+                }
+                else
+                {
+                    response.Text = "对不起, 没有找到您想要的地址";
+                }
+
+                await dc.Context.SendActivityAsync(response).ConfigureAwait(false);
+                handled = true;
+            }
+            else
+            {
+                switch (command)
+                {
+                    case "change radio station to 99.7":
+                    case "将收音机调到99.7 FM":
+                        {
+                            response.Type = ActivityTypes.Event;
+                            response.Name = "TuneRadio";
+                            response.Value = "99.7 FM";
+                            await dc.Context.SendActivityAsync(response);
+
+                            handled = true;
+                            break;
+                        }
+
+                    case "turn off cruise control":
+                    case "打开巡航控制器":
+                    case "关闭巡航控制器":
+                        {
+                            response.Type = ActivityTypes.Event;
+                            response.Name = "ToggleCruiseControl";
+                            await dc.Context.SendActivityAsync(response);
+
+                            handled = true;
+                            break;
+                        }
+
+                    case "change temperature to 23 degrees":
+                    case "将温度设定为23度":
+                    case "将温度设定为二十三度":
+                        {
+                            response.Type = ActivityTypes.Event;
+                            response.Name = "ChangeTemperature";
+                            response.Value = "23";
+                            await dc.Context.SendActivityAsync(response);
+
+                            handled = true;
+                            break;
+                        }
+
+                    case "play the song rainbow by jay chou":
+                    case "播放周杰伦的歌曲彩虹":
+                        {
+                            response.Type = ActivityTypes.Event;
+                            response.Name = "PlayMusic";
+                            response.Value = "彩虹 - 周杰伦";
+                            await dc.Context.SendActivityAsync(response);
+                            handled = true;
+                            break;
+                        }
+                }
+            }
+
+            if (handled)
+            {
+                await CompleteAsync(dc);
+            }
+
+            return handled;
         }
 
         protected override async Task CompleteAsync(DialogContext dc, DialogTurnResult result = null, CancellationToken cancellationToken = default(CancellationToken))
