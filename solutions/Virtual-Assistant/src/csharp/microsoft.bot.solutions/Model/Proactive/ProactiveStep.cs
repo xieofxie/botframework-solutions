@@ -17,9 +17,6 @@ namespace Microsoft.Bot.Solutions.Model.Proactive
         [JsonProperty("action")]
         public ProactiveNextStepActionType Action { get; set; }
 
-        [JsonProperty("skillId")]
-        public string SkillId { get; set; }
-
         [JsonProperty("parameters")]
         public Dictionary<string, string> Parameters { get; set; }
     }

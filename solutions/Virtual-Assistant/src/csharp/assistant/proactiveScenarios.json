@@ -14,6 +14,7 @@
       "parameters": {
         "eventName": "FetchApproachingMeeting",
         "userId": "{userId}",
+        "provider": "{provider}",
         "token": "{token}"
       }
     },
@@ -23,6 +24,7 @@
       "parameters": {
         "eventName": "FetchGroceryRoute",
         "userId": "{userId}",
+        "provider": "{provider}",
         "token": "{token}"
       }
     }
