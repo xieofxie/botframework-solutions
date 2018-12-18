@@ -35,6 +35,10 @@ namespace VirtualAssistant
                     (context, data) => MessageFactory.Text(MainStrings.CONFUSED, MainStrings.CONFUSED, InputHints.AcceptingInput)
                 },
                 {
+                    ResponseIds.Done,
+                    (context, data) => MessageFactory.Text(MainStrings.DONE, MainStrings.DONE, InputHints.AcceptingInput)
+                },
+                {
                     ResponseIds.Greeting,
                     (context, data) => MessageFactory.Text(MainStrings.GREETING, MainStrings.GREETING, InputHints.AcceptingInput)
                 },
@@ -96,6 +100,7 @@ namespace VirtualAssistant
             public const string Cancelled = "cancelled";
             public const string Completed = "completed";
             public const string Confused = "confused";
+            public const string Done = "done";
             public const string Greeting = "greeting";
             public const string Help = "help";
             public const string Intro = "intro";

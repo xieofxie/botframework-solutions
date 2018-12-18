@@ -442,6 +442,7 @@ namespace VirtualAssistant
 
             if (handled)
             {
+                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Done);
                 await CompleteAsync(dc);
             }
 
