@@ -4,10 +4,12 @@ using EmailSkill;
 using EmailSkillTest.Flow.Fakes;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Adapters;
+using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Solutions.Authentication;
 using Microsoft.Bot.Solutions.Dialogs;
 using Microsoft.Bot.Solutions.Dialogs.BotResponseFormatters;
+using Microsoft.Bot.Solutions.Models.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestFramework;
@@ -18,9 +20,13 @@ namespace EmailSkillTest.Flow
     {
         public IStatePropertyAccessor<EmailSkillState> EmailStateAccessor { get; set; }
 
+        public EndpointService EndpointService { get; set; }
+
         public ConversationState ConversationState { get; set; }
 
         public UserState UserState { get; set; }
+
+        public ProactiveState ProactiveState { get; set; }
 
         public IBotTelemetryClient TelemetryClient { get; set; }
 
@@ -33,8 +39,10 @@ namespace EmailSkillTest.Flow
         {
             var builder = new ContainerBuilder();
 
+            this.EndpointService = new EndpointService();
             this.ConversationState = new ConversationState(new MemoryStorage());
             this.UserState = new UserState(new MemoryStorage());
+            this.ProactiveState = new ProactiveState(new MemoryStorage());
             this.TelemetryClient = new NullBotTelemetryClient();
             this.EmailStateAccessor = this.ConversationState.CreateProperty<EmailSkillState>(nameof(EmailSkillState));
             this.Services = new MockSkillConfiguration();
@@ -78,7 +86,7 @@ namespace EmailSkillTest.Flow
 
         public override IBot BuildBot()
         {
-            return new EmailSkill.EmailSkill(this.Services, this.ConversationState, this.UserState,  this.TelemetryClient, this.ServiceManager, true);
+            return new EmailSkill.EmailSkill(this.Services, this.EndpointService, this.ConversationState, this.UserState, this.ProactiveState, this.TelemetryClient, this.ServiceManager, true);
         }
     }
 }

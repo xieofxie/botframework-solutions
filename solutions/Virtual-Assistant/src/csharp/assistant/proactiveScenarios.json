@@ -1,0 +1,32 @@
+{
+  "proactiveSteps": [
+    {
+      "event": "ApproachingMeeting",
+      "action": "ShowDialog",
+      "parameters": {
+        "dialogId": "ApproachingMeetingDialog",
+        "skillId": "l_Calendar"
+      }
+    },
+    {
+      "event": "CarStart",
+      "action": "ServiceBus",
+      "parameters": {
+        "eventName": "FetchApproachingMeeting",
+        "userId": "{userId}",
+        "provider": "{provider}",
+        "token": "{token}"
+      }
+    },
+    {
+      "event": "CarNavStart",
+      "action": "ServiceBus",
+      "parameters": {
+        "eventName": "FetchGroceryRoute",
+        "userId": "{userId}",
+        "provider": "{provider}",
+        "token": "{token}"
+      }
+    }
+  ]
+}

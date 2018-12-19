@@ -2,12 +2,12 @@
 // Licensed under the MIT License.
 
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Schema;
+using Microsoft.Bot.Configuration;
+using Microsoft.Bot.Solutions.Models.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 
 namespace PointOfInterestSkill
@@ -18,19 +18,23 @@ namespace PointOfInterestSkill
     public class PointOfInterestSkill : IBot
     {
         private readonly SkillConfiguration _services;
+        private readonly EndpointService _endpointService;
         private readonly UserState _userState;
         private readonly ConversationState _conversationState;
+        private readonly ProactiveState _proactiveState;
         private readonly IServiceManager _serviceManager;
         private readonly IBotTelemetryClient _telemetryClient;
         private DialogSet _dialogs;
         private bool _skillMode;
 
-        public PointOfInterestSkill(SkillConfiguration services, ConversationState conversationState, UserState userState, IBotTelemetryClient telemetryClient, IServiceManager serviceManager = null, bool skillMode = false)
+        public PointOfInterestSkill(SkillConfiguration services, EndpointService endpointService, ConversationState conversationState, UserState userState, ProactiveState proactiveState, IBotTelemetryClient telemetryClient, IServiceManager serviceManager = null, bool skillMode = false)
         {
             _skillMode = skillMode;
+            _endpointService = endpointService ?? throw new ArgumentNullException(nameof(endpointService));
             _services = services ?? throw new ArgumentNullException(nameof(services));
-            _userState = userState ?? throw new ArgumentNullException(nameof(userState));
             _conversationState = conversationState ?? throw new ArgumentNullException(nameof(conversationState));
+            _userState = userState ?? throw new ArgumentNullException(nameof(userState));
+            _proactiveState = proactiveState ?? throw new ArgumentNullException(nameof(proactiveState));
             _serviceManager = serviceManager ?? new ServiceManager();
             _telemetryClient = telemetryClient ?? throw new ArgumentNullException(nameof(telemetryClient));
 

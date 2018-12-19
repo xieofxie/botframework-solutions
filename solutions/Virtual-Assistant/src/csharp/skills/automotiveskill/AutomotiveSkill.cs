@@ -10,7 +10,9 @@ namespace AutomotiveSkill
     using Microsoft.AspNetCore.Http;
     using Microsoft.Bot.Builder;
     using Microsoft.Bot.Builder.Dialogs;
+    using Microsoft.Bot.Configuration;
     using Microsoft.Bot.Schema;
+    using Microsoft.Bot.Solutions.Models.Proactive;
     using Microsoft.Bot.Solutions.Skills;
 
     /// <summary>
@@ -20,8 +22,8 @@ namespace AutomotiveSkill
     {
         private readonly ISkillConfiguration _services;
         private readonly ConversationState _conversationState;
-        private readonly IBotTelemetryClient _telemetryClient;
         private readonly UserState _userState;
+        private readonly IBotTelemetryClient _telemetryClient;
         private bool _skillMode;
         private IServiceManager _serviceManager;
         private IHttpContextAccessor _httpContext;
@@ -31,9 +33,9 @@ namespace AutomotiveSkill
         {
             _skillMode = skillMode;
             _services = services ?? throw new ArgumentNullException(nameof(services));
+            _conversationState = conversationState ?? throw new ArgumentNullException(nameof(conversationState));
             _userState = userState ?? throw new ArgumentNullException(nameof(userState));
             _httpContext = httpContext ?? throw new ArgumentNullException(nameof(httpContext));
-            _conversationState = conversationState ?? throw new ArgumentNullException(nameof(conversationState));
             _serviceManager = serviceManager ?? new ServiceManager();
             _telemetryClient = telemetryClient ?? throw new ArgumentNullException(nameof(telemetryClient));
 

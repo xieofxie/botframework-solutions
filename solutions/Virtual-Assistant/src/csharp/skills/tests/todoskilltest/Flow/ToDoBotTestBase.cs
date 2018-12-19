@@ -9,6 +9,7 @@ using Microsoft.Bot.Schema;
 using Microsoft.Bot.Solutions.Authentication;
 using Microsoft.Bot.Solutions.Dialogs;
 using Microsoft.Bot.Solutions.Dialogs.BotResponseFormatters;
+using Microsoft.Bot.Solutions.Models.Proactive;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestFramework;
 using ToDoSkill;
@@ -19,9 +20,13 @@ namespace ToDoSkillTest.Flow
 {
     public class ToDoBotTestBase : BotTestBase
     {
+        public EndpointService EndpointService { get; set; }
+
         public ConversationState ConversationState { get; set; }
 
         public UserState UserState { get; set; }
+
+        public ProactiveState ProactiveState { get; set; }
 
         public IBotTelemetryClient TelemetryClient { get; set; }
 
@@ -79,7 +84,7 @@ namespace ToDoSkillTest.Flow
 
         public override IBot BuildBot()
         {
-            return new ToDoSkill.ToDoSkill(this.Services, this.ConversationState, this.UserState, this.TelemetryClient, this.ToDoService, true);
+            return new ToDoSkill.ToDoSkill(this.Services, this.EndpointService, this.ConversationState, this.UserState, this.ProactiveState, this.TelemetryClient, this.ToDoService, true);
         }
     }
 }

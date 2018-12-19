@@ -10,6 +10,7 @@ using Microsoft.Bot.Schema;
 using Microsoft.Bot.Solutions.Authentication;
 using Microsoft.Bot.Solutions.Extensions;
 using Microsoft.Bot.Solutions.Middleware;
+using Microsoft.Bot.Solutions.Models.Proactive;
 using Microsoft.Bot.Solutions.Resources;
 
 namespace Microsoft.Bot.Solutions.Skills
@@ -22,6 +23,7 @@ namespace Microsoft.Bot.Solutions.Skills
         // Fields
         private Dictionary<string, ISkillConfiguration> _skills;
         private IStatePropertyAccessor<DialogState> _accessor;
+        private ProactiveState _proactiveState;
         private EndpointService _endpointService;
         private IBotTelemetryClient _telemetryClient;
         private DialogSet _dialogs;
@@ -30,11 +32,12 @@ namespace Microsoft.Bot.Solutions.Skills
         private bool _skillInitialized;
         private bool _useCachedTokens;
 
-        public SkillDialog(Dictionary<string, ISkillConfiguration> skills, IStatePropertyAccessor<DialogState> accessor, EndpointService endpointService, IBotTelemetryClient telemetryClient, bool useCachedTokens = true)
+        public SkillDialog(Dictionary<string, ISkillConfiguration> skills, IStatePropertyAccessor<DialogState> accessor, ProactiveState proactiveState, EndpointService endpointService, IBotTelemetryClient telemetryClient, bool useCachedTokens = true)
             : base(nameof(SkillDialog))
         {
             _skills = skills;
             _accessor = accessor;
+            _proactiveState = proactiveState;
             _endpointService = endpointService;
             _telemetryClient = telemetryClient;
             _useCachedTokens = useCachedTokens;
@@ -149,7 +152,7 @@ namespace Microsoft.Bot.Solutions.Skills
                 try
                 {
                     var skillType = Type.GetType(skillDefinition.Assembly);
-                    _activatedSkill = (IBot)Activator.CreateInstance(skillType, skillConfiguration, conversationState, userState, _telemetryClient, null, true);
+                    _activatedSkill = (IBot)Activator.CreateInstance(skillType, _endpointService, skillConfiguration, conversationState, userState, _proactiveState, _telemetryClient, null, true);
                 }
                 catch (Exception e)
                 {

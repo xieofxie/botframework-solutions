@@ -1,0 +1,47 @@
+{
+  "UpcomingMeetingMessage": {
+    "replies": [
+      {
+        "text": "You have an upcoming meeting",
+        "speak": "You have a meeting in {EventTime} with {PeopleList} at {Location}"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "ShowUpcomingMeetingCallInMessage": {
+    "replies": [
+      {
+        "text": "You have the following event on your calendar:",
+        "speak": "You have the following event on your calendar: You have {EventName} at {EventTime} with {PeopleList}. Would you like me to dial in the meeting for you?"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "UpcomingMeetingNavigateToLocationMessage": {
+    "replies": [
+      {
+        "text": "You have a meeting in {EventMinutesLeft} minutes in {EventLocation} with {PeopleList}, do you want to navigate to the meeting location?",
+        "speak": "You have a meeting in {EventMinutesLeft} minutes in {EventLocation} with {PeopleList}, do you want to navigate to the meeting location?"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "ShowNextMeetingMessage": {
+    "replies": [
+      {
+        "text": "You have the following event on your calendar:",
+        "speak": "You have the following event on your calendar: You have {EventName} at {EventTime} with {PeopleCount} people at {Location}."
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "ShowMultipleNextMeetingMessage": {
+    "replies": [
+      {
+        "text": "You have the following event on your calendar:",
+        "speak": "You have the following event on your calendar:"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  }
+}

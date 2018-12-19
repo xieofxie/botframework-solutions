@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using Autofac;
 using CalendarSkill;
 using CalendarSkillTest.Flow.Fakes;
@@ -10,6 +9,7 @@ using Microsoft.Bot.Schema;
 using Microsoft.Bot.Solutions.Authentication;
 using Microsoft.Bot.Solutions.Dialogs;
 using Microsoft.Bot.Solutions.Dialogs.BotResponseFormatters;
+using Microsoft.Bot.Solutions.Models.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestFramework;
@@ -20,7 +20,11 @@ namespace CalendarSkillTest.Flow
     {
         public IStatePropertyAccessor<CalendarSkillState> CalendarStateAccessor { get; set; }
 
+        public EndpointService EndpointService { get; set; }
+
         public ConversationState ConversationState { get; set; }
+
+        public ProactiveState ProactiveState { get; set; }
 
         public UserState UserState { get; set; }
 
@@ -37,8 +41,10 @@ namespace CalendarSkillTest.Flow
         {
             var builder = new ContainerBuilder();
 
+            this.EndpointService = new EndpointService();
             this.ConversationState = new ConversationState(new MemoryStorage());
             this.UserState = new UserState(new MemoryStorage());
+            this.ProactiveState = new ProactiveState(new MemoryStorage());
             this.TelemetryClient = new NullBotTelemetryClient();
             this.CalendarStateAccessor = this.ConversationState.CreateProperty<CalendarSkillState>(nameof(CalendarSkillState));
             this.Services = new MockSkillConfiguration();
@@ -80,7 +86,7 @@ namespace CalendarSkillTest.Flow
 
         public override IBot BuildBot()
         {
-            return new CalendarSkill.CalendarSkill(this.Services, this.ConversationState, this.UserState, this.TelemetryClient, this.ServiceManager, true);
+            return new CalendarSkill.CalendarSkill(this.Services, this.EndpointService, this.ConversationState, this.UserState, this.ProactiveState, this.TelemetryClient, this.ServiceManager, true);
         }
     }
 }
