@@ -302,9 +302,39 @@ namespace Microsoft.Bot.Solutions.Skills
         {
             return async (turnContext, token) =>
             {
+                EnsureActivities(activities);
+
                 // Send back the activities in the proactive context
                 await turnContext.SendActivitiesAsync(activities, token);
             };
+        }
+
+        /// <summary>
+        /// Ensure the activity objects are correctly set for proactive messages
+        /// There is known issues about not being able to send these messages back
+        /// correctly if the properties are not set in a certain way.
+        /// </summary>
+        /// <param name="activities">activities that's being send out.</param>
+        private void EnsureActivities(Activity[] activities)
+        {
+            if (activities != null && activities.Length > 0)
+            {
+                foreach (var activity in activities)
+                {
+                    if (activity.From != null)
+                    {
+                        activity.From.Name = "User";
+                        activity.From.Properties["role"] = "user";
+                    }
+
+                    if (activity.Recipient != null)
+                    {
+                        activity.Recipient.Id = "1";
+                        activity.Recipient.Name = "Bot";
+                        activity.Recipient.Properties["role"] = "bot";
+                    }
+                }
+            }
         }
 
         private class Events
