@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
@@ -28,22 +29,24 @@ namespace Microsoft.Bot.Solutions.Middleware
         {
             var proactiveState = await _proactiveStateAccessor.GetAsync(turnContext, () => new ProactiveModel());
             ProactiveData data;
-            var userId = turnContext.Activity.From.Id;
-            var conversationReference = turnContext.Activity.GetConversationReference();
-            var proactiveData = new ProactiveData { Conversation = conversationReference };
-
-            if (proactiveState.TryGetValue(userId, out data))
+            if (turnContext.Activity.From.Name.Equals("user", StringComparison.InvariantCultureIgnoreCase))
             {
-                data.Conversation = conversationReference;
-            }
-            else
-            {
-                data = new ProactiveData { Conversation = conversationReference };
-            }
+                // only persist the conversation reference if it's from a user
+                var userId = turnContext.Activity.From.Id;
+                var conversationReference = turnContext.Activity.GetConversationReference();
+                if (proactiveState.TryGetValue(userId, out data))
+                {
+                    data.Conversation = conversationReference;
+                }
+                else
+                {
+                    data = new ProactiveData { Conversation = conversationReference };
+                }
 
-            proactiveState[userId] = data;
-            await _proactiveStateAccessor.SetAsync(turnContext, proactiveState);
-            await _proactiveState.SaveChangesAsync(turnContext);
+                proactiveState[userId] = data;
+                await _proactiveStateAccessor.SetAsync(turnContext, proactiveState);
+                await _proactiveState.SaveChangesAsync(turnContext);
+            }
 
             await next(cancellationToken).ConfigureAwait(false);
         }
