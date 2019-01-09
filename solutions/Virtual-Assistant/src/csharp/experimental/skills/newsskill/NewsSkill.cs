@@ -25,7 +25,7 @@ namespace NewsSkill
 
         private bool _skillMode;
 
-        public NewsSkill(SkillConfigurationBase services, ConversationState conversationState, UserState userState, IBotTelemetryClient telemetryClient, bool skillMode = false)
+        public NewsSkill(SkillConfigurationBase services, ConversationState conversationState, UserState userState, IBotTelemetryClient telemetryClient, NewsClient client = null, bool skillMode = false)
         {
             _skillMode = skillMode;
             _services = services;

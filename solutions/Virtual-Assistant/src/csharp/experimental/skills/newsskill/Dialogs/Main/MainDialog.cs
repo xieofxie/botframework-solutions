@@ -68,6 +68,7 @@ namespace NewsSkill
                 state.LuisResult = result;
 
                 var intent = result?.TopIntent().intent;
+                var turnResult = EndOfTurn;
 
                 // switch on general intents
                 switch (intent)
@@ -75,7 +76,7 @@ namespace NewsSkill
                     case News.Intent.FindArticles:
                         {
                             // send greeting response
-                            await dc.BeginDialogAsync(nameof(FindArticlesDialog));
+                            turnResult = await dc.BeginDialogAsync(nameof(FindArticlesDialog));
                             break;
                         }
 
@@ -83,6 +84,7 @@ namespace NewsSkill
                         {
                             // No intent was identified, send confused message
                             await _responder.ReplyWith(dc.Context, MainResponses.Confused);
+                            turnResult.Status = DialogTurnStatus.Complete;
                             break;
                         }
 
@@ -90,8 +92,14 @@ namespace NewsSkill
                         {
                             // intent was identified but not yet implemented
                             await dc.Context.SendActivityAsync("This feature is not yet implemented in this skill.");
+                            turnResult.Status = DialogTurnStatus.Complete;
                             break;
                         }
+                }
+
+                if (_skillMode && (turnResult.Status != DialogTurnStatus.Waiting))
+                {
+                    await CompleteAsync(dc, turnResult);
                 }
             }
         }
