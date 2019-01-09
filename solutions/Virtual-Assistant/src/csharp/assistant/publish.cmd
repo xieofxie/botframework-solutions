@@ -1,0 +1,1 @@
+az bot publish --resource-group VANewsDemo -n VANewsDemo --subscription 4b9dbc78-8b15-4d4b-b478-bdce776aca4f -v v4 --proj-name "VirtualAssistant.csproj" 

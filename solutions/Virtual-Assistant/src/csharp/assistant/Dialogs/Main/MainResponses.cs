@@ -82,17 +82,16 @@ namespace VirtualAssistant.Dialogs.Main
 
             var response = MessageFactory.Attachment(attachment, ssml: MainStrings.HELP_TEXT, inputHint: InputHints.AcceptingInput);
 
-            response.SuggestedActions = new SuggestedActions
-            {
-                Actions = new List<CardAction>()
-                {
-                    new CardAction(type: ActionTypes.ImBack, title: MainStrings.CALENDAR_SUGGESTEDACTION),
-                    new CardAction(type: ActionTypes.ImBack, title: MainStrings.EMAIL_SUGGESTEDACTION),
-                    new CardAction(type: ActionTypes.ImBack, title: MainStrings.MEETING_SUGGESTEDACTION),
-                    new CardAction(type: ActionTypes.ImBack, title: MainStrings.POI_SUGGESTEDACTION),
-                },
-            };
-
+            // response.SuggestedActions = new SuggestedActions
+            // {
+            //     Actions = new List<CardAction>()
+            //     {
+            //         new CardAction(type: ActionTypes.ImBack, title: MainStrings.CALENDAR_SUGGESTEDACTION),
+            //         new CardAction(type: ActionTypes.ImBack, title: MainStrings.EMAIL_SUGGESTEDACTION),
+            //         new CardAction(type: ActionTypes.ImBack, title: MainStrings.MEETING_SUGGESTEDACTION),
+            //         new CardAction(type: ActionTypes.ImBack, title: MainStrings.POI_SUGGESTEDACTION),
+            //     },
+            // };
             return response;
         }
 

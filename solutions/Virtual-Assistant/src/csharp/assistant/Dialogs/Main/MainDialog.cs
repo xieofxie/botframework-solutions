@@ -164,10 +164,8 @@ namespace VirtualAssistant.Dialogs.Main
                         break;
                     }
 
-                case Dispatch.Intent.l_Calendar:
-                case Dispatch.Intent.l_Email:
-                case Dispatch.Intent.l_ToDo:
                 case Dispatch.Intent.l_PointOfInterest:
+                case Dispatch.Intent.l_News:
                     {
                         virtualAssistantState.LastIntent = intent.ToString();
                         var matchedSkill = _skillRouter.IdentifyRegisteredSkill(intent.ToString());
@@ -330,15 +328,14 @@ namespace VirtualAssistant.Dialogs.Main
 
         private async Task StartConversation(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var onboardingState = await _onboardingState.GetAsync(dc.Context, () => new OnboardingState());
-
             var view = new MainResponses();
             await view.ReplyWith(dc.Context, MainResponses.ResponseIds.Intro);
-            if (string.IsNullOrEmpty(onboardingState.Name))
-            {
-                // This is the first time the user is interacting with the bot, so gather onboarding information.
-                await dc.BeginDialogAsync(nameof(OnboardingDialog));
-            }
+            // var onboardingState = await _onboardingState.GetAsync(dc.Context, () => new OnboardingState());
+            // if (string.IsNullOrEmpty(onboardingState.Name))
+            // {
+            //     // This is the first time the user is interacting with the bot, so gather onboarding information.
+            //     await dc.BeginDialogAsync(nameof(OnboardingDialog));
+            // }
         }
 
         private async Task RouteToSkillAsync(DialogContext dc, SkillDialogOptions options)

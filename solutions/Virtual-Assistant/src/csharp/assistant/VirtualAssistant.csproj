@@ -19,9 +19,6 @@
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.8.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.8.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.8.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.8.1" />    
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.5" />
     <PackageReference Include="Microsoft.Azure.CognitiveServices.ContentModerator" Version="1.0.0" />
     <PackageReference Include="Microsoft.Azure.CognitiveServices.Language" Version="1.0.1-preview" />
@@ -98,6 +95,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\experimental\skills\newsskill\NewsSkill.csproj" />
     <ProjectReference Include="..\Microsoft.Bot.Solutions\Microsoft.Bot.Solutions.csproj" />
     <ProjectReference Include="..\skills\calendarskill\CalendarSkill.csproj" />
     <ProjectReference Include="..\skills\emailskill\EmailSkill.csproj" />

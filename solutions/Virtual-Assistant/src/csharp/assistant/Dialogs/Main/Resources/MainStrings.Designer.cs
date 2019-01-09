@@ -133,7 +133,7 @@ namespace VirtualAssistant.Dialogs.Main.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to I&apos;m your Virtual Assistant! I can perform a number of tasks through my connected skills. Right now I can help you with Calendar, Email, Task and Point of Interest questions. Or you can help me do more by creating your own!.
+        ///   Looks up a localized string similar to I&apos;m Marvin! I can tell you about the latest news or find points of interest based on your coordinates. Try asking &quot;tell me the news&quot; to get started..
         /// </summary>
         public static string HELP_TEXT {
             get {
@@ -142,7 +142,7 @@ namespace VirtualAssistant.Dialogs.Main.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Help for Virtual Assistant.
+        ///   Looks up a localized string similar to Help for Marvin.
         /// </summary>
         public static string HELP_TITLE {
             get {
@@ -159,14 +159,14 @@ namespace VirtualAssistant.Dialogs.Main.Resources {
         ///  &quot;body&quot;: [
         ///    {
         ///      &quot;type&quot;: &quot;Image&quot;,
-        ///      &quot;url&quot;: &quot;https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtB3AwMUeNoq4gUBGe6Ocj8kyh3bXa9ZbV7u1fVKQoyKFHdkqU&quot;,
+        ///      &quot;url&quot;: &quot;https://nationalpoetryday.co.uk/wp/wp-content/uploads/2017/05/BBC-logo-for-web.jpg&quot;,
         ///      &quot;size&quot;: &quot;stretch&quot;
         ///    },
         ///    {
         ///      &quot;type&quot;: &quot;TextBlock&quot;,
         ///      &quot;spacing&quot;: &quot;medium&quot;,
         ///      &quot;size&quot;: &quot;default&quot;,
-        ///     [rest of string was truncated]&quot;;.
+        ///      &quot;weight&quot;: &quot;bolder&quot;,        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Intro {
             get {

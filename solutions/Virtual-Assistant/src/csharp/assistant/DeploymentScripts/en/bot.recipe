@@ -8,18 +8,8 @@
     },
     {
       "type": "luis",
-      "id": "calendar",
-      "name": "Calendar"
-    },
-    {
-      "type": "luis",
-      "id": "email",
-      "name": "Email"
-    },
-    {
-      "type": "luis",
-      "id": "todo",
-      "name": "ToDo"
+      "id": "news",
+      "name": "News"
     },
     {
       "type": "luis",
@@ -37,9 +27,7 @@
       "name": "Dispatch",
       "serviceIds": [
         "general",
-        "calendar",
-        "email",
-        "todo",
+        "news",
         "pointofinterest",
         "faq"
       ]

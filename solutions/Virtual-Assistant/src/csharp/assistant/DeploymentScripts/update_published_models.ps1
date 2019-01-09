@@ -1,6 +1,6 @@
 ﻿param (
     [string] $locales = "de-de,en-us,es-es,fr-fr,it-it,zh-cn",
-	[string] $domains = "general,calendar,email,todo,pointofinterest,dispatch"
+	[string] $domains = "general,news,pointofinterest,dispatch"
 )
 
 $localeArr = $locales.Split(",")

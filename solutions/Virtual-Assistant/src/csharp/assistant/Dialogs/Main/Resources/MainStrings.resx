@@ -142,10 +142,10 @@
     <value>Hey, {0}!</value>
   </data>
   <data name="HELP_TEXT" xml:space="preserve">
-    <value>I'm your Virtual Assistant! I can perform a number of tasks through my connected skills. Right now I can help you with Calendar, Email, Task and Point of Interest questions. Or you can help me do more by creating your own!</value>
+    <value>I'm Marvin! I can tell you about the latest news or find points of interest based on your coordinates. Try asking "tell me the news" to get started.</value>
   </data>
   <data name="HELP_TITLE" xml:space="preserve">
-    <value>Help for Virtual Assistant</value>
+    <value>Help for Marvin</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Intro" type="System.Resources.ResXFileRef, System.Windows.Forms">
