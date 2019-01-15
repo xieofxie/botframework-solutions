@@ -83,6 +83,13 @@ namespace VirtualAssistant
             services.AddSingleton(proactiveState);
             services.AddSingleton(new BotStateSet(userState, conversationState));
 
+            // Initialize ServiceBus service
+            var serviceBusService = botConfig.Services.FirstOrDefault(s => s.Type == "servicebus");
+            if (serviceBusService != null)
+            {
+                services.AddSingleton(serviceBusService);
+            }
+
             var environment = _isProduction ? "production" : "development";
             var service = botConfig.Services.FirstOrDefault(s => s.Type == ServiceTypes.Endpoint && s.Name == environment);
             if (!(service is EndpointService endpointService))

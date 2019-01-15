@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Luis;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Configuration;
@@ -36,8 +38,9 @@ namespace VirtualAssistant
         private IStatePropertyAccessor<VirtualAssistantState> _virtualAssistantState;
         private MainResponses _responder = new MainResponses();
         private SkillRouter _skillRouter;
+        private ConnectedService _serviceBus;
 
-        public MainDialog(BotServices services, BotConfiguration botConfig, ConversationState conversationState, UserState userState, ProactiveState proactiveState, EndpointService endpointService, IBotTelemetryClient telemetryClient)
+        public MainDialog(BotServices services, BotConfiguration botConfig, ConversationState conversationState, UserState userState, ProactiveState proactiveState, EndpointService endpointService, ConnectedService serviceBus, IBotTelemetryClient telemetryClient)
             : base(nameof(MainDialog), telemetryClient)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
@@ -46,6 +49,7 @@ namespace VirtualAssistant
             _userState = userState;
             _proactiveState = proactiveState;
             _endpointService = endpointService;
+            _serviceBus = serviceBus;
             TelemetryClient = telemetryClient;
             _onboardingState = _userState.CreateProperty<OnboardingState>(nameof(OnboardingState));
             _parametersAccessor = _userState.CreateProperty<Dictionary<string, object>>("userInfo");
@@ -279,6 +283,21 @@ namespace VirtualAssistant
                             await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: errorMessage));
                             TelemetryClient.TrackException(new ArgumentException(errorMessage));
                         }
+                    }
+                    else if (nextStep.Action == ProactiveNextStepActionType.ServiceBus)
+                    {
+                        var queueName = string.Empty;
+                        foreach (var param in nextStep.Parameters)
+                        {
+                            if (param.Key.Equals("queueName", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                queueName = param.Value;
+                                break;
+                            }
+                        }
+
+                        var queue = new QueueClient(_serviceBus.Properties["connectionString"].ToString(), queueName);
+                        await queue.SendAsync(new Message(Encoding.UTF8.GetBytes("message")));
                     }
 
                     // TODO: add handling for other types of proactive events

@@ -12,7 +12,7 @@
       "event": "CarStart",
       "action": "ServiceBus",
       "parameters": {
-        "eventName": "FetchApproachingMeeting",
+        "queueName": "upcomingmeeting",
         "userId": "{userId}",
         "provider": "{provider}",
         "token": "{token}"
