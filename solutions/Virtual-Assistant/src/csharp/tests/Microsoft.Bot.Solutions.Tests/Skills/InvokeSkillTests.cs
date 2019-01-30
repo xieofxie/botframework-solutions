@@ -31,7 +31,7 @@ namespace Microsoft.Bot.Solutions.Tests.Skills
             SkillDialogOptions.SkillDefinition = fakeSkillDefinition;
 
             // Add the SkillDialog to the available dialogs passing the initialized FakeSkill
-            Dialogs.Add(new SkillDialog(fakeSkillDefinition, Services, null, TelemetryClient));
+            Dialogs.Add(new SkillDialog(fakeSkillDefinition, Services, null, null, TelemetryClient));
         }
 
         /// <summary>

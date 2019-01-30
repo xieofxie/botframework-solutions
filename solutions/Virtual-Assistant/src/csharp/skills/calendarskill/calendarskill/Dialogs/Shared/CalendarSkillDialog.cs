@@ -75,15 +75,23 @@ namespace CalendarSkill.Dialogs.Shared
 
         protected override async Task<DialogTurnResult> OnBeginDialogAsync(DialogContext dc, object options, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var state = await Accessor.GetAsync(dc.Context);
-            await DigestCalendarLuisResult(dc, state.LuisResult, true);
+            var state = await Accessor.GetAsync(dc.Context, () => new CalendarSkillState());
+            if (state.LuisResult != null)
+            {
+                await DigestCalendarLuisResult(dc, state.LuisResult, true);
+            }
+
             return await base.OnBeginDialogAsync(dc, options, cancellationToken);
         }
 
         protected override async Task<DialogTurnResult> OnContinueDialogAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var state = await Accessor.GetAsync(dc.Context);
-            await DigestCalendarLuisResult(dc, state.LuisResult, false);
+            var state = await Accessor.GetAsync(dc.Context, () => new CalendarSkillState());
+            if (state.LuisResult != null)
+            {
+                await DigestCalendarLuisResult(dc, state.LuisResult, false);
+            }
+
             return await base.OnContinueDialogAsync(dc, cancellationToken);
         }
 
@@ -92,7 +100,7 @@ namespace CalendarSkill.Dialogs.Shared
         {
             try
             {
-               var skillOptions = (CalendarSkillDialogOptions)sc.Options;
+                var skillOptions = (CalendarSkillDialogOptions)sc.Options;
 
                 // If in Skill mode we ask the calling Bot for the token
                 if (skillOptions != null && skillOptions.SkillMode)

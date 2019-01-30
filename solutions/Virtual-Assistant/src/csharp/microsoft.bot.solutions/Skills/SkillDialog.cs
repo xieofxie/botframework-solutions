@@ -11,6 +11,7 @@ using Microsoft.Bot.Solutions.Authentication;
 using Microsoft.Bot.Solutions.Extensions;
 using Microsoft.Bot.Solutions.Middleware;
 using Microsoft.Bot.Solutions.Middleware.Telemetry;
+using Microsoft.Bot.Solutions.Models.Proactive;
 using Microsoft.Bot.Solutions.Resources;
 
 namespace Microsoft.Bot.Solutions.Skills
@@ -21,16 +22,18 @@ namespace Microsoft.Bot.Solutions.Skills
         private SkillDefinition _skillDefinition;
         private SkillConfigurationBase _skillConfiguration;
         private EndpointService _endpointService;
+        private ProactiveState _proactiveState;
         private IBotTelemetryClient _telemetryClient;
         private InProcAdapter _inProcAdapter;
         private IBot _activatedSkill;
         private bool _skillInitialized;
         private bool _useCachedTokens;
 
-        public SkillDialog(SkillDefinition skillDefinition, SkillConfigurationBase skillConfiguration, EndpointService endpointService, IBotTelemetryClient telemetryClient, bool useCachedTokens = true)
+        public SkillDialog(SkillDefinition skillDefinition, SkillConfigurationBase skillConfiguration, ProactiveState proactiveState, EndpointService endpointService, IBotTelemetryClient telemetryClient, bool useCachedTokens = true)
             : base(skillDefinition.Id)
         {
             _skillDefinition = skillDefinition;
+            _proactiveState = proactiveState;
             _skillConfiguration = skillConfiguration;
             _endpointService = endpointService;
             _telemetryClient = telemetryClient;
@@ -127,7 +130,7 @@ namespace Microsoft.Bot.Solutions.Skills
                 try
                 {
                     var skillType = Type.GetType(_skillDefinition.Assembly);
-                    _activatedSkill = (IBot)Activator.CreateInstance(skillType, _skillConfiguration, conversationState, userState, _telemetryClient, null, true);
+                    _activatedSkill = (IBot)Activator.CreateInstance(skillType, _skillConfiguration, _endpointService, conversationState, userState, _proactiveState, _telemetryClient, null, true);
                 }
                 catch (Exception e)
                 {
@@ -276,9 +279,39 @@ namespace Microsoft.Bot.Solutions.Skills
         {
             return async (turnContext, token) =>
             {
+                EnsureActivities(activities);
+
                 // Send back the activities in the proactive context
                 await turnContext.SendActivitiesAsync(activities, token);
             };
+        }
+
+        /// <summary>
+        /// Ensure the activity objects are correctly set for proactive messages
+        /// There is known issues about not being able to send these messages back
+        /// correctly if the properties are not set in a certain way.
+        /// </summary>
+        /// <param name="activities">activities that's being send out.</param>
+        private void EnsureActivities(Activity[] activities)
+        {
+            if (activities != null && activities.Length > 0)
+            {
+                foreach (var activity in activities)
+                {
+                    if (activity.From != null)
+                    {
+                        activity.From.Name = "User";
+                        activity.From.Properties["role"] = "user";
+                    }
+
+                    if (activity.Recipient != null)
+                    {
+                        activity.Recipient.Id = "1";
+                        activity.Recipient.Name = "Bot";
+                        activity.Recipient.Properties["role"] = "bot";
+                    }
+                }
+            }
         }
 
         private class Events

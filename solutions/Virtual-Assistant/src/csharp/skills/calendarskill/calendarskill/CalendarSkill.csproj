@@ -85,6 +85,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>TimeRemainResponses.tt</DependentUpon>
     </Compile>
+    <Compile Update="Dialogs\UpcomingEvent\Resources\UpcomingEventResponses.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UpcomingEventResponses.tt</DependentUpon>
+    </Compile>
     <Compile Update="Dialogs\UpdateEvent\Resources\UpdateEventResponses.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -137,6 +142,10 @@
     <None Update="Dialogs\TimeRemain\Resources\TimeRemainResponses.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>TimeRemainResponses.cs</LastGenOutput>
+    </None>
+    <None Update="Dialogs\UpcomingEvent\Resources\UpcomingEventResponses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UpcomingEventResponses.cs</LastGenOutput>
     </None>
     <None Update="Dialogs\UpdateEvent\Resources\UpdateEventResponses.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -326,6 +335,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="Dialogs\TimeRemain\Resources\TimeRemainResponses.it.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Dialogs\UpcomingEvent\Resources\UpcomingEventResponses.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="Dialogs\UpdateEvent\Resources\UpdateEventResponses.zh.json">

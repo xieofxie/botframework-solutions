@@ -8,6 +8,8 @@ using CalendarSkill.Dialogs.Main;
 using CalendarSkill.ServiceClients;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Configuration;
+using Microsoft.Bot.Solutions.Models.Proactive;
 using Microsoft.Bot.Solutions.Skills;
 
 namespace CalendarSkill
@@ -18,24 +20,28 @@ namespace CalendarSkill
     public class CalendarSkill : IBot
     {
         private readonly SkillConfigurationBase _services;
+        private readonly EndpointService _endpointService;
         private readonly UserState _userState;
         private readonly ConversationState _conversationState;
+        private readonly ProactiveState _proactiveState;
         private readonly IBotTelemetryClient _telemetryClient;
         private readonly IServiceManager _serviceManager;
         private readonly bool _skillMode;
         private DialogSet _dialogs;
 
-        public CalendarSkill(SkillConfigurationBase services, ConversationState conversationState, UserState userState, IBotTelemetryClient telemetryClient, IServiceManager serviceManager = null, bool skillMode = false)
+        public CalendarSkill(SkillConfigurationBase services, EndpointService endpointService, ConversationState conversationState, UserState userState, ProactiveState proactiveState, IBotTelemetryClient telemetryClient, IServiceManager serviceManager = null, bool skillMode = false)
         {
             _skillMode = skillMode;
             _services = services ?? throw new ArgumentNullException(nameof(services));
+            _endpointService = endpointService ?? throw new ArgumentNullException(nameof(endpointService));
             _userState = userState ?? throw new ArgumentNullException(nameof(userState));
             _conversationState = conversationState ?? throw new ArgumentNullException(nameof(conversationState));
+            _proactiveState = proactiveState ?? throw new ArgumentNullException(nameof(proactiveState));
             _serviceManager = serviceManager ?? new ServiceManager(_services);
             _telemetryClient = telemetryClient ?? throw new ArgumentNullException(nameof(telemetryClient));
 
             _dialogs = new DialogSet(_conversationState.CreateProperty<DialogState>(nameof(DialogState)));
-            _dialogs.Add(new MainDialog(_services, _conversationState, _userState, _telemetryClient, _serviceManager, _skillMode));
+            _dialogs.Add(new MainDialog(_services, _endpointService, _conversationState, _userState, _proactiveState, _telemetryClient, _serviceManager, _skillMode));
         }
 
         /// <summary>
