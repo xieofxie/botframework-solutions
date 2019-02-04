@@ -278,6 +278,20 @@ namespace AutomotiveSkillTest.Flow
         }
 
         [TestMethod]
+        public async Task Test_SettingAndValueSelectionWithOrdinalsLast()
+        {
+            await this.GetTestFlow()
+                .Send("adjust equalizer")
+                .AssertReply(this.CheckReply("Here are the matching settings. Which one? (1) Equalizer (Bass)(2) Equalizer (Midrange)(3) Equalizer (Treble)(4) Equalizer (Surround)"))
+                .Send("the last one")
+                .AssertReply(this.CheckReply("Here are the possible values for Equalizer (Surround). Which one? (1) Decrease(2) Increase"))
+                .Send("the last one")
+                .AssertReply(this.CheckForSettingEvent())
+                .AssertReply(this.CheckReply("Increasing Equalizer (Surround)."))
+                .StartTestAsync();
+        }
+
+        [TestMethod]
         public async Task Test_SettingAndValueSelectionWithIncorrectChoices()
         {
             await this.GetTestFlow()
