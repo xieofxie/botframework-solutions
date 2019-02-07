@@ -11,6 +11,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
 using Microsoft.Bot.Builder.Integration.ApplicationInsights.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Builder.Speech;
 using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
@@ -89,6 +90,9 @@ namespace VirtualAssistant
 
             services.AddSingleton(endpointService);
 
+            // Kona
+            services.AddBotWebSocketHandler();
+
             // Add the bot with options
             services.AddBot<VirtualAssistant>(options =>
             {
@@ -151,7 +155,9 @@ namespace VirtualAssistant
             app.UseBotApplicationInsights()
                 .UseDefaultFiles()
                 .UseStaticFiles()
+                .AllowWebsocketConnectionsToBot()
                 .UseBotFramework();
+
         }
     }
 }
