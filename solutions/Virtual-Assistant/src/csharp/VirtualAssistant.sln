@@ -45,9 +45,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualAssistant.Tests", "t
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HospitalitySkill", "HospitalitySkill", "{21162642-7BF1-4B63-B248-A2E6D21398B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalitySkill", "skills\HospitalitySkill\HospitalitySkill\HospitalitySkill.csproj", "{E19979B7-8338-4C7F-AF77-3A1B59F4BF85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HospitalitySkill", "skills\HospitalitySkill\HospitalitySkill\HospitalitySkill.csproj", "{E19979B7-8338-4C7F-AF77-3A1B59F4BF85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalitySkillTests", "skills\HospitalitySkill\HospitalitySkillTests\HospitalitySkillTests.csproj", "{43BFDF67-0CFF-4B1B-87AF-AF16E6D0A042}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HospitalitySkillTests", "skills\HospitalitySkill\HospitalitySkillTests\HospitalitySkillTests.csproj", "{43BFDF67-0CFF-4B1B-87AF-AF16E6D0A042}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestSkill", "TestSkill", "{F96D07CC-1E10-431D-BCE7-710B20E88034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSkill", "skills\TestSkill\TestSkill\TestSkill.csproj", "{03C89461-25CC-4DAA-AF10-BFF44769BAA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSkillTests", "skills\TestSkill\TestSkillTests\TestSkillTests.csproj", "{19D5D79E-A664-49B7-8064-1CC26482B142}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +121,14 @@ Global
 		{43BFDF67-0CFF-4B1B-87AF-AF16E6D0A042}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43BFDF67-0CFF-4B1B-87AF-AF16E6D0A042}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43BFDF67-0CFF-4B1B-87AF-AF16E6D0A042}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03C89461-25CC-4DAA-AF10-BFF44769BAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03C89461-25CC-4DAA-AF10-BFF44769BAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03C89461-25CC-4DAA-AF10-BFF44769BAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03C89461-25CC-4DAA-AF10-BFF44769BAA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19D5D79E-A664-49B7-8064-1CC26482B142}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19D5D79E-A664-49B7-8064-1CC26482B142}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19D5D79E-A664-49B7-8064-1CC26482B142}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19D5D79E-A664-49B7-8064-1CC26482B142}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,6 +153,9 @@ Global
 		{21162642-7BF1-4B63-B248-A2E6D21398B9} = {35B7FB90-4866-40C9-AD92-CEB5784CF034}
 		{E19979B7-8338-4C7F-AF77-3A1B59F4BF85} = {21162642-7BF1-4B63-B248-A2E6D21398B9}
 		{43BFDF67-0CFF-4B1B-87AF-AF16E6D0A042} = {21162642-7BF1-4B63-B248-A2E6D21398B9}
+		{F96D07CC-1E10-431D-BCE7-710B20E88034} = {35B7FB90-4866-40C9-AD92-CEB5784CF034}
+		{03C89461-25CC-4DAA-AF10-BFF44769BAA8} = {F96D07CC-1E10-431D-BCE7-710B20E88034}
+		{19D5D79E-A664-49B7-8064-1CC26482B142} = {F96D07CC-1E10-431D-BCE7-710B20E88034}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7569C2D0-1323-45B5-8CFF-3ECACD9E0B82}

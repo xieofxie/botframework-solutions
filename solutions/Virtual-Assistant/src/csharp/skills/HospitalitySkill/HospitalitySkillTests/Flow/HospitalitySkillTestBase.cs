@@ -9,7 +9,6 @@ using Microsoft.Bot.Solutions.Testing.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using HospitalitySkillTests.Flow.LuisTestUtils;
 using HospitalitySkill.Dialogs.Main.Resources;
-using HospitalitySkill.Dialogs.Sample.Resources;
 using HospitalitySkill.Dialogs.Shared.Resources;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +54,6 @@ namespace HospitalitySkillTests.Flow
             {
                     new MainResponses(),
                     new SharedResponses(),
-                    new SampleResponses()
             }, Services.LocaleConfigurations.Keys.ToArray());
         }
 

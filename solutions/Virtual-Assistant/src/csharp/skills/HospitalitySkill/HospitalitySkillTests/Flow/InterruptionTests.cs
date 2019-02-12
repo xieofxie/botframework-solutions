@@ -5,7 +5,6 @@ using System;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using HospitalitySkill.Dialogs.Main.Resources;
-using HospitalitySkill.Dialogs.Sample.Resources;
 
 namespace HospitalitySkillTests.Flow
 {

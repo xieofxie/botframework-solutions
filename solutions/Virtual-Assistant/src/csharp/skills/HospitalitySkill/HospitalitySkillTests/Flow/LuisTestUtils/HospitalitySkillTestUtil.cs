@@ -10,7 +10,6 @@ namespace HospitalitySkillTests.Flow.LuisTestUtils
     {
         private static Dictionary<string, IRecognizerConvert> _utterances = new Dictionary<string, IRecognizerConvert>
         {
-            { SampleDialogUtterances.Trigger, CreateIntent(SampleDialogUtterances.Trigger, HospitalitySkillLU.Intent.Sample) },
         };
 
         public static MockLuisRecognizer CreateRecognizer()
