@@ -1,0 +1,176 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Dialogs\CheckIn\CheckInDialogResponses.de.json" />
+    <Content Remove="Dialogs\CheckIn\CheckInDialogResponses.es.json" />
+    <Content Remove="Dialogs\CheckIn\CheckInDialogResponses.fr.json" />
+    <Content Remove="Dialogs\CheckIn\CheckInDialogResponses.it.json" />
+    <Content Remove="Dialogs\CheckIn\CheckInDialogResponses.json" />
+    <Content Remove="Dialogs\CheckIn\CheckInDialogResponses.zh.json" />
+    <Content Remove="Dialogs\CheckOut\CheckOutDialogResponses.de.json" />
+    <Content Remove="Dialogs\CheckOut\CheckOutDialogResponses.es.json" />
+    <Content Remove="Dialogs\CheckOut\CheckOutDialogResponses.fr.json" />
+    <Content Remove="Dialogs\CheckOut\CheckOutDialogResponses.it.json" />
+    <Content Remove="Dialogs\CheckOut\CheckOutDialogResponses.json" />
+    <Content Remove="Dialogs\CheckOut\CheckOutDialogResponses.zh.json" />
+    <Content Remove="Dialogs\OrderFood\OrderFoodDialogResponses.de.json" />
+    <Content Remove="Dialogs\OrderFood\OrderFoodDialogResponses.es.json" />
+    <Content Remove="Dialogs\OrderFood\OrderFoodDialogResponses.fr.json" />
+    <Content Remove="Dialogs\OrderFood\OrderFoodDialogResponses.it.json" />
+    <Content Remove="Dialogs\OrderFood\OrderFoodDialogResponses.json" />
+    <Content Remove="Dialogs\OrderFood\OrderFoodDialogResponses.zh.json" />
+    <Content Remove="Dialogs\RequestServices\RequestServicesDialogResponses.de.json" />
+    <Content Remove="Dialogs\RequestServices\RequestServicesDialogResponses.es.json" />
+    <Content Remove="Dialogs\RequestServices\RequestServicesDialogResponses.fr.json" />
+    <Content Remove="Dialogs\RequestServices\RequestServicesDialogResponses.it.json" />
+    <Content Remove="Dialogs\RequestServices\RequestServicesDialogResponses.json" />
+    <Content Remove="Dialogs\RequestServices\RequestServicesDialogResponses.zh.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.All" />
+    <PackageReference Include="Microsoft.Azure.CognitiveServices.Language" Version="1.0.1-preview" />
+    <PackageReference Include="Microsoft.Bot.Builder" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Builder.AI.Luis" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Builder.AI.QnA" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Builder.ApplicationInsights" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Builder.Azure" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Builder.Dialogs" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Builder.Integration.ApplicationInsights.Core" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Builder.TemplateManager" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Configuration" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Connector" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Bot.Schema" Version="4.2.0" />
+    <PackageReference Include="Microsoft.Recognizers.Text.DataTypes.TimexExpression" Version="1.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Dialogs\CheckIn\CheckInDialogResponses.de.json" />
+    <EmbeddedResource Include="Dialogs\CheckIn\CheckInDialogResponses.es.json" />
+    <EmbeddedResource Include="Dialogs\CheckIn\CheckInDialogResponses.fr.json" />
+    <EmbeddedResource Include="Dialogs\CheckIn\CheckInDialogResponses.it.json" />
+    <EmbeddedResource Include="Dialogs\CheckIn\CheckInDialogResponses.json" />
+    <EmbeddedResource Include="Dialogs\CheckIn\CheckInDialogResponses.zh.json" />
+    <EmbeddedResource Include="Dialogs\CheckOut\CheckOutDialogResponses.de.json" />
+    <EmbeddedResource Include="Dialogs\CheckOut\CheckOutDialogResponses.es.json" />
+    <EmbeddedResource Include="Dialogs\CheckOut\CheckOutDialogResponses.fr.json" />
+    <EmbeddedResource Include="Dialogs\CheckOut\CheckOutDialogResponses.it.json" />
+    <EmbeddedResource Include="Dialogs\CheckOut\CheckOutDialogResponses.json" />
+    <EmbeddedResource Include="Dialogs\CheckOut\CheckOutDialogResponses.zh.json" />
+    <EmbeddedResource Include="Dialogs\Main\Resources\MainResponses.de.json" />
+    <EmbeddedResource Include="Dialogs\Main\Resources\MainResponses.es.json" />
+    <EmbeddedResource Include="Dialogs\Main\Resources\MainResponses.fr.json" />
+    <EmbeddedResource Include="Dialogs\Main\Resources\MainResponses.it.json" />
+    <EmbeddedResource Include="Dialogs\Main\Resources\MainResponses.json" />
+    <EmbeddedResource Include="Dialogs\Main\Resources\MainResponses.zh.json" />
+    <EmbeddedResource Include="Dialogs\OrderFood\OrderFoodDialogResponses.de.json" />
+    <EmbeddedResource Include="Dialogs\OrderFood\OrderFoodDialogResponses.es.json" />
+    <EmbeddedResource Include="Dialogs\OrderFood\OrderFoodDialogResponses.it.json" />
+    <EmbeddedResource Include="Dialogs\OrderFood\OrderFoodDialogResponses.json" />
+    <EmbeddedResource Include="Dialogs\OrderFood\OrderFoodDialogResponses.zh.json" />
+    <EmbeddedResource Include="Dialogs\RequestServices\RequestServicesDialogResponses.de.json" />
+    <EmbeddedResource Include="Dialogs\RequestServices\RequestServicesDialogResponses.es.json" />
+    <EmbeddedResource Include="Dialogs\RequestServices\RequestServicesDialogResponses.fr.json" />
+    <EmbeddedResource Include="Dialogs\RequestServices\RequestServicesDialogResponses.it.json" />
+    <EmbeddedResource Include="Dialogs\RequestServices\RequestServicesDialogResponses.json" />
+    <EmbeddedResource Include="Dialogs\RequestServices\RequestServicesDialogResponses.zh.json" />
+    <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.de.json" />
+    <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.es.json" />
+    <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.fr.json" />
+    <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.it.json" />
+    <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.json" />
+    <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.zh.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Dialogs\OrderFood\OrderFoodDialogResponses.fr.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Microsoft.Bot.Solutions\Microsoft.Bot.Solutions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Dialogs\CheckIn\CheckInDialogResponses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CheckInDialogResponses.cs</LastGenOutput>
+    </None>
+    <None Update="Dialogs\CheckOut\CheckOutDialogResponses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CheckOutDialogResponses.cs</LastGenOutput>
+    </None>
+    <None Update="Dialogs\Main\Resources\MainResponses.tt">
+      <LastGenOutput>MainResponses.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Dialogs\OrderFood\OrderFoodDialogResponses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OrderFoodDialogResponses.cs</LastGenOutput>
+    </None>
+    <None Update="Dialogs\RequestServices\RequestServicesDialogResponses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RequestServicesDialogResponses.cs</LastGenOutput>
+    </None>
+    <None Update="Dialogs\Shared\Resources\SharedResponses.tt">
+      <LastGenOutput>SharedResponses.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Dialogs\CheckIn\CheckInDialogResponses.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CheckInDialogResponses.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\CheckOut\CheckOutDialogResponses.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CheckOutDialogResponses.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\Main\Resources\MainResponses.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MainResponses.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\OrderFood\OrderFoodDialogResponses.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OrderFoodDialogResponses.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\RequestServices\RequestServicesDialogResponses.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RequestServicesDialogResponses.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\Shared\Resources\SharedResponses.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResponses.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="*.bot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="LocaleConfigurations\*.bot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

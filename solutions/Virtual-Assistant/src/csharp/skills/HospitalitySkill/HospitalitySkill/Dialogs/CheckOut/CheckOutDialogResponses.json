@@ -1,0 +1,38 @@
+{
+  "EmailPrompt": {
+    "replies": [
+      {
+        "text": "What email should I send your receipt to?",
+        "speak": "What email should I send your receipt to?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "InvalidEmailPrompt": {
+    "replies": [
+      {
+        "text": "Please try an email address in the format email@domain.com.",
+        "speak": "Please try an email address in the format email@domain.com."
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "HaveEmailMessage": {
+    "replies": [
+      {
+        "text": "Ok, I'll send the receipt to {Email}.",
+        "speak": "Ok, I'll send the receipt to {Email}."
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "CheckOutSuccessful": {
+    "replies": [
+      {
+        "text": "You're all checked out! We look forward to seeing you again.",
+        "speak": "You're all checked out! We look forward to seeing you again."
+      }
+    ],
+    "inputHint": "acceptingInput"
+  }
+}

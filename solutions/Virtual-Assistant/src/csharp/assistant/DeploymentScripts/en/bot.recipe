@@ -32,6 +32,12 @@
       "luPath": "..\\skills\\pointofinterestskill\\pointofinterestskill\\CognitiveModels\\LUIS\\en\\pointofinterest.lu"
     },
     {
+      "type": "luis",
+      "id": "HospitalitySkill",
+      "name": "HospitalitySkill",
+      "luPath": "..\\skills\\HospitalitySkill\\HospitalitySkill\\CognitiveModels\\LUIS\\en\\HospitalitySkill.lu"
+    },
+    {
       "type": "qna",
       "id": "faq",
       "name": "FAQ",

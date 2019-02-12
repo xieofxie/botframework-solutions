@@ -1,0 +1,38 @@
+{
+  "RoomInfoMessage": {
+    "replies": [
+      {
+        "text": "We have you staying in room {RoomNumber}.",
+        "speak": "We have you staying in room {RoomNumber}."
+      }
+    ],
+    "inputHint": "ignoringInput"
+  },
+  "CardNumberPrompt": {
+    "replies": [
+      {
+        "text": "Would you like to use the card we have on file?",
+        "speak": "Would you like to use the card we have on file?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "CheckInSuccessfulMessage": {
+    "replies": [
+      {
+        "text": "Ok, you're all checked in. Enjoy your stay!",
+        "speak": "Ok, you're all checked in. Enjoy your stay!"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "CheckInFailedMessage": {
+    "replies": [
+      {
+        "text": "I've sent your information to the concierge desk to complete your check in with a new card.",
+        "speak": "I've sent your information to the concierge desk to complete your check in with a new card."
+      }
+    ],
+    "inputHint": "acceptingInput"
+  }
+}

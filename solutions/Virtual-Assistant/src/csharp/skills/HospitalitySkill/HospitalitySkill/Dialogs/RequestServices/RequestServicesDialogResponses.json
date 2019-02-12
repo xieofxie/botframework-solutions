@@ -1,0 +1,11 @@
+{
+  "RequestSent": {
+    "replies": [
+      {
+        "text": "Sure, someone will bring more {Item} to your room shortly.",
+        "speak": "Sure, someone will bring more {Item} to your room shortly."
+      }
+    ],
+    "inputHint": "acceptingInput"
+  }
+}

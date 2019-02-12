@@ -61,5 +61,11 @@ $TaskContentPattern:simple
 $KEYWORD:simple
 $ADDRESS:simple
 
+# l_Hospitality
+- [l_Hospitality](../../../../skills/HospitalitySkill/HospitalitySkill/CognitiveModels/LUIS/en/HospitalitySkill.lu#CheckIn)
+- [l_Hospitality](../../../../skills/HospitalitySkill/HospitalitySkill/CognitiveModels/LUIS/en/HospitalitySkill.lu#CheckOut)
+- [l_Hospitality](../../../../skills/HospitalitySkill/HospitalitySkill/CognitiveModels/LUIS/en/HospitalitySkill.lu#OrderFood)
+- [l_Hospitality](../../../../skills/HospitalitySkill/HospitalitySkill/CognitiveModels/LUIS/en/HospitalitySkill.lu#RequestServices)
+
 # q_FAQ
 - [q_FAQ](../../QnA/en/faq.lu#?)

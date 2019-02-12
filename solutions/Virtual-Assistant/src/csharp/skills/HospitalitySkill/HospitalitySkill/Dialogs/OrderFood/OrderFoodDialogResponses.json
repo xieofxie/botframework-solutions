@@ -1,0 +1,38 @@
+{
+  "ShowFoodOptionsMessage": {
+    "replies": [
+      {
+        "text": "I can help you place a food order. Here are some popular options, or I can show you our full menu.",
+        "speak": "I can help you place a food order. Here are some popular options, or I can show you our full menu."
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "PromptForOrder": {
+    "replies": [
+      {
+        "text": "What would you like?",
+        "speak": "What would you like?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "PromptForTime": {
+    "replies": [
+      {
+        "text": "What time do you want it delivered? Let me know a specific time, or type **ASAP** to get your food as soon as it's ready.",
+        "speak": "What time do you want it delivered? Let me know a specific time, or type **ASAP** to get your food as soon as it's ready."
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "OrderPlacedMessage": {
+    "replies": [
+      {
+        "text": "Your order of {Order} will be delivered to your door by {Time}.",
+        "speak": "Your order of {Order} will be delivered to your door by {Time}."
+      }
+    ],
+    "inputHint": "expectingInput"
+  }
+}
