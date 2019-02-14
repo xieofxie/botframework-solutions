@@ -183,7 +183,7 @@ namespace PointOfInterestSkill.Dialogs.Main
                     {
                         if (dc.Context.Activity.Value is Dictionary<string, object> userData)
                         {
-                            if (userData.TryGetValue("IPA.Location", out var location))
+                            if (userData.TryGetValue(Events.Location, out var location))
                             {
                                 var coords = ((string)location).Split(',');
                                 if (coords.Length == 2)
@@ -196,6 +196,63 @@ namespace PointOfInterestSkill.Dialogs.Main
                                             Longitude = lng,
                                         };
                                         state.CurrentCoordinates = coordinates;
+                                    }
+                                }
+                            }
+
+                            if (userData.TryGetValue(Events.Destination, out var destination))
+                            {
+                                var coords = ((string)destination).Split(',');
+                                if (coords.Length == 2)
+                                {
+                                    if (double.TryParse(coords[0], out var lat) && double.TryParse(coords[1], out var lng))
+                                    {
+                                        var coordinates = new LatLng
+                                        {
+                                            Latitude = lat,
+                                            Longitude = lng,
+                                        };
+
+                                        if (state.Destination == null)
+                                        {
+                                            state.Destination = new PointOfInterestModel();
+                                        }
+
+                                        state.Destination.Geolocation = coordinates;
+                                    }
+                                }
+                            }
+
+                            if (userData.TryGetValue(Events.Home, out var home))
+                            {
+                                var coords = ((string)home).Split(',');
+                                if (coords.Length == 2)
+                                {
+                                    if (double.TryParse(coords[0], out var lat) && double.TryParse(coords[1], out var lng))
+                                    {
+                                        var coordinates = new LatLng
+                                        {
+                                            Latitude = lat,
+                                            Longitude = lng,
+                                        };
+                                        state.Home = coordinates;
+                                    }
+                                }
+                            }
+
+                            if (userData.TryGetValue(Events.Office, out var office))
+                            {
+                                var coords = ((string)office).Split(',');
+                                if (coords.Length == 2)
+                                {
+                                    if (double.TryParse(coords[0], out var lat) && double.TryParse(coords[1], out var lng))
+                                    {
+                                        var coordinates = new LatLng
+                                        {
+                                            Latitude = lat,
+                                            Longitude = lng,
+                                        };
+                                        state.Office = coordinates;
                                     }
                                 }
                             }
@@ -230,6 +287,90 @@ namespace PointOfInterestSkill.Dialogs.Main
                         break;
                     }
 
+                case Events.Destination:
+                    {
+                        // Test trigger with
+                        // /event:{ "Name": "IPA.Destination", "Value": "34.05222222222222,-118.2427777777777" }
+                        var value = dc.Context.Activity.Value.ToString();
+
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            var coords = value.Split(',');
+                            if (coords.Length == 2)
+                            {
+                                if (double.TryParse(coords[0], out var lat) && double.TryParse(coords[1], out var lng))
+                                {
+                                    var coordinates = new LatLng
+                                    {
+                                        Latitude = lat,
+                                        Longitude = lng,
+                                    };
+
+                                    if (state.Destination == null)
+                                    {
+                                        state.Destination = new PointOfInterestModel();
+                                    }
+
+                                    state.Destination.Geolocation = coordinates;
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+
+                case Events.Home:
+                    {
+                        // Test trigger with
+                        // /event:{ "Name": "IPA.Home", "Value": "34.05222222222222,-118.2427777777777" }
+                        var value = dc.Context.Activity.Value.ToString();
+
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            var coords = value.Split(',');
+                            if (coords.Length == 2)
+                            {
+                                if (double.TryParse(coords[0], out var lat) && double.TryParse(coords[1], out var lng))
+                                {
+                                    var coordinates = new LatLng
+                                    {
+                                        Latitude = lat,
+                                        Longitude = lng,
+                                    };
+                                    state.Home = coordinates;
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+
+                case Events.Office:
+                    {
+                        // Test trigger with
+                        // /event:{ "Name": "IPA.Office", "Value": "34.05222222222222,-118.2427777777777" }
+                        var value = dc.Context.Activity.Value.ToString();
+
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            var coords = value.Split(',');
+                            if (coords.Length == 2)
+                            {
+                                if (double.TryParse(coords[0], out var lat) && double.TryParse(coords[1], out var lng))
+                                {
+                                    var coordinates = new LatLng
+                                    {
+                                        Latitude = lat,
+                                        Longitude = lng,
+                                    };
+                                    state.Office = coordinates;
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+
                 case Events.ActiveLocation:
                     {
                         // Test trigger with...
@@ -239,7 +380,7 @@ namespace PointOfInterestSkill.Dialogs.Main
                         var activeLocation = state.LastFoundPointOfInterests?.FirstOrDefault(x => x.Name.Contains(activeLocationName, StringComparison.InvariantCultureIgnoreCase));
                         if (activeLocation != null)
                         {
-                            state.ActiveLocation = activeLocation;
+                            state.Destination = activeLocation;
                             state.LastFoundPointOfInterests = null;
                         }
 
@@ -383,6 +524,9 @@ namespace PointOfInterestSkill.Dialogs.Main
             public const string ActiveLocation = "IPA.ActiveLocation";
             public const string ActiveRoute = "IPA.ActiveRoute";
             public const string Location = "IPA.Location";
+            public const string Destination = "IPA.Destination";
+            public const string Home = "IPA.Home";
+            public const string Office = "IPA.Office";
             public const string SkillBeginEvent = "skillBegin";
         }
     }

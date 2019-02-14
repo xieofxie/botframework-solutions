@@ -30,12 +30,12 @@ namespace PointOfInterestSkill.Dialogs.Route
             {
                 CheckIfActiveRouteExists,
                 CheckIfFoundLocationExists,
-                CheckIfActiveLocationExists,
+                CheckIfDestinationExists,
             };
 
             var findRouteToActiveLocation = new WaterfallStep[]
             {
-                GetRoutesToActiveLocation,
+                GetRoutesToDestination,
                 ResponseToStartRoutePrompt,
             };
 
@@ -92,33 +92,33 @@ namespace PointOfInterestSkill.Dialogs.Route
 
                 if (!string.IsNullOrEmpty(state.Keyword))
                 {
-                    // Set ActiveLocation if one w/ matching name is found in FoundLocations
-                    var activeLocation = state.LastFoundPointOfInterests?.FirstOrDefault(x => x.Name.Contains(state.Keyword, StringComparison.InvariantCultureIgnoreCase));
-                    if (activeLocation != null)
+                    // Set Destionation if one w/ matching name is found in FoundLocations
+                    var destination = state.LastFoundPointOfInterests?.FirstOrDefault(x => x.Name.Contains(state.Keyword, StringComparison.InvariantCultureIgnoreCase));
+                    if (destination != null)
                     {
-                        state.ActiveLocation = activeLocation;
+                        state.Destination = destination;
                         state.LastFoundPointOfInterests = null;
                     }
                 }
 
                 if (!string.IsNullOrEmpty(state.Address) && state.LastFoundPointOfInterests != null)
                 {
-                    // Set ActiveLocation if one w/ matching address is found in FoundLocations
-                    var activeLocation = state.LastFoundPointOfInterests?.FirstOrDefault(x => x.City.Contains(state.Address, StringComparison.InvariantCultureIgnoreCase));
-                    if (activeLocation != null)
+                    // Set Destionation if one w/ matching address is found in FoundLocations
+                    var destination = state.LastFoundPointOfInterests?.FirstOrDefault(x => x.City.Contains(state.Address, StringComparison.InvariantCultureIgnoreCase));
+                    if (destination != null)
                     {
-                        state.ActiveLocation = activeLocation;
+                        state.Destination = destination;
                         state.LastFoundPointOfInterests = null;
                     }
                 }
 
                 if (state.UserSelectIndex >= 0 && state.UserSelectIndex < state.LastFoundPointOfInterests.Count)
                 {
-                    // Set ActiveLocation if one w/ matching address is found in FoundLocations
-                    var activeLocation = state.LastFoundPointOfInterests?[state.UserSelectIndex];
-                    if (activeLocation != null)
+                    // Set Destionation if one w/ matching address is found in FoundLocations
+                    var destination = state.LastFoundPointOfInterests?[state.UserSelectIndex];
+                    if (destination != null)
                     {
-                        state.ActiveLocation = activeLocation;
+                        state.Destination = destination;
                         state.LastFoundPointOfInterests = null;
                     }
                 }
@@ -132,12 +132,26 @@ namespace PointOfInterestSkill.Dialogs.Route
             }
         }
 
-        public async Task<DialogTurnResult> CheckIfActiveLocationExists(WaterfallStepContext sc, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<DialogTurnResult> CheckIfDestinationExists(WaterfallStepContext sc, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
                 var state = await Accessor.GetAsync(sc.Context);
-                if (state.ActiveLocation == null)
+
+                // Determine if the skill needs to know of a "destination"
+                if (!string.IsNullOrEmpty(state.CommonLocation) && string.IsNullOrEmpty(state.Keyword))
+                {
+                    var destination = state.GetCommonLocationCoordinates(state.CommonLocation);
+                    if (state.Destination == null)
+                    {
+                        state.Destination = new PointOfInterestModel();
+                    }
+
+                    state.Destination.Name = state.CommonLocation;
+                    state.Destination.Geolocation = destination;
+                }
+
+                if (state.Destination == null || (state.Destination != null && state.CommonLocation.Equals("destination") && !string.IsNullOrEmpty(state.Keyword)))
                 {
                     await sc.EndDialogAsync(true);
                     return await sc.BeginDialogAsync(Action.FindPointOfInterest);
@@ -152,7 +166,7 @@ namespace PointOfInterestSkill.Dialogs.Route
             }
         }
 
-        public async Task<DialogTurnResult> GetRoutesToActiveLocation(WaterfallStepContext sc, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<DialogTurnResult> GetRoutesToDestination(WaterfallStepContext sc, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
@@ -160,26 +174,15 @@ namespace PointOfInterestSkill.Dialogs.Route
                 var service = ServiceManager.InitRoutingMapsService(Services);
                 var routeDirections = new RouteDirections();
 
-                state.CheckForValidCurrentCoordinates();
-
-                if (state.ActiveLocation == null)
+                if (state.Destination == null)
                 {
                     // No ActiveLocation found
                     return await sc.PromptAsync(Action.Prompt, new PromptOptions { Prompt = sc.Context.Activity.CreateReply(RouteResponses.MissingActiveLocationErrorMessage, ResponseBuilder) });
                 }
 
-                if (!string.IsNullOrEmpty(state.RouteType))
-                {
-                    routeDirections = await service.GetRouteDirectionsToDestinationAsync(state.CurrentCoordinates.Latitude, state.CurrentCoordinates.Longitude, state.ActiveLocation.Geolocation.Latitude, state.ActiveLocation.Geolocation.Longitude, state.RouteType);
+                routeDirections = await service.GetRouteDirectionsToDestinationAsync(state.CurrentCoordinates.Latitude, state.CurrentCoordinates.Longitude, state.Destination.Geolocation.Latitude, state.Destination.Geolocation.Longitude, state.RouteType);
 
-                    await GetRouteDirectionsViewCards(sc, routeDirections);
-                }
-                else
-                {
-                    routeDirections = await service.GetRouteDirectionsToDestinationAsync(state.CurrentCoordinates.Latitude, state.CurrentCoordinates.Longitude, state.ActiveLocation.Geolocation.Latitude, state.ActiveLocation.Geolocation.Longitude);
-
-                    await GetRouteDirectionsViewCards(sc, routeDirections);
-                }
+                await GetRouteDirectionsViewCards(sc, routeDirections);
 
                 if (routeDirections?.Routes?.ToList().Count == 1)
                 {
@@ -221,7 +224,7 @@ namespace PointOfInterestSkill.Dialogs.Route
                     replyEvent.Name = "ActiveRoute.Directions";
 
                     DirectionsEventResponse eventPayload = new DirectionsEventResponse();
-                    eventPayload.Destination = state.ActiveLocation;
+                    eventPayload.Destination = state.Destination;
                     eventPayload.Route = state.ActiveRoute;
                     replyEvent.Value = eventPayload;
 
