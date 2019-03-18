@@ -11,6 +11,11 @@ namespace Microsoft.Bot.Builder.Solutions.Skills
         {
         }
 
+        public enum SkillTypes { InProc, Remote };
+
+        [JsonProperty("skillType")]
+        public SkillTypes SkillType { get; set; }
+
         [JsonProperty("dispatchIntent")]
         public string DispatchIntent { get; set; }
 

@@ -12,10 +12,14 @@ using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Schema;
 using Microsoft.Bot.Builder.Solutions.Authentication;
 using Microsoft.Bot.Builder.Solutions.Middleware;
+using Microsoft.Bot.Builder.Solutions.Middleware;
 using Microsoft.Bot.Builder.Solutions.Proactive;
 using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Builder.Solutions.TaskExtensions;
 using Microsoft.Bot.Builder.Solutions.Telemetry;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Microsoft.Bot.Builder.Solutions.Skills
 {
@@ -33,6 +37,7 @@ namespace Microsoft.Bot.Builder.Solutions.Skills
         private IBot _activatedSkill;
         private bool _skillInitialized;
         private bool _useCachedTokens;
+        private HttpClient _httpClient = new HttpClient();
 
         public SkillDialog(SkillDefinition skillDefinition, SkillConfigurationBase skillConfiguration, ProactiveState proactiveState, EndpointService endpointService, IBotTelemetryClient telemetryClient, IBackgroundTaskQueue backgroundTaskQueue, bool useCachedTokens = true)
             : base(skillDefinition.Id)
@@ -44,6 +49,8 @@ namespace Microsoft.Bot.Builder.Solutions.Skills
             _telemetryClient = telemetryClient;
             _backgroundTaskQueue = backgroundTaskQueue;
             _useCachedTokens = useCachedTokens;
+
+            skillDefinition.SkillType = SkillDefinition.SkillTypes.Remote;
 
             var supportedLanguages = skillConfiguration.LocaleConfigurations.Keys.ToArray();
             _responseManager = new ResponseManager(supportedLanguages, new SkillResponses());
@@ -120,68 +127,76 @@ namespace Microsoft.Bot.Builder.Solutions.Skills
             {
                 IStorage storage;
 
-                if (_skillConfiguration.CosmosDbOptions != null)
+                if (_skillDefinition.SkillType == SkillDefinition.SkillTypes.InProc)
                 {
-                    var cosmosDbOptions = _skillConfiguration.CosmosDbOptions;
-                    cosmosDbOptions.CollectionId = _skillDefinition.Name;
-                    storage = new CosmosDbStorage(cosmosDbOptions);
-                }
-                else
-                {
-                    storage = new MemoryStorage();
-                }
-
-                // Initialize skill state
-                var userState = new UserState(storage);
-                var conversationState = new ConversationState(storage);
-
-                // Create skill instance
-                try
-                {
-                    var skillType = Type.GetType(_skillDefinition.Assembly);
-
-                    // Have to use refined BindingFlags to allow for optional parameters on constructors.
-                    _activatedSkill = (IBot)Activator.CreateInstance(
-                        skillType,
-                        BindingFlags.CreateInstance | BindingFlags.Public | BindingFlags.Instance | BindingFlags.OptionalParamBinding,
-                        default(Binder),
-                        new object[] { _skillConfiguration, _endpointService, conversationState, userState, _proactiveState, _telemetryClient, _backgroundTaskQueue, true },
-                        CultureInfo.CurrentCulture);
-                }
-                catch (Exception e)
-                {
-                    var message = $"Skill ({_skillDefinition.Name}) could not be created.";
-                    throw new InvalidOperationException(message, e);
-                }
-
-                _inProcAdapter = new InProcAdapter
-                {
-                    // set up skill turn error handling
-                    OnTurnError = async (context, exception) =>
+                    if (_skillConfiguration.CosmosDbOptions != null)
                     {
-                        await context.SendActivityAsync(_responseManager.GetResponse(SkillResponses.ErrorMessageSkillError));
+                        var cosmosDbOptions = _skillConfiguration.CosmosDbOptions;
+                        cosmosDbOptions.CollectionId = _skillDefinition.Name;
+                        storage = new CosmosDbStorage(cosmosDbOptions);
+                    }
+                    else
+                    {
+                        storage = new MemoryStorage();
+                    }
 
-                        await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"Skill Error: {exception.Message} | {exception.StackTrace}"));
+                    // Initialize skill state
+                    var userState = new UserState(storage);
+                    var conversationState = new ConversationState(storage);
+
+                    // Create skill instance
+                    try
+                    {
+                        var skillType = Type.GetType(_skillDefinition.Assembly);
+
+                        // Have to use refined BindingFlags to allow for optional parameters on constructors.
+                        _activatedSkill = (IBot)Activator.CreateInstance(
+                            skillType,
+                            BindingFlags.CreateInstance | BindingFlags.Public | BindingFlags.Instance | BindingFlags.OptionalParamBinding,
+                            default(Binder),
+                            new object[] { _skillConfiguration, _endpointService, conversationState, userState, _proactiveState, _telemetryClient, _backgroundTaskQueue, true },
+                            CultureInfo.CurrentCulture);
+                    }
+                    catch (Exception e)
+                    {
+                        var message = $"Skill ({_skillDefinition.Name}) could not be created.";
+                        throw new InvalidOperationException(message, e);
+                    }
+
+                    _inProcAdapter = new InProcAdapter
+                    {
+                        // set up skill turn error handling
+                        OnTurnError = async (context, exception) =>
+                        {
+                            await context.SendActivityAsync(_responseManager.GetResponse(SkillResponses.ErrorMessageSkillError));
+
+                            await dc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"Skill Error: {exception.Message} | {exception.StackTrace}"));
 
                         // Log exception in AppInsights
                         _telemetryClient.TrackExceptionEx(exception, context.Activity);
-                    },
-                    BackgroundTaskQueue = _backgroundTaskQueue
-                };
+                        },
+                        BackgroundTaskQueue = _backgroundTaskQueue
+                    };
 
-                _inProcAdapter.Use(new EventDebuggerMiddleware());
+                    _inProcAdapter.Use(new EventDebuggerMiddleware());
 
-                // change this to use default locale from appsettings when we have dependency injection
-                var locale = "en-us";
-                if (!string.IsNullOrWhiteSpace(dc.Context.Activity.Locale))
-                {
-                    locale = dc.Context.Activity.Locale;
+                    // change this to use default locale from appsettings when we have dependency injection
+                    var locale = "en-us";
+                    if (!string.IsNullOrWhiteSpace(dc.Context.Activity.Locale))
+                    {
+                        locale = dc.Context.Activity.Locale;
+                    }
+
+                    _inProcAdapter.Use(new SetLocaleMiddleware(locale));
+
+                    _inProcAdapter.Use(new AutoSaveStateMiddleware(userState, conversationState));
+                    _skillInitialized = true;
                 }
-
-                _inProcAdapter.Use(new SetLocaleMiddleware(locale));
-
-                _inProcAdapter.Use(new AutoSaveStateMiddleware(userState, conversationState));
-                _skillInitialized = true;
+                else
+                {
+                    _httpClient = new HttpClient();
+                    _skillInitialized = true;
+                }
             }
             catch
             {
@@ -201,73 +216,96 @@ namespace Microsoft.Bot.Builder.Solutions.Skills
                     await InitializeSkill(innerDc);
                 }
 
-                _inProcAdapter.ProcessActivity(activity, async (skillContext, ct) =>
-                {
-                    await _activatedSkill.OnTurnAsync(skillContext);
-                }, async (activities) =>
-                {
-                    foreach (var response in activities)
-                    {
-                        await innerDc.Context.Adapter.ContinueConversationAsync(_endpointService.AppId, response.GetConversationReference(), CreateCallback(response), default(CancellationToken));
-                    }
-                }).Wait();
-
                 var queue = new List<Activity>();
-                var endOfConversation = false;
-                var skillResponse = _inProcAdapter.GetNextReply();
 
-                while (skillResponse != null)
+                if (_skillDefinition.SkillType == SkillDefinition.SkillTypes.Remote)
                 {
-                    if (skillResponse.Type == ActivityTypes.EndOfConversation)
+                    var response = await _httpClient.PostAsJsonAsync<Activity>(_skillDefinition.Assembly, activity);
+
+                    if (response.IsSuccessStatusCode)
                     {
-                        endOfConversation = true;
+                        queue = await response.Content.ReadAsAsync<List<Activity>>();
                     }
-                    else if (skillResponse?.Name == Events.TokenRequestEventName)
+                }
+                else
+                {
+                    _inProcAdapter.ProcessActivity(activity, async (skillContext, ct) =>
                     {
-                        // Send trace to emulator
-                        await innerDc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"<--Received a Token Request from a skill"));
-
-                        if (!_useCachedTokens)
+                        await _activatedSkill.OnTurnAsync(skillContext);
+                    }, 
+                    async (activities) =>
+                    {
+                        foreach (var response in activities)
                         {
-                            var adapter = innerDc.Context.Adapter as BotFrameworkAdapter;
-                            var tokens = await adapter.GetTokenStatusAsync(innerDc.Context, innerDc.Context.Activity.From.Id);
+                            await innerDc.Context.Adapter.ContinueConversationAsync(_endpointService.AppId, response.GetConversationReference(), CreateCallback(response), default(CancellationToken));
+                        }
+                    }).Wait();
 
-                            foreach (var token in tokens)
+
+                    queue = _inProcAdapter.GetReplies();
+                }
+
+                var endOfConversation = false;
+
+                if (_skillDefinition.SkillType != SkillDefinition.SkillTypes.Remote)
+                {
+
+ 
+                    var skillResponse = _inProcAdapter.GetNextReply();
+
+                    while (skillResponse != null)
+                    {
+                        if (skillResponse.Type == ActivityTypes.EndOfConversation)
+                        {
+                            endOfConversation = true;
+                        }
+                        else if (skillResponse?.Name == Events.TokenRequestEventName)
+                        {
+                            // Send trace to emulator
+                            await innerDc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"<--Received a Token Request from a skill"));
+
+                            if (!_useCachedTokens)
                             {
-                                await adapter.SignOutUserAsync(innerDc.Context, token.ConnectionName, innerDc.Context.Activity.From.Id, default(CancellationToken));
+                                var adapter = innerDc.Context.Adapter as BotFrameworkAdapter;
+                                var tokens = await adapter.GetTokenStatusAsync(innerDc.Context, innerDc.Context.Activity.From.Id);
+
+                                foreach (var token in tokens)
+                                {
+                                    await adapter.SignOutUserAsync(innerDc.Context, token.ConnectionName, innerDc.Context.Activity.From.Id, default(CancellationToken));
+                                }
+                            }
+
+                            var authResult = await innerDc.BeginDialogAsync(nameof(MultiProviderAuthDialog));
+
+                            if (authResult.Result?.GetType() == typeof(ProviderTokenResponse))
+                            {
+                                var tokenEvent = skillResponse.CreateReply();
+                                tokenEvent.Type = ActivityTypes.Event;
+                                tokenEvent.Name = Events.TokenResponseEventName;
+                                tokenEvent.Value = authResult.Result as ProviderTokenResponse;
+
+                                return await ForwardToSkill(innerDc, tokenEvent);
+                            }
+                            else
+                            {
+                                return authResult;
+                            }
+                        }
+                        else
+                        {
+                            if (skillResponse.Type == ActivityTypes.Trace)
+                            {
+                                // Write out any trace messages from the skill to the emulator
+                                await innerDc.Context.SendActivityAsync(skillResponse);
+                            }
+                            else
+                            {
+                                queue.Add(skillResponse);
                             }
                         }
 
-                        var authResult = await innerDc.BeginDialogAsync(nameof(MultiProviderAuthDialog));
-
-                        if (authResult.Result?.GetType() == typeof(ProviderTokenResponse))
-                        {
-                            var tokenEvent = skillResponse.CreateReply();
-                            tokenEvent.Type = ActivityTypes.Event;
-                            tokenEvent.Name = Events.TokenResponseEventName;
-                            tokenEvent.Value = authResult.Result as ProviderTokenResponse;
-
-                            return await ForwardToSkill(innerDc, tokenEvent);
-                        }
-                        else
-                        {
-                            return authResult;
-                        }
+                        skillResponse = _inProcAdapter.GetNextReply();
                     }
-                    else
-                    {
-                        if (skillResponse.Type == ActivityTypes.Trace)
-                        {
-                            // Write out any trace messages from the skill to the emulator
-                            await innerDc.Context.SendActivityAsync(skillResponse);
-                        }
-                        else
-                        {
-                            queue.Add(skillResponse);
-                        }
-                    }
-
-                    skillResponse = _inProcAdapter.GetNextReply();
                 }
 
                 // send skill queue to User

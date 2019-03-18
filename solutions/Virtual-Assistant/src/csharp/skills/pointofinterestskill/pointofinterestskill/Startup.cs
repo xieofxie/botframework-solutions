@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Azure;
+using Microsoft.Bot.Builder.Integration;
 using Microsoft.Bot.Builder.Integration.ApplicationInsights.Core;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Solutions.Middleware;
@@ -44,7 +45,10 @@ namespace PointOfInterestSkill
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
-            Configuration = builder.Build();
+            if (env.IsDevelopment()) 
+                builder.AddUserSecrets<Startup>();
+
+                Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -159,6 +163,44 @@ namespace PointOfInterestSkill
 
                 return botFrameworkHttpAdapter;
             });
+
+            // Add the http adapter to enable MVC style bot API
+            services.AddSingleton<IAdapterIntegration>(sp =>
+            {
+                var credentialProvider = new SimpleCredentialProvider(endpointService.AppId, endpointService.AppPassword);
+
+                // Telemetry Middleware (logs activity messages in Application Insights)
+                var telemetryClient = sp.GetService<IBotTelemetryClient>();
+                var botFrameworkHttpAdapter = new RemoteSkillAdapter(credentialProvider)
+                {
+                    OnTurnError = async (context, exception) =>
+                    {
+                        CultureInfo.CurrentUICulture = new CultureInfo(context.Activity.Locale);
+                        await context.SendActivityAsync(responseManager.GetResponse(POISharedResponses.PointOfInterestErrorMessage));
+                        await context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"PointOfInterestSkill Error: {exception.Message} | {exception.StackTrace}"));
+                        telemetryClient.TrackExceptionEx(exception, context.Activity);
+                    }
+                };
+                var appInsightsLogger = new TelemetryLoggerMiddleware(telemetryClient, logPersonalInformation: true);
+                botFrameworkHttpAdapter.Use(appInsightsLogger);
+
+                // Transcript Middleware (saves conversation history in a standard format)
+                var storageService = botConfig.Services.FirstOrDefault(s => s.Type == ServiceTypes.BlobStorage) ?? throw new Exception("Please configure your Azure Storage service in your .bot file.");
+                var blobStorage = storageService as BlobStorageService;
+                var transcriptStore = new AzureBlobTranscriptStore(blobStorage.ConnectionString, blobStorage.Container);
+                var transcriptMiddleware = new TranscriptLoggerMiddleware(transcriptStore);
+                botFrameworkHttpAdapter.Use(transcriptMiddleware);
+
+                // Typing Middleware (automatically shows typing when the bot is responding/working)
+                var typingMiddleware = new ShowTypingMiddleware();
+                botFrameworkHttpAdapter.Use(typingMiddleware);
+
+                botFrameworkHttpAdapter.Use(new EventDebuggerMiddleware());
+                botFrameworkHttpAdapter.Use(new AutoSaveStateMiddleware(userState, conversationState));
+
+                return botFrameworkHttpAdapter;
+            });
+
         }
 
         /// <summary>
