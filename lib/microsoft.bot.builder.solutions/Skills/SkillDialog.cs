@@ -50,8 +50,6 @@ namespace Microsoft.Bot.Builder.Solutions.Skills
             _backgroundTaskQueue = backgroundTaskQueue;
             _useCachedTokens = useCachedTokens;
 
-            skillDefinition.SkillType = SkillDefinition.SkillTypes.Remote;
-
             var supportedLanguages = skillConfiguration.LocaleConfigurations.Keys.ToArray();
             _responseManager = new ResponseManager(supportedLanguages, new SkillResponses());
 
@@ -216,19 +214,22 @@ namespace Microsoft.Bot.Builder.Solutions.Skills
                     await InitializeSkill(innerDc);
                 }
 
-                var queue = new List<Activity>();
+                var skillResponses = new List<Activity>();
+                var filteredSkillResponses = new List<Activity>();
 
+                // For Remote Skill activation we post the Activity to the provided Endpoint URI
                 if (_skillDefinition.SkillType == SkillDefinition.SkillTypes.Remote)
                 {
                     var response = await _httpClient.PostAsJsonAsync<Activity>(_skillDefinition.Assembly, activity);
 
                     if (response.IsSuccessStatusCode)
                     {
-                        queue = await response.Content.ReadAsAsync<List<Activity>>();
+                        skillResponses = await response.Content.ReadAsAsync<List<Activity>>();
                     }
                 }
                 else
                 {
+                    // In-Proc Activation
                     _inProcAdapter.ProcessActivity(activity, async (skillContext, ct) =>
                     {
                         await _activatedSkill.OnTurnAsync(skillContext);
@@ -242,77 +243,72 @@ namespace Microsoft.Bot.Builder.Solutions.Skills
                     }).Wait();
 
 
-                    queue = _inProcAdapter.GetReplies();
+                    skillResponses = _inProcAdapter.GetReplies();
                 }
 
+
                 var endOfConversation = false;
-
-                if (_skillDefinition.SkillType != SkillDefinition.SkillTypes.Remote)
+                foreach (Activity skillResponse in skillResponses)
                 {
-
- 
-                    var skillResponse = _inProcAdapter.GetNextReply();
-
-                    while (skillResponse != null)
+                    // Signal that the SkilLDialog should be unwound once these responses are processed.
+                    if (skillResponse.Type == ActivityTypes.EndOfConversation)
                     {
-                        if (skillResponse.Type == ActivityTypes.EndOfConversation)
+                        endOfConversation = true;
+                    }
+                    else if (skillResponse?.Name == Events.TokenRequestEventName)
+                    {
+                        // A token Request event is handled directly.
+
+                        // Send trace to emulator
+                        await innerDc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"<--Received a Token Request from a skill"));
+
+                        if (!_useCachedTokens)
                         {
-                            endOfConversation = true;
+                            var adapter = innerDc.Context.Adapter as BotFrameworkAdapter;
+                            var tokens = await adapter.GetTokenStatusAsync(innerDc.Context, innerDc.Context.Activity.From.Id);
+
+                            foreach (var token in tokens)
+                            {
+                                await adapter.SignOutUserAsync(innerDc.Context, token.ConnectionName, innerDc.Context.Activity.From.Id, default(CancellationToken));
+                            }
                         }
-                        else if (skillResponse?.Name == Events.TokenRequestEventName)
+
+                        var authResult = await innerDc.BeginDialogAsync(nameof(MultiProviderAuthDialog));
+
+                        if (authResult.Result?.GetType() == typeof(ProviderTokenResponse))
                         {
-                            // Send trace to emulator
-                            await innerDc.Context.SendActivityAsync(new Activity(type: ActivityTypes.Trace, text: $"<--Received a Token Request from a skill"));
+                            var tokenEvent = skillResponse.CreateReply();
+                            tokenEvent.Type = ActivityTypes.Event;
+                            tokenEvent.Name = Events.TokenResponseEventName;
+                            tokenEvent.Value = authResult.Result as ProviderTokenResponse;
 
-                            if (!_useCachedTokens)
-                            {
-                                var adapter = innerDc.Context.Adapter as BotFrameworkAdapter;
-                                var tokens = await adapter.GetTokenStatusAsync(innerDc.Context, innerDc.Context.Activity.From.Id);
-
-                                foreach (var token in tokens)
-                                {
-                                    await adapter.SignOutUserAsync(innerDc.Context, token.ConnectionName, innerDc.Context.Activity.From.Id, default(CancellationToken));
-                                }
-                            }
-
-                            var authResult = await innerDc.BeginDialogAsync(nameof(MultiProviderAuthDialog));
-
-                            if (authResult.Result?.GetType() == typeof(ProviderTokenResponse))
-                            {
-                                var tokenEvent = skillResponse.CreateReply();
-                                tokenEvent.Type = ActivityTypes.Event;
-                                tokenEvent.Name = Events.TokenResponseEventName;
-                                tokenEvent.Value = authResult.Result as ProviderTokenResponse;
-
-                                return await ForwardToSkill(innerDc, tokenEvent);
-                            }
-                            else
-                            {
-                                return authResult;
-                            }
+                            return await ForwardToSkill(innerDc, tokenEvent);
                         }
                         else
                         {
-                            if (skillResponse.Type == ActivityTypes.Trace)
-                            {
-                                // Write out any trace messages from the skill to the emulator
-                                await innerDc.Context.SendActivityAsync(skillResponse);
-                            }
-                            else
-                            {
-                                queue.Add(skillResponse);
-                            }
+                            return authResult;
                         }
-
-                        skillResponse = _inProcAdapter.GetNextReply();
+                    }
+                    else
+                    {
+                        if (skillResponse.Type == ActivityTypes.Trace)
+                        {
+                            // Write out any trace messages from the skill to the emulator
+                            await innerDc.Context.SendActivityAsync(skillResponse);
+                        }
+                        else
+                        {
+                            filteredSkillResponses.Add(skillResponse);
+                        }
                     }
                 }
 
-                // send skill queue to User
-                if (queue.Count > 0)
+
+                // send the filtered list of activities to the user
+                if (filteredSkillResponses.Count > 0)
                 {
                     // if the conversation id from the activity is the same as the context activity, it's reactive message
-                    await innerDc.Context.SendActivitiesAsync(queue.ToArray());
+                    await innerDc.Context.SendActivitiesAsync(filteredSkillResponses.ToArray());
                 }
 
                 // handle ending the skill conversation
