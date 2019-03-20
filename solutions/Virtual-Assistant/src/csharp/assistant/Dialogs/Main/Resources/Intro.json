@@ -1,32 +1,34 @@
 ﻿{
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
-  "version": "1.0",
-  "speak": "Welcome to your Virtual Assistant! Now that you're up and running, let's get started.",
+  "height": "stretch",
   "body": [
     {
-      "type": "Image",
-      "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtB3AwMUeNoq4gUBGe6Ocj8kyh3bXa9ZbV7u1fVKQoyKFHdkqU",
-      "size": "stretch"
+      "type": "Container",
+      "items": [
+        {
+          "type": "Image",
+          "url": "https://vakonadj.azurewebsites.net/images/introduction_header.png",
+          "size": "Stretch"
+        }
+      ]
     },
     {
-      "type": "TextBlock",
-      "spacing": "medium",
-      "size": "default",
-      "weight": "bolder",
-      "text": "Welcome to **your** Virtual Assistant!",
-      "speak": "Welcome to your Virtual Assistant",
-      "wrap": true,
-      "maxLines": 0
-    },
-    {
-      "type": "TextBlock",
-      "size": "default",
-      "isSubtle": true,
-      "text": "Now that you have successfully run your Virtual Assistant, follow the links in this Adaptive Card to explore further.",
-      "speak": "Now that your up and running let's get started.",
-      "wrap": true,
-      "maxLines": 0
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "spacing": "Medium",
+          "weight": "Bolder",
+          "text": "Welcome to **your** Virtual Assistant!",
+          "wrap": true
+        },
+        {
+          "type": "TextBlock",
+          "text": "Now that I'm up and running, explore the links in this [Adaptive Card](https://adaptivecards.io/) to learn what I can do.",
+          "isSubtle": true,
+          "wrap": true
+        }
+      ]
     }
   ],
   "actions": [
@@ -38,12 +40,15 @@
     {
       "type": "Action.OpenUrl",
       "title": "Linked Accounts",
-      "url": "https://aka.ms/linkedaccountsdocs"
+      "url": "https://aka.ms/linkedaccountdocs"
     },
     {
       "type": "Action.OpenUrl",
       "title": "Skills",
       "url": "https://aka.ms/skilldocs"
     }
-  ]
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.0",
+  "speak": "Welcome to your Virtual Assistant! Now that you're up and running, let's get started."
 }

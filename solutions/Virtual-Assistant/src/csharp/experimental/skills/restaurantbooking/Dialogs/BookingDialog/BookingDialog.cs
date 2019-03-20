@@ -94,7 +94,7 @@ namespace RestaurantBooking.Dialogs.BookingDialog
             // This would be passed from the Virtual Assistant moving forward
             var tokens = new StringDictionary
             {
-                { "UserName", "Jane" }
+                { "UserName", "Elaine" }
             };
 
             // Start the flow
@@ -455,7 +455,7 @@ namespace RestaurantBooking.Dialogs.BookingDialog
             }
 
             // Prompt for restaurant
-            var restaurants = SeedReservationSampleData.GetListOfRestaurants(reservation.Category, "London", _urlResolver);
+            var restaurants = SeedReservationSampleData.GetListOfRestaurants(reservation.Category, state.Booking.Location ?? "Redmond", _urlResolver);
             state.Restaurants = restaurants;
 
             var restaurantOptionsForSpeak = new StringBuilder();
@@ -525,14 +525,11 @@ namespace RestaurantBooking.Dialogs.BookingDialog
 
             if (promptContext.Recognized.Succeeded)
             {
-                var restaurants = SeedReservationSampleData.GetListOfRestaurants(state.Booking.Category, "London", _urlResolver);
+                var restaurants = SeedReservationSampleData.GetListOfRestaurants(state.Booking.Category, state.Booking.Location ?? "Redmond", _urlResolver);
                 var restaurant = restaurants.First(r => r.Name == promptContext.Recognized.Value.Value);
                 if (restaurant != null)
                 {
                     state.Booking.BookingPlace = restaurant;
-
-                    var reply = ResponseManager.GetResponse(RestaurantBookingSharedResponses.BookRestaurantBookingPlaceSelectionEcho, new StringDictionary { { "BookingPlaceName", restaurant.Name } });
-                    await promptContext.Context.SendActivityAsync(reply, cancellationToken);
 
                     return true;
                 }
@@ -552,39 +549,45 @@ namespace RestaurantBooking.Dialogs.BookingDialog
             var state = await ConversationStateAccessor.GetAsync(sc.Context);
             var reservation = state.Booking;
 
-            // TODO Process reservation request here.
-            // Simulate the booking process through a delay;
-            await Task.Delay(16000);
+            var reply = ResponseManager.GetResponse(RestaurantBookingSharedResponses.BookRestaurantBookingPlaceSelectionEcho, 
+                new StringDictionary { { "BookingPlaceName", reservation.BookingPlace.Name } });
+            await sc.Context.SendActivityAsync(reply, cancellationToken);
 
-            // Send an update to the user (this would be done asynchronously and through a proactive notification
-            var tokens = new StringDictionary
+            Task.Run( async () => {
+                // TODO Process reservation request here.
+                // Simulate the booking process through a delay;
+                await Task.Delay(16000);
+
+                // Send an update to the user (this would be done asynchronously and through a proactive notification
+                var tokens = new StringDictionary
+                    {
+                        { "Restaurant", reservation.BookingPlace.Name },
+                        { "Location", reservation.BookingPlace.Location },
+                        { "ReservationDate", reservation.ReservationDate?.ToShortDateString() },
+                        { "ReservationDateSpeak", reservation.ReservationDate?.ToSpeakString(true) },
+                        { "ReservationTime", reservation.ReservationTime?.ToShortTimeString() },
+                        { "AttendeeCount", reservation.AttendeeCount.ToString() },
+                    };
+
+                var cardData = new ReservationConfirmationData
                 {
-                    { "Restaurant", reservation.BookingPlace.Name },
-                    { "Location", reservation.BookingPlace.Location },
-                    { "ReservationDate", reservation.ReservationDate?.ToShortDateString() },
-                    { "ReservationDateSpeak", reservation.ReservationDate?.ToSpeakString(true) },
-                    { "ReservationTime", reservation.ReservationTime?.ToShortTimeString() },
-                    { "AttendeeCount", reservation.AttendeeCount.ToString() },
+                    ImageUrl = reservation.BookingPlace.PictureUrl,
+                    ImageSize = AdaptiveImageSize.Stretch,
+                    ImageAlign = AdaptiveHorizontalAlignment.Center,
+                    BookingPlace = reservation.BookingPlace.Name,
+                    Location = reservation.BookingPlace.Location,
+                    ReservationDate = reservation.ReservationDate?.ToShortDateString(),
+                    ReservationTime = reservation.ReservationTime?.ToShortTimeString(),
+                    AttendeeCount = reservation.AttendeeCount.ToString()
                 };
 
-            var cardData = new ReservationConfirmationData
-            {
-                ImageUrl = reservation.BookingPlace.PictureUrl,
-                ImageSize = AdaptiveImageSize.Stretch,
-                ImageAlign = AdaptiveHorizontalAlignment.Center,
-                BookingPlace = reservation.BookingPlace.Name,
-                Location = reservation.BookingPlace.Location,
-                ReservationDate = reservation.ReservationDate?.ToShortDateString(),
-                ReservationTime = reservation.ReservationTime?.ToShortTimeString(),
-                AttendeeCount = reservation.AttendeeCount.ToString()
-            };
+                var replyMessage = ResponseManager.GetCardResponse(
+                           RestaurantBookingSharedResponses.BookRestaurantAcceptedMessage,
+                           new Card("ReservationConfirmationCard", cardData),
+                           tokens);
 
-            var replyMessage = ResponseManager.GetCardResponse(
-                       RestaurantBookingSharedResponses.BookRestaurantAcceptedMessage,
-                       new Card("ReservationConfirmationCard", cardData),
-                       tokens);
-
-            await sc.Context.SendActivityAsync(replyMessage);
+                await sc.Context.SendActivityAsync(replyMessage);
+            }).Wait();
 
             state.Clear();
 

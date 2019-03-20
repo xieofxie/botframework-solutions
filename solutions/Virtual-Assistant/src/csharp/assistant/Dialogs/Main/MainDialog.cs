@@ -12,6 +12,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Solutions.Dialogs;
 using Microsoft.Bot.Builder.Solutions.Proactive;
+using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Builder.Solutions.Skills;
 using Microsoft.Bot.Builder.Solutions.TaskExtensions;
 using Microsoft.Bot.Builder.Solutions.Telemetry;
@@ -194,6 +195,9 @@ namespace VirtualAssistant.Dialogs.Main
                 case Dispatch.Intent.l_Email:
                 case Dispatch.Intent.l_ToDo:
                 case Dispatch.Intent.l_PointOfInterest:
+                case Dispatch.Intent.l_Automotive:
+                case Dispatch.Intent.l_Restaurant:
+                case Dispatch.Intent.l_News:
                     {
                         virtualAssistantState.LastIntent = intent.ToString();
                         var matchedSkill = _skillRouter.IdentifyRegisteredSkill(intent.ToString());
@@ -426,8 +430,23 @@ namespace VirtualAssistant.Dialogs.Main
 
         private async Task StartConversation(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var view = new MainResponses();
-            await view.ReplyWith(dc.Context, MainResponses.ResponseIds.Intro);
+            var introResponse = await _responder.RenderTemplate(dc.Context, "en", MainResponses.ResponseIds.Intro);
+
+            introResponse.SuggestedActions = new SuggestedActions
+            {
+                Actions = new List<CardAction>()
+                {
+                    new CardAction(type: ActionTypes.ImBack, title: MainStrings.CALENDAR_SUGGESTEDACTION, value: MainStrings.CALENDAR_SUGGESTEDACTION),
+                    new CardAction(type: ActionTypes.ImBack, title: MainStrings.EMAIL_SUGGESTEDACTION, value: MainStrings.EMAIL_SUGGESTEDACTION),
+                    new CardAction(type: ActionTypes.ImBack, title: MainStrings.MEETING_SUGGESTEDACTION, value: MainStrings.MEETING_SUGGESTEDACTION),
+                    new CardAction(type: ActionTypes.ImBack, title: MainStrings.POI_SUGGESTEDACTION, value: MainStrings.POI_SUGGESTEDACTION),
+                    new CardAction(type: ActionTypes.ImBack, title: "Book a restaurant", value: "Book a restaurant"),
+                    new CardAction(type: ActionTypes.ImBack, title: "Find news", value: "What's the latest news on Microsoft"),
+                    new CardAction(type: ActionTypes.ImBack, title: "I'm feeling cold", value: "I'm feeling cold")
+                },
+            };
+
+            await dc.Context.SendActivityAsync(introResponse);
         }
 
         private async Task RouteToSkillAsync(DialogContext dc, SkillDialogOptions options)

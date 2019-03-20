@@ -17,6 +17,7 @@ using Microsoft.Bot.Builder.Solutions.Proactive;
 using Microsoft.Bot.Builder.Solutions.Skills;
 using Microsoft.Bot.Builder.Solutions.TaskExtensions;
 using Microsoft.Bot.Builder.Solutions.Telemetry;
+using Microsoft.Bot.Builder.Speech;
 using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
@@ -114,6 +115,8 @@ namespace VirtualAssistant
 
             services.AddSingleton(endpointService);
 
+            services.AddBotWebSocketHandler();
+
             // Add the bot with options
             services.AddBot<VirtualAssistant>(options =>
             {
@@ -163,6 +166,7 @@ namespace VirtualAssistant
             app.UseBotApplicationInsights()
                 .UseDefaultFiles()
                 .UseStaticFiles()
+                .AllowWebsocketConnectionsToBot()
                 .UseBotFramework();
         }
     }
