@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EmailSkill.Dialogs.Shared.Resources.Strings;
 using EmailSkill.Extensions;
 using Microsoft.Bot.Builder.Dialogs;
@@ -11,6 +12,63 @@ namespace EmailSkill.Util
 {
     public class SpeakHelper
     {
+        public const int MaxReadoutNumber = 3;
+
+        public static string ToSpeechRecipientsString_Summary(IEnumerable<Recipient> recipients)
+        {
+            if (recipients == null || recipients.Count() == 0)
+            {
+                throw new Exception("No recipient!");
+            }
+
+            string toRecipient = !string.IsNullOrEmpty(recipients.FirstOrDefault()?.EmailAddress?.Name)
+                                 ? recipients.FirstOrDefault()?.EmailAddress?.Name : EmailCommonStrings.UnknownRecipient;
+
+            for (int i = 1; i < Math.Min(recipients.Count(), MaxReadoutNumber); i++)
+            {
+                if (string.IsNullOrEmpty(recipients.ElementAt(i)?.EmailAddress?.Name))
+                {
+                    toRecipient += string.Format(", {0}", EmailCommonStrings.UnknownRecipient);
+                }
+                else
+                {
+                    toRecipient += string.Format(", {0}", recipients.ElementAt(i)?.EmailAddress?.Name);
+                }
+            }
+
+            if (recipients.Count() > MaxReadoutNumber)
+            {
+                toRecipient += string.Format(CommonStrings.RecipientsSummary, recipients.Count() - MaxReadoutNumber);
+            }
+
+            return toRecipient;
+        }
+
+        public static string ToSpeechRecipientsString(IEnumerable<Recipient> recipients)
+        {
+            if (recipients == null || recipients.Count() == 0)
+            {
+                throw new Exception("No recipient!");
+            }
+
+            string toRecipient = !string.IsNullOrEmpty(recipients.FirstOrDefault()?.EmailAddress?.Name)
+                                 ? recipients.FirstOrDefault()?.EmailAddress?.Name : EmailCommonStrings.UnknownRecipient;
+
+            for (int i = 1; i < recipients.Count(); i++)
+            {
+                if (string.IsNullOrEmpty(recipients.ElementAt(i)?.EmailAddress?.Name))
+                {
+                    toRecipient += string.Format(", {0}", EmailCommonStrings.UnknownRecipient);
+                }
+                else
+                {
+                    toRecipient += string.Format(", {0}", recipients.ElementAt(i)?.EmailAddress?.Name);
+                }
+            }
+
+            return toRecipient;
+        }
+
         public static string ToSpeechEmailListString(List<Message> messages, TimeZoneInfo timeZone, int maxReadSize = 1)
         {
             string speakString = string.Empty;

@@ -1,13 +1,4 @@
 {
-  "RecipientConfirmed": {
-    "replies": [
-      {
-        "text": "Alright, I will send this to {UserName}.",
-        "speak": "Alright, I will send this to {UserName}."
-      }
-    ],
-    "inputHint": "acceptingInput"
-  },
   "NoSubject": {
     "replies": [
       {

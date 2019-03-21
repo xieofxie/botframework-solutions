@@ -214,8 +214,8 @@
   "RecipientConfirmed": {
     "replies": [
       {
-        "text": "Alright, I will send this to {UserName}.",
-        "speak": "Alright, I will send this to {UserName}."
+        "text": "Alright, I will add {UserName}.",
+        "speak": "Alright, I will add {UserName}."
       }
     ],
     "inputHint": "acceptingInput"
@@ -235,6 +235,42 @@
         "text": "Please confirm before sending this email.",
         "speak": "Please confirm before sending this email."
       },
+      {
+        "text": "Please confirm this email.",
+        "speak": "Please confirm this email."
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "ConfirmReadMoreRecipients": {
+    "replies": [
+      {
+        "text": "I'm ready to send the email. Do you want me to read the whole list of recipients?",
+        "speak": "I'm ready to send the email. The Email detail is: {EmailDetails}. Do you want me to read the whole list of recipients?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "ConfirmReadMoreRecipientsFailed": {
+    "replies": [
+      {
+        "text": "Please confirm whether to read out the whole list of recipients.",
+        "speak": "Please confirm whether to read out the whole list of recipients."
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "ReadMoreRecipients": {
+    "replies": [
+      {
+        "text": "The email is to {RecipientDetails}. Can you confirm this email?",
+        "speak": "The email is to {RecipientDetails}. Can you confirm this email?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "ReadMoreRecipientsFailed": {
+    "replies": [
       {
         "text": "Please confirm this email.",
         "speak": "Please confirm this email."

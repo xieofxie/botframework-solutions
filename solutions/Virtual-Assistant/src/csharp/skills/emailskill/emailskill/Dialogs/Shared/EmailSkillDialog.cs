@@ -429,23 +429,29 @@ namespace EmailSkill.Dialogs.Shared
                 }
 
                 var state = await EmailStateAccessor.GetAsync(sc.Context);
-                string nameListString;
+                var nameListString = DisplayHelper.ToDisplayRecipientsString_Summay(state.Recipients);
+                string speechNameListString;
+                string actionType;
 
-                // this means reply confirm
                 if (state.Recipients.FirstOrDefault() == null)
                 {
-                    await GetPreviewSubject(sc, Actions.Reply);
-                    nameListString = await GetPreviewNameListString(sc, Actions.Reply);
+                    // this means reply confirm
+                    actionType = Actions.Reply;
+                    await GetPreviewSubject(sc, actionType);
+                    speechNameListString = DisplayHelper.ToDisplayRecipientsString_Summay(state.Recipients);
                 }
                 else if (state.Subject == null)
                 {
-                    // this mean forward confirm
-                    await GetPreviewSubject(sc, Actions.Forward);
-                    nameListString = await GetPreviewNameListString(sc, Actions.Forward);
+                    // this means forward confirm
+                    actionType = Actions.Forward;
+                    await GetPreviewSubject(sc, actionType);
+                    speechNameListString = SpeakHelper.ToSpeechRecipientsString_Summary(state.Recipients);
                 }
                 else
                 {
-                    nameListString = await GetPreviewNameListString(sc, Actions.Send);
+                    // this means send confirm
+                    actionType = Actions.Send;
+                    speechNameListString = SpeakHelper.ToSpeechRecipientsString_Summary(state.Recipients);
                 }
 
                 var emailCard = new EmailCardData
@@ -455,18 +461,28 @@ namespace EmailSkill.Dialogs.Shared
                     EmailContent = state.Content.Equals(EmailCommonStrings.EmptyContent) ? null : string.Format(EmailCommonStrings.ContentFormat, state.Content),
                 };
 
-                var speech = SpeakHelper.ToSpeechEmailSendDetailString(state.Subject, nameListString, state.Content);
+                var speech = SpeakHelper.ToSpeechEmailSendDetailString(state.Subject, speechNameListString, state.Content);
                 var tokens = new StringDictionary
                 {
                     { "EmailDetails", speech },
                 };
 
+                var response = EmailSharedResponses.ConfirmSend;
+                var retryResponse = EmailSharedResponses.ConfirmSendFailed;
+                //if ((state.Recipients.Count > SpeakHelper.MaxReadoutNumber)
+                //    && (actionType == Actions.Send)
+                //    && (actionType == Actions.Forward))
+                //{
+                //    response = EmailSharedResponses.ConfirmReadMoreRecipients;
+                //    retryResponse = EmailSharedResponses.ConfirmReadMoreRecipientsFailed;
+                //}
+
                 var prompt = ResponseManager.GetCardResponse(
-                    EmailSharedResponses.ConfirmSend,
+                    response,
                     new Card("EmailWithOutButtonCard", emailCard),
                     tokens);
 
-                var retry = ResponseManager.GetResponse(EmailSharedResponses.ConfirmSendFailed);
+                var retry = ResponseManager.GetResponse(retryResponse);
 
                 return await sc.PromptAsync(Actions.TakeFurtherAction, new PromptOptions { Prompt = prompt, RetryPrompt = retry });
             }
@@ -797,27 +813,6 @@ namespace EmailSkill.Dialogs.Shared
             return result;
         }
 
-        protected async Task<string> GetPreviewNameListString(WaterfallStepContext sc, string actionType)
-        {
-            var state = await EmailStateAccessor.GetAsync(sc.Context);
-            var nameListString = string.Empty;
-
-            switch (actionType)
-            {
-                case Actions.Send:
-                    nameListString = DisplayHelper.ToDisplayRecipientsString(state.Recipients);
-                    break;
-                case Actions.Reply:
-                case Actions.Forward:
-                case Actions.Delete:
-                default:
-                    nameListString = DisplayHelper.ToDisplayRecipientsString_Summay(state.Recipients);
-                    break;
-            }
-
-            return nameListString;
-        }
-
         protected async Task<bool> GetPreviewSubject(WaterfallStepContext sc, string actionType)
         {
             try
@@ -835,7 +830,6 @@ namespace EmailSkill.Dialogs.Shared
                     case Actions.Forward:
                         state.Subject = focusedMessage.Subject.ToLower().StartsWith(EmailCommonStrings.Forward) ? focusedMessage.Subject : string.Format(EmailCommonStrings.ForwardReplyFormat, focusedMessage?.Subject);
                         break;
-                    case Actions.Send:
                     default:
                         break;
                 }

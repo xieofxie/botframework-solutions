@@ -73,6 +73,12 @@ namespace EmailSkill.Dialogs.SendEmail
                 AfterGetRecreateInfo,
             };
 
+            //var confirmEmail = new WaterfallStep[]
+            //{
+            //    ConfirmBeforeSending,
+            //    ReadMoreRecipients,
+            //};
+
             // Define the conversation flow using a waterfall model.
             AddDialog(new WaterfallDialog(Actions.Send, sendEmail) { TelemetryClient = telemetryClient });
             AddDialog(new WaterfallDialog(Actions.CollectRecipient, collectRecipients) { TelemetryClient = telemetryClient });
@@ -367,6 +373,30 @@ namespace EmailSkill.Dialogs.SendEmail
                 return new DialogTurnResult(DialogTurnStatus.Cancelled, CommonUtil.DialogTurnResultCancelAllDialogs);
             }
         }
+
+        //public async Task<DialogTurnResult> ReadMoreRecipients(WaterfallStepContext sc, CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    try
+        //    {
+        //        var confirmResult = (bool)sc.Result;
+        //        if (confirmResult)
+        //        {
+        //            var prompt = ResponseManager.GetResponse(EmailSharedResponses.ReadMoreRecipients);
+        //            var retry = ResponseManager.GetResponse(EmailSharedResponses.ReadMoreRecipientsFailed);
+
+        //            return await sc.PromptAsync(Actions.TakeFurtherAction, new PromptOptions { Prompt = prompt, RetryPrompt = retry });
+        //        }
+        //        else
+        //        {
+                    
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await HandleDialogExceptions(sc, ex);
+        //        return new DialogTurnResult(DialogTurnStatus.Cancelled, CommonUtil.DialogTurnResultCancelAllDialogs);
+        //    }
+        //}
 
         public async Task<DialogTurnResult> SendEmail(WaterfallStepContext sc, CancellationToken cancellationToken = default(CancellationToken))
         {

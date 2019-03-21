@@ -27,6 +27,10 @@ namespace EmailSkill.Dialogs.Shared.Resources
         public const string RecipientConfirmed = "RecipientConfirmed";
         public const string ConfirmSend = "ConfirmSend";
         public const string ConfirmSendFailed = "ConfirmSendFailed";
+        public const string ConfirmReadMoreRecipients = "ConfirmReadMoreRecipients";
+        public const string ConfirmReadMoreRecipientsFailed = "ConfirmReadMoreRecipientsFailed";
+        public const string ReadMoreRecipients = "ReadMoreRecipients";
+        public const string ReadMoreRecipientsFailed = "ReadMoreRecipientsFailed";
         public const string EmailNotFound = "EmailNotFound";
         public const string NoFocusMessage = "NoFocusMessage";
         public const string ShowEmailPrompt = "ShowEmailPrompt";
