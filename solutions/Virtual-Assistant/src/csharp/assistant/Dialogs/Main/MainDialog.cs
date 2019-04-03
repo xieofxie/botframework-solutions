@@ -79,6 +79,14 @@ namespace VirtualAssistant.Dialogs.Main
 
         protected override async Task<InterruptionAction> OnInterruptDialogAsync(DialogContext dc, CancellationToken cancellationToken)
         {
+            if (dc.Context.Activity.Locale != null)
+            {
+                if (dc.Context.Activity.Locale.ToLower() == "xx")
+                {
+                    dc.Context.Activity.Locale = "en-us";
+                }
+            }
+
             if (dc.Context.Activity.Type == ActivityTypes.Message)
             {
                 // Adaptive card responses come through with empty text properties
@@ -115,142 +123,153 @@ namespace VirtualAssistant.Dialogs.Main
             var parameters = await _parametersAccessor.GetAsync(dc.Context, () => new Dictionary<string, object>());
             var virtualAssistantState = await _virtualAssistantState.GetAsync(dc.Context, () => new VirtualAssistantState());
 
-            // get current activity locale
-            var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-            var localeConfig = _services.LocaleConfigurations[locale];
-
-            // No dialog is currently on the stack and we haven't responded to the user
-            // Check dispatch result
-            var dispatchResult = await localeConfig.DispatchRecognizer.RecognizeAsync<Dispatch>(dc, CancellationToken.None);
-            var intent = dispatchResult.TopIntent().intent;
-
-            switch (intent)
+            if (!string.IsNullOrEmpty(dc.Context.Activity.Text))
             {
-                case Dispatch.Intent.l_General:
-                    {
-                        // If dispatch result is general luis model
-                        var luisService = localeConfig.LuisServices["general"];
-                        var luisResult = await luisService.RecognizeAsync<General>(dc, CancellationToken.None);
-                        var luisIntent = luisResult?.TopIntent().intent;
+                // get current activity locale
+                var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+                var localeConfig = _services.LocaleConfigurations[locale];
 
-                        // switch on general intents
-                        if (luisResult.TopIntent().score > 0.5)
+                // No dialog is currently on the stack and we haven't responded to the user
+                // Check dispatch result
+                var dispatchResult = await localeConfig.DispatchRecognizer.RecognizeAsync<Dispatch>(dc, CancellationToken.None);
+                var intent = dispatchResult.TopIntent().intent;
+
+                switch (intent)
+                {
+                    case Dispatch.Intent.l_General:
                         {
-                            switch (luisIntent)
+                            // If dispatch result is general luis model
+                            var luisService = localeConfig.LuisServices["general"];
+                            var luisResult = await luisService.RecognizeAsync<General>(dc, CancellationToken.None);
+                            var luisIntent = luisResult?.TopIntent().intent;
+
+                            // switch on general intents
+                            if (luisResult.TopIntent().score > 0.5)
                             {
-                                case General.Intent.Help:
-                                    {
-                                        // send help response
-                                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Help);
-                                        break;
-                                    }
-
-                                case General.Intent.Cancel:
-                                    {
-                                        // if this was triggered, then there is no active dialog
-                                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.NoActiveDialog);
-                                        break;
-                                    }
-
-                                case General.Intent.Escalate:
-                                    {
-                                        // start escalate dialog
-                                        await dc.BeginDialogAsync(nameof(EscalateDialog));
-                                        break;
-                                    }
-
-                                case General.Intent.Logout:
-                                    {
-                                        await LogoutAsync(dc);
-                                        break;
-                                    }
-
-                                case General.Intent.ShowNext:
-                                case General.Intent.ShowPrevious:
-                                    {
-                                        var lastExecutedIntent = virtualAssistantState.LastIntent;
-                                        if (lastExecutedIntent != null)
+                                switch (luisIntent)
+                                {
+                                    case General.Intent.Help:
                                         {
-                                            var matchedSkill = _skillRouter.IdentifyRegisteredSkill(lastExecutedIntent);
-                                            await RouteToSkillAsync(dc, new SkillDialogOptions()
-                                            {
-                                                SkillDefinition = matchedSkill,
-                                                Parameters = parameters,
-                                            });
+                                            // send help response
+                                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Help);
+                                            break;
                                         }
 
-                                        break;
-                                    }
+                                    case General.Intent.Cancel:
+                                        {
+                                            // if this was triggered, then there is no active dialog
+                                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.NoActiveDialog);
+                                            break;
+                                        }
 
-                                case General.Intent.None:
-                                default:
-                                    {
-                                        // No intent was identified, send confused message
-                                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
-                                        break;
-                                    }
+                                    case General.Intent.Escalate:
+                                        {
+                                            // start escalate dialog
+                                            await dc.BeginDialogAsync(nameof(EscalateDialog));
+                                            break;
+                                        }
+
+                                    case General.Intent.Logout:
+                                        {
+                                            await LogoutAsync(dc);
+                                            break;
+                                        }
+
+                                    case General.Intent.ShowNext:
+                                    case General.Intent.ShowPrevious:
+                                        {
+                                            var lastExecutedIntent = virtualAssistantState.LastIntent;
+                                            if (lastExecutedIntent != null)
+                                            {
+                                                var matchedSkill = _skillRouter.IdentifyRegisteredSkill(lastExecutedIntent);
+                                                await RouteToSkillAsync(dc, new SkillDialogOptions()
+                                                {
+                                                    SkillDefinition = matchedSkill,
+                                                    Parameters = parameters,
+                                                });
+                                            }
+
+                                            break;
+                                        }
+
+                                    case General.Intent.None:
+                                    default:
+                                        {
+                                            // No intent was identified, send confused message
+                                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                                            break;
+                                        }
+                                }
                             }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                case Dispatch.Intent.l_Calendar:
-                case Dispatch.Intent.l_Email:
-                case Dispatch.Intent.l_ToDo:
-                case Dispatch.Intent.l_PointOfInterest:
-                    {
-                        virtualAssistantState.LastIntent = intent.ToString();
-                        var matchedSkill = _skillRouter.IdentifyRegisteredSkill(intent.ToString());
-
-                        if (matchedSkill != null)
+                    case Dispatch.Intent.l_Calendar:
+                    case Dispatch.Intent.l_Email:
+                    case Dispatch.Intent.l_ToDo:
+                    case Dispatch.Intent.l_PointOfInterest:
+                    case Dispatch.Intent.l_Automotive:
+                    case Dispatch.Intent.l_Restaurant:
+                    case Dispatch.Intent.l_News:
                         {
-                            await RouteToSkillAsync(dc, new SkillDialogOptions()
+                            virtualAssistantState.LastIntent = intent.ToString();
+                            var matchedSkill = _skillRouter.IdentifyRegisteredSkill(intent.ToString());
+
+                            if (matchedSkill != null)
                             {
-                                SkillDefinition = matchedSkill,
-                                Parameters = parameters,
-                            });
+                                await RouteToSkillAsync(dc, new SkillDialogOptions()
+                                {
+                                    SkillDefinition = matchedSkill,
+                                    Parameters = parameters,
+                                });
+                            }
+                            else
+                            {
+                                // Dispatch indicated a skill but we couldn't map to an available skill.
+                                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.SkillNotFound);
+                            }
+
+                            break;
                         }
-                        else
+
+                    case Dispatch.Intent.q_FAQ:
                         {
-                            // Dispatch indicated a skill but we couldn't map to an available skill.
-                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.SkillNotFound);
+                            var qnaService = localeConfig.QnAServices["faq"];
+                            var answers = await qnaService.GetAnswersAsync(dc.Context);
+                            if (answers != null && answers.Count() > 0)
+                            {
+                                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Qna, answers[0].Answer);
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                case Dispatch.Intent.q_FAQ:
-                    {
-                        var qnaService = localeConfig.QnAServices["faq"];
-                        var answers = await qnaService.GetAnswersAsync(dc.Context);
-                        if (answers != null && answers.Count() > 0)
+                    case Dispatch.Intent.q_Chitchat:
                         {
-                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Qna, answers[0].Answer);
+                            var qnaService = localeConfig.QnAServices["chitchat"];
+                            var answers = await qnaService.GetAnswersAsync(dc.Context);
+                            if (answers != null && answers.Count() > 0)
+                            {
+                                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Qna, answers[0].Answer);
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-
-                case Dispatch.Intent.q_Chitchat:
-                    {
-                        var qnaService = localeConfig.QnAServices["chitchat"];
-                        var answers = await qnaService.GetAnswersAsync(dc.Context);
-                        if (answers != null && answers.Count() > 0)
+                    case Dispatch.Intent.None:
+                    default:
                         {
-                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Qna, answers[0].Answer);
+                            // No intent was identified, send confused message
+                            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                            break;
                         }
-
-                        break;
-                    }
-
-                case Dispatch.Intent.None:
-                default:
-                    {
-                        // No intent was identified, send confused message
-                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
-                        break;
-                    }
+                }
+            }
+            else
+            {
+                // No intent was identified, send confused message
+                await dc.Context.SendActivityAsync("I didn't receive any text in your incoming message?", "I didn't receive any text in your incoming message?", InputHints.AcceptingInput);
             }
         }
 
