@@ -24,16 +24,16 @@
   "NewUserGreetingTitle": {
     "replies": [
       {
-        "text": "Hi, I'm **your** Virtual Assistant",
-        "speak": "Hi, I'm **your** Virtual Assistant!"
+        "text": "Hi, I'm Sara!",
+        "speak": "Hi, I'm Sara!"
       },
       {
-        "text": "Hey, I'm **your** Virtual Assistant",
-        "speak": "Hey, I'm **your** Virtual Assistant!"
+        "text": "Hey, I'm Sara, your Coca Cola Virtual Assistant",
+        "speak": "Hey, I'm Sara, your Coca Cola Virtual Assistant"
       },
       {
-        "text": "Hey there, I'm **your** Virtual Assistant",
-        "speak": "Hey there, I'm **your** Virtual Assistant!"
+        "text": "Hey there, I'm Sara your friendly Coca Cola Virtual Assistant",
+        "speak": "Hey there, I'm Sara your friendly Coca Cola Virtual Assistant"
       }
     ],
     "inputHint": "acceptingInput"

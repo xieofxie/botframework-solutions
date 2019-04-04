@@ -212,6 +212,7 @@ namespace VirtualAssistant.Dialogs.Main
                     case Dispatch.Intent.l_Automotive:
                     case Dispatch.Intent.l_Restaurant:
                     case Dispatch.Intent.l_News:
+                    case Dispatch.Intent.l_HRSkill:
                         {
                             virtualAssistantState.LastIntent = intent.ToString();
                             var matchedSkill = _skillRouter.IdentifyRegisteredSkill(intent.ToString());
@@ -241,6 +242,11 @@ namespace VirtualAssistant.Dialogs.Main
                             {
                                 await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Qna, answers[0].Answer);
                             }
+                            else
+                            {
+                                // No intent was identified, send confused message
+                                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                            }
 
                             break;
                         }
@@ -252,6 +258,28 @@ namespace VirtualAssistant.Dialogs.Main
                             if (answers != null && answers.Count() > 0)
                             {
                                 await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Qna, answers[0].Answer);
+                            }
+                            else
+                            {
+                                // No intent was identified, send confused message
+                                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                            }
+
+                            break;
+                        }
+
+                    case Dispatch.Intent.q_cocacolafaq:
+                        {
+                            var qnaService = localeConfig.QnAServices["cocacolafaq"];
+                            var answers = await qnaService.GetAnswersAsync(dc.Context);
+                            if (answers != null && answers.Count() > 0)
+                            {
+                                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Qna, answers[0].Answer);
+                            }
+                            else
+                            {
+                                 // No intent was identified, send confused message
+                                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
                             }
 
                             break;
