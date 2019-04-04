@@ -1,0 +1,25 @@
+{
+  "NewAddressPrompt": {
+    "replies": [
+      {
+        "text": "What is your new address?",
+        "speak": "What is new address?"
+      },
+      {
+        "text": "Where have you moved to?",
+        "speak": "Where have you moved to?"
+      }
+
+    ],
+    "inputHint": "expectingInput"
+  },
+  "NotificationPrompt": {
+    "replies": [
+      {
+        "text": "Thank you. This has been submitted to Workday. Would you like a notification when the change is complete?",
+        "speak": "Thank you. This has been submitted to Workday. Would you like a notification when the change is complete?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  }
+}

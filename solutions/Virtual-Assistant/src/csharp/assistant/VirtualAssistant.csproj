@@ -123,6 +123,7 @@
     <ProjectReference Include="..\skills\automotiveskill\automotiveskill\AutomotiveSkill.csproj" />
     <ProjectReference Include="..\skills\calendarskill\calendarskill\CalendarSkill.csproj" />
     <ProjectReference Include="..\skills\emailskill\emailskill\EmailSkill.csproj" />
+    <ProjectReference Include="..\skills\HRSkill\HRSkill\HRSkill.csproj" />
     <ProjectReference Include="..\skills\pointofinterestskill\pointofinterestskill\PointOfInterestSkill.csproj" />
     <ProjectReference Include="..\skills\todoskill\todoskill\ToDoSkill.csproj" />
   </ItemGroup>

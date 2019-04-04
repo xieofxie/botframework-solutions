@@ -23,9 +23,11 @@ namespace Luis
             l_PointOfInterest, 
             l_Restaurant, 
             l_ToDo, 
+            l_HRSkill,
             None, 
             q_Chitchat, 
-            q_FAQ
+            q_FAQ,
+            q_cocacolafaq
         };
         public Dictionary<Intent, IntentScore> Intents;
 

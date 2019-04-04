@@ -345,3 +345,6 @@ ASALocalRun/
 /solutions/**/.deployment
 /solutions/**/publish
 /solutions/**/publish.cmd
+/solutions/Virtual-Assistant/src/csharp/assistant/LocaleConfigurations/vacocacolademoen_Dispatch.dispatch
+/solutions/Virtual-Assistant/src/csharp/assistant/LocaleConfigurations/vacocacolademoen_Dispatch.json
+/solutions/Virtual-Assistant/src/csharp/assistant/LocaleConfigurations/Summary.html
