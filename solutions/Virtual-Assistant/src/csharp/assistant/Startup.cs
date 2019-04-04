@@ -88,9 +88,6 @@ namespace VirtualAssistant
             var connectedServices = new BotServices(botConfig, languageModels, skills, skillEvents);
             services.AddSingleton(sp => connectedServices);
 
-            var imageAssetLocation = Configuration.GetSection("imageAssetLocation").Get<string>();
-            services.AddSingleton(sp => imageAssetLocation);
-
             var defaultLocale = Configuration.GetSection("configuration").Get<string>();
             var supportedLanguages = languageModels.Select(l => l.Key).ToArray();
             var responseManager = new ResponseManager(
@@ -133,9 +130,6 @@ namespace VirtualAssistant
             services.AddBotWebSocketHandler();
 
             services.AddSingleton<IBot, VirtualAssistant>();
-
-            // HttpContext required for path resolution
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Add the http adapter to enable MVC style bot API
             services.AddSingleton<IBotFrameworkHttpAdapter>((sp) =>
