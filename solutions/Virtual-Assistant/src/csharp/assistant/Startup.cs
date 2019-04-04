@@ -26,7 +26,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VirtualAssistant.Dialogs.Main;
 using VirtualAssistant.Dialogs.Main.Resources;
-using Microsoft.Bot.Builder.Speech;
+//using Microsoft.Bot.Builder.Speech;
 
 namespace VirtualAssistant
 {
@@ -127,7 +127,7 @@ namespace VirtualAssistant
 
             services.AddSingleton(endpointService);
 
-            services.AddBotWebSocketHandler();
+            //services.AddBotWebSocketHandler();
 
             services.AddSingleton<IBot, VirtualAssistant>();
 
@@ -182,7 +182,7 @@ namespace VirtualAssistant
             app.UseBotApplicationInsights()
                 .UseDefaultFiles()
                 .UseStaticFiles()
-                .AllowWebsocketConnectionsToBot()
+                //.AllowWebsocketConnectionsToBot()
                 .UseMvc();
         }
     }

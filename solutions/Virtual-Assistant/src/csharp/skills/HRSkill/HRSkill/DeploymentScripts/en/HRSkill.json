@@ -1,0 +1,114 @@
+{
+  "intents": [
+    {
+      "name": "ChangeAddress"
+    },
+    {
+      "name": "GetPayslip"
+    },
+    {
+      "name": "None"
+    }
+  ],
+  "entities": [],
+  "composites": [],
+  "closedLists": [],
+  "regex_entities": [],
+  "model_features": [],
+  "regex_features": [],
+  "utterances": [
+    {
+      "text": "I've changed my address",
+      "intent": "ChangeAddress",
+      "entities": []
+    },
+    {
+      "text": "I've moved",
+      "intent": "ChangeAddress",
+      "entities": []
+    },
+    {
+      "text": "I need to change my address",
+      "intent": "ChangeAddress",
+      "entities": []
+    },
+    {
+      "text": "change address",
+      "intent": "ChangeAddress",
+      "entities": []
+    },
+    {
+      "text": "I have moved house",
+      "intent": "ChangeAddress",
+      "entities": []
+    },
+    {
+      "text": "I would like to change my mailing address",
+      "intent": "ChangeAddress",
+      "entities": []
+    },
+    {
+      "text": "My address has changed",
+      "intent": "ChangeAddress",
+      "entities": []
+    },
+    {
+      "text": "I want my payslip",
+      "intent": "GetPayslip",
+      "entities": []
+    },
+    {
+      "text": "payslip",
+      "intent": "GetPayslip",
+      "entities": []
+    },
+    {
+      "text": "How much was I paid this month",
+      "intent": "GetPayslip",
+      "entities": []
+    },
+    {
+      "text": "Check my salary",
+      "intent": "GetPayslip",
+      "entities": []
+    },
+    {
+      "text": "Get my paycheck",
+      "intent": "GetPayslip",
+      "entities": []
+    },
+    {
+      "text": "Get my payslip",
+      "intent": "GetPayslip",
+      "entities": []
+    },
+    {
+      "text": "hi",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "hello",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "logout",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "goodbye",
+      "intent": "None",
+      "entities": []
+    }
+  ],
+  "patterns": [],
+  "patternAnyEntities": [],
+  "prebuiltEntities": [],
+  "luis_schema_version": "3.0.0",
+  "versionId": "0.1",
+  "name": "HRSkill",
+  "desc": "",
+  "culture": "en-us"
+}

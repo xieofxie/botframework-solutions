@@ -142,10 +142,10 @@
     <value>Hey, {0}!</value>
   </data>
   <data name="HELP_TEXT" xml:space="preserve">
-    <value>I'm your Virtual Assistant! I can perform a number of tasks through my connected skills. Right now I can help you with Calendar, Email, Task and Point of Interest questions. Or you can help me do more by creating your own!</value>
+    <value>I'm SaraI can perform a number of tasks through my connected skills. Right now I can help you with Calendar, Email, Task and Point of Interest questions. Or you can help me do more by creating your own!</value>
   </data>
   <data name="HELP_TITLE" xml:space="preserve">
-    <value>Help for Virtual Assistant</value>
+    <value>Help for Sara</value>
   </data>
   <data name="LOGOUT" xml:space="preserve">
     <value>Ok, you're signed out.</value>
