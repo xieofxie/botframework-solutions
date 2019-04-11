@@ -1,0 +1,315 @@
+﻿{
+  "type": "AdaptiveCard",
+  "height": "stretch",
+  "backgroundImage": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKwAAACeCAYAAACvg+F+AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAAhdEVYdENyZWF0aW9uIFRpbWUAMjAxOTowMzoxMyAxOTo0Mjo0OBCBEeIAAAG8SURBVHhe7dJBDQAgEMCwA/+egQcmlrSfGdg6z0DE/oUEw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phSTEsKYYlxbCkGJYUw5JiWFIMS4phCZm52U4FOCAVGHQAAAAASUVORK5CYII=",
+  "body": [
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "ColumnSet",
+          "columns": [
+            {
+              "type": "Column",
+              "backgroundImage": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRw%0D%0AOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMzEwIDU5Ij48ZGVmcz48c3R5%0D%0AbGU+LmF7ZmlsbDp1cmwoI2EpO30uYntmaWxsOnVybCgjYik7fS5je2ZpbGw6I2Y0MDAwMDt9LmR7%0D%0AZmlsbDojYTZhNmE2O30uZXtmaWxsOiNmZmY7fTwvc3R5bGU+PGxpbmVhckdyYWRpZW50IGlkPSJh%0D%0AIiB4MT0iNjMuMjUiIHkxPSItNjMuMjUiIHgyPSIyNDYuNzUiIHkyPSIxMjAuMjUiIGdyYWRpZW50%0D%0AVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmZmYi%0D%0ALz48c3RvcCBvZmZzZXQ9IjAuMzYiIHN0b3AtY29sb3I9IiNmZWZlZmUiIHN0b3Atb3BhY2l0eT0i%0D%0AMC45OSIvPjxzdG9wIG9mZnNldD0iMC41IiBzdG9wLWNvbG9yPSIjZmNmY2ZjIiBzdG9wLW9wYWNp%0D%0AdHk9IjAuOTciLz48c3RvcCBvZmZzZXQ9IjAuNiIgc3RvcC1jb2xvcj0iI2Y5ZjlmOSIgc3RvcC1v%0D%0AcGFjaXR5PSIwLjkyIi8+PHN0b3Agb2Zmc2V0PSIwLjY4IiBzdG9wLWNvbG9yPSIjZjRmNGY0IiBz%0D%0AdG9wLW9wYWNpdHk9IjAuODYiLz48c3RvcCBvZmZzZXQ9IjAuNzYiIHN0b3AtY29sb3I9IiNlZWUi%0D%0AIHN0b3Atb3BhY2l0eT0iMC43NyIvPjxzdG9wIG9mZnNldD0iMC44MiIgc3RvcC1jb2xvcj0iI2U2%0D%0AZTZlNiIgc3RvcC1vcGFjaXR5PSIwLjY3Ii8+PHN0b3Agb2Zmc2V0PSIwLjg4IiBzdG9wLWNvbG9y%0D%0APSIjZGNkY2RjIiBzdG9wLW9wYWNpdHk9IjAuNTUiLz48c3RvcCBvZmZzZXQ9IjAuOTQiIHN0b3At%0D%0AY29sb3I9IiNkMmQyZDIiIHN0b3Atb3BhY2l0eT0iMC40Ii8+PHN0b3Agb2Zmc2V0PSIwLjk5IiBz%0D%0AdG9wLWNvbG9yPSIjYzZjNmM2IiBzdG9wLW9wYWNpdHk9IjAuMjUiLz48c3RvcCBvZmZzZXQ9IjEi%0D%0AIHN0b3AtY29sb3I9IiNjMmMyYzIiIHN0b3Atb3BhY2l0eT0iMC4yIi8+PC9saW5lYXJHcmFkaWVu%0D%0AdD48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHkxPSIyOS41IiB4Mj0iMzEwIiB5Mj0iMjkuNSIgZ3Jh%0D%0AZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0i%0D%0AI2ZmZiIvPjxzdG9wIG9mZnNldD0iMC4zNSIgc3RvcC1jb2xvcj0iI2ZlZmVmZSIgc3RvcC1vcGFj%0D%0AaXR5PSIwLjk5Ii8+PHN0b3Agb2Zmc2V0PSIwLjQ5IiBzdG9wLWNvbG9yPSIjZmRmZGZkIiBzdG9w%0D%0ALW9wYWNpdHk9IjAuOTciLz48c3RvcCBvZmZzZXQ9IjAuNTkiIHN0b3AtY29sb3I9IiNmOWY5Zjki%0D%0AIHN0b3Atb3BhY2l0eT0iMC45MiIvPjxzdG9wIG9mZnNldD0iMC42OCIgc3RvcC1jb2xvcj0iI2Y1%0D%0AZjVmNSIgc3RvcC1vcGFjaXR5PSIwLjg2Ii8+PHN0b3Agb2Zmc2V0PSIwLjc1IiBzdG9wLWNvbG9y%0D%0APSIjZWVlIiBzdG9wLW9wYWNpdHk9IjAuNzciLz48c3RvcCBvZmZzZXQ9IjAuODEiIHN0b3AtY29s%0D%0Ab3I9IiNlN2U3ZTciIHN0b3Atb3BhY2l0eT0iMC42NiIvPjxzdG9wIG9mZnNldD0iMC44NyIgc3Rv%0D%0AcC1jb2xvcj0iI2RlZGVkZSIgc3RvcC1vcGFjaXR5PSIwLjU0Ii8+PHN0b3Agb2Zmc2V0PSIwLjkz%0D%0AIiBzdG9wLWNvbG9yPSIjZDRkNGQ0IiBzdG9wLW9wYWNpdHk9IjAuMzkiLz48c3RvcCBvZmZzZXQ9%0D%0AIjAuOTgiIHN0b3AtY29sb3I9IiNjOGM4YzgiIHN0b3Atb3BhY2l0eT0iMC4yNCIvPjxzdG9wIG9m%0D%0AZnNldD0iMSIgc3RvcC1jb2xvcj0iI2MyYzJjMiIgc3RvcC1vcGFjaXR5PSIwLjE1Ii8+PC9saW5l%0D%0AYXJHcmFkaWVudD48L2RlZnM+PHRpdGxlPnBsYXRmb3Jtc0Fzc2V0IDkyPC90aXRsZT48cmVjdCBj%0D%0AbGFzcz0iYSIgd2lkdGg9IjMxMCIgaGVpZ2h0PSI1NyIvPjxyZWN0IGNsYXNzPSJiIiB3aWR0aD0i%0D%0AMzEwIiBoZWlnaHQ9IjU5Ii8+PHJlY3QgY2xhc3M9ImMiIHdpZHRoPSIzMTAiIGhlaWdodD0iNCIv%0D%0APjxyZWN0IGNsYXNzPSJkIiB5PSI1NSIgd2lkdGg9IjMxMCIgaGVpZ2h0PSI0Ii8+PGNpcmNsZSBj%0D%0AbGFzcz0iZSIgY3g9IjI1NiIgY3k9IjE5IiByPSI2Ii8+PGNpcmNsZSBjbGFzcz0iZSIgY3g9IjIx%0D%0AMiIgY3k9IjM2IiByPSI2Ii8+PC9zdmc+",
+              "items": [
+                {
+                  "type": "ColumnSet",
+                  "height": "stretch",
+                  "columns": [
+                    {
+                      "type": "Column",
+                      "height": "stretch",
+                      "items": [
+                        {
+                          "type": "ColumnSet",
+                          "height": "stretch",
+                          "columns": [
+                            {
+                              "type": "Column",
+                              "height": "stretch",
+                              "items": [
+                                {
+                                  "type": "Image",
+                                  "horizontalAlignment": "Center",
+                                  "url": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRw%0D%0AOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMjEuMTIgMjEuMTIiPjxkZWZz%0D%0APjxzdHlsZT4uYXtmaWxsOm5vbmU7fS5ie2NsaXAtcGF0aDp1cmwoI2EpO30uY3tjbGlwLXBhdGg6%0D%0AdXJsKCNiKTt9PC9zdHlsZT48Y2xpcFBhdGggaWQ9ImEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDUu%0D%0AMjIgNS4xMykiPjxjaXJjbGUgY2xhc3M9ImEiIGN4PSI1LjI4IiBjeT0iNS4yOCIgcj0iNS4yOCIv%0D%0APjwvY2xpcFBhdGg+PGNsaXBQYXRoIGlkPSJiIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1LjIyIDUu%0D%0AMTMpIj48cmVjdCBjbGFzcz0iYSIgeD0iLTUiIHk9Ii01IiB3aWR0aD0iMjAuNTciIGhlaWdodD0i%0D%0AMjAuNTciLz48L2NsaXBQYXRoPjwvZGVmcz48dGl0bGU+cGxhdGZvcm1zQXNzZXQgNjM8L3RpdGxl%0D%0APjxnIGNsYXNzPSJiIj48ZyBjbGFzcz0iYyI+PGcgY2xhc3M9ImMiPjxpbWFnZSB3aWR0aD0iNDQi%0D%0AIGhlaWdodD0iNDQiIHRyYW5zZm9ybT0ic2NhbGUoMC40OCkiIHhsaW5rOmhyZWY9ImRhdGE6aW1h%0D%0AZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBQ3dBQUFBc0NBWUFBQUFlaEZv%0D%0AQkFBQUFDWEJJV1hNQUFCY1JBQUFYRVFIS0p2TS9BQUFKeTBsRVFWUllSNldZVGFnbFJ4WEhmNmU2%0D%0ANzMwZmt3d0pEa1l3S2tnSWdpZ0drb1dUekhzS0UwUTNnZ1FVZCs3Y1JDU01Dek9aS0w3NHZSTmN1%0D%0AWENqSUJyUThTTWZNSnM3eVFUTVNnU0pnaENqR00zSEpEUHZ6YjIzdTZ1cmpvdHorbmJmKys1OG1R%0D%0ATkZWWFYzVmYzcmYvN25WTjBycXFxOEk1dUFucmVtVHRBOFFUT2dRQWFSWFpCZFVKQnlCOHJkYTAx%0D%0AMlhaUC9EL0FlTUxIU2pWWlFaUW5zb2RKdFl1dHhaTFFEbzVzSGY1T0FKNkI3SUpQbHg4clZBU2NP%0D%0AYjhDL2w5RXVjdVFNakc4YytJMEIxZ213WjdWZ1pmRnVVR2NIM1FGTVhKVmxjajlPUnJ2SXNYUGNp%0D%0ARjBmY0o1QVBnbWhHN0ZTNjNKUkJWMEhkQlh3eWppQWNPd2NiRnliN2NDMUxPNUJjL0x3SW5Cb3Nj%0D%0ANTBGY2c2dHRkOW81QmZQd24xaXR4VzdPb016MDZDVG14TGdWNEt3ekkwQjZMWnlnSmdHclE3OEhC%0D%0ANDg5MGNRSGozT2RoY3ovUjZodWQ3MEV3T0I4NlFzWHk0cjZ2dkU4dUFoOCt2SWhOSm9QODVDZlAx%0D%0AVEI5bXVKbkE1Wk05czEwcHVoSDBqSGQ5N2NIcUVGVExZWVpYV2UzTTM0bUN1SmZrdmVkZ2U1bnBa%0D%0AWWFyQ2J4MnNsK2tYU25kd2wxZk9jeldLblByR0YvM3p0bnR2cEVNdkxuSHFpMEIxb3Q3YUF2YUFB%0D%0AMEdLZzdxMlBjMVk5KzJvS2t2UzZCVzIwUDNyMnhLa3JNN0pPWHlCUDY3RExxWHhIUkMvcGRKUVRv%0D%0ASkRPc0FJcUNEV29NdjJOWFpaKzJBckpQRTBBYnlFTitVREwzVzFmZkd4WkFGdy9ycW5pMVFnOGEr%0D%0AMElEV29KV1Z4ZnZPQ3cxUTBYdWtvZmZLRUtTdUtmNWNuRzNKOUY0Y3p2MUt6N0tvcXVyK2hQelNT%0D%0AU2ljM1FDVS9rVlhEd090cEU5dEJjWkU5MDNIc2dmam9rNnNaemlEeEFIWW9TUVNrTlRhRDdhQXc5%0D%0ARzN6ME50UGUwazBMRElDQXVKUUE5MGVQSVZ2Z0R1MGs0dUpjdDVmQlh3RUZqbmxhN2ZZQU1hNzc4%0D%0ANWdXTzdCamo5N1Z0STZZTTZjSW85d3pZaEhidEQzY3BnVE9tTCtGaEd3SVkvSDlON0IzL3YwcEdF%0D%0Aa2VWeVJMUm51dk5NQWw0M3dLS3EydngraERncjRnd3U1dThZd3BudUZsVC9aaGhRTFVnQk1yYlBj%0D%0AZ2Q0RTlqRzlMZ0JOQTUwN3UycW0wY1hMQy9sYzhVMjk2V1dNcjIwWjBIVTZhMmsxeUhlVDhiMjRp%0D%0AUWI2RkZpMzZacmV4Wmg1TTgzZ051OFhiR1FoM1R1Ym9IS0oxRlFsOWNpVFlJQkJzb2NJYytkR1lF%0D%0AY1YrUldEWFRwN3dpMldEZWgwQzNhTTdNNFB6dUcvdzBjOFlVRkN6SlllSXVNWlNUeHNZWFBNemlr%0D%0AOUo4VFNoSm9GTFIySU9wZ1JTMkN4UWVwTGFLdEEvUUZ1Z0NSZ0dsd2pzMjFnYmxZWkZtUG0vU2VQ%0D%0ASXBsQWZvTmFtSHZ0ZlZuZ2NXUEFubDVRcWtKOHRRbmNGZllycVVIbG14ZFdwQ2tTR3Y3a2U0RW5O%0D%0Aa0NvWlBFdnRwbU1sQXBPb3lMRGZxQUxJQk4wREYyRUpWT1Zta2dGZnVtazZJMFVGWVg5bXppbW1V%0D%0AdHBFR2RqRjFKQmxJU3B0MW9JR1VPTXZPSmF6VnR2bTdqdEFKbU5yY0MzQTVzWWV4dWdJNkFiYXUx%0D%0AZ0l5Z2hjSUlzb2hkZ29MTkhTS1U0WTVkMm45TUFIdllwUy8xazBveXB0MnUzNGlsNUZxUnl0NkZC%0D%0AcVRHcEhFWmkvNEttQUlIbU5ZYmtFMnIyUWFkZ3R4cW9QUE1BS2RTREhRUTJJUXNCallEVWtDWmhE%0D%0ASzhaNGYwMTBrUE5rTk81bkpjcjdreDRNRVp6aEVrQ2pJRHFTQkVwYWhBWnhCbVFwaXBzVnA3Y1cv%0D%0AcHpMeWpqVHV6aGJ3RmVRUnBCR2xzdFk2QUNObHp2UUpoQkdVREpSbFNEYXIrSmxuVXFZSmtDeGlO%0D%0ANnZxMVFtV1NDQTJFR25JbDVFb3BPb0MxTFJpR2FjbE5HMjljaHJ3SnFSSHlGc1NSNGNoalNDTnhq%0D%0AU3NFeUNxRUNPTVd5dHhDanRKZkYxVXNuUXlPVFczRkRyaG9ZTlJabFFaS2YxYk9iY0ZSQlZJTG82%0D%0AUm9GNnhkWE9EdEJLbVd4WlU2Sm9oYlFpd2haY2l0eTdBVUMwWnNuanMrZjRaeS9NRmRVdk5FZjZm%0D%0AMS9LakpYRzhNMjJhNkcxbVJvSzBGS29pTlVqUkMyMEFSSWRkUVpodGZLcFJMYU0xeUVwb0FiWVFX%0D%0ATWFlb21CeVNzUnk3VkZrbzVRaENzT0FxeDNmdDBIckM3d0JyaHR5S2IwS2hkV2swTG85bzRLVVJR%0D%0Ab05Kb0JGR0RZUU1HMWtwczJYS2JlMHZjVWxrY2RWb004eVNjQ0JDYkl6WkJzaFpLSktTQzlBQ3hp%0D%0AT2h6WEQwdmgwRERIRDBNMmQ0KzlkUGtOeEhxWUhrK2xzQWp4YUkyZ2dhSVZWNFdoTkNhMnhKZ2lM%0D%0ARGRvWWdRcW5LWElRdGxLUXdSeWlCQXVVaXdqUUw4d3h0SzJTeGRjc1J0Q29Rb0N5aFRrb0ljT3dq%0D%0AdXozZ25LQ1p1N3RhQTVzZGZHNXRJazJRb2xoa3UwUWtHYU5OaEp4aGxKV1VZVitGTVg2VkVFZ0lj%0D%0AN0VzcDM2Q1RERzJRMVlPa3FBaUhISDVTTVlPakF5YmhSQ0NjdWVYSDdOMzNVK2t2M3h1Y3dFMFp3%0D%0AZm5LYTZOSFdEZlFBUnRCV2toUm1NL0pXaGJrMFB0MG1vVm9zSk00QUJoYXZITUJxQ2VZd3VCSWdn%0D%0AVU1BNVFGRXBaUUZuQUtFQWh5dnZ1MytIRXo1L3RHUVo0MTBPUDhlclBua0N6R01nRmNFakpucVcy%0D%0AQjk4bWlLMjFZeFp5aGxwTmcxbjk1aWd3RmVFTmhBTlIzaExoYllSTjRIYUJUWlJ0aFEyRmNWWkdD%0D%0ASnVvRllWeFVBb1I3bjc0c1E3bTh2OFNMejY0UmM0ZXZhMkJTTWxZVE42UDBWaFB2b0hZWW93bW9j%0D%0Ab1FNMVJaT0ZDN01WNXl3QzhINFFvd0YrRTJWVzRIanFKc0E3Y0VaU3d3RW10dkJoaUpjcVJRN243%0D%0AZ0JBODkrY3dDOElKaGdBLzk4Rm4rOVBDbmlGRklEclpOSm8zR0djMFpZaXZVRHJyS1F1UHVieFQy%0D%0Ac3hDQlN3aVhSSmdDYnpxemwwUThXMENqeWo3S01XOFhLSnZBUEF0YnF0d1NiTDc3SGprOWhMZ00r%0D%0AT2pIZHJqMW83dTg4ZUo1WWd0SmhkZ2F3SnloYnBVbUNXMkNOZ3V0d2l6YkFWQXJUTlVBem9BWnds%0D%0Ac0VwbUxnNTRnZG9oNThpTTJmZ1Nzb1IxQzJWVDFqQ3FxWnIvejJLVDV3L01RUzRNQ0szZlBqWnpo%0D%0ANnp3NHBDMDJFdWpWMjV4R3FGR2hWcUxNd1MzQ1FoSmtLKzFtNHBJR0xLbHdpY0ZrREZ3bGNRVGdn%0D%0AVUl2UUlpaUNFa2dFNWhxWUlseFc0YklHOWpVd0pYQ2d3bHpoL2NkM3VPditaYkN3b3VHaC9lckRS%0D%0ANGpPWnBNZ0ppRzZOS29rVk1uME9uTko3S3VCbjZzd1ZiR3NnQVZkN1JuQ01xV2RXQUZsaERMR2Jw%0D%0Ac2JvbXg3d08zczNNK1AvdkM3ZGJBT005elo3aytmNGRpOUp3WWdvYzUyT3RXZXJxWlpxRldZWVhX%0D%0AdFFxVlFJVlFJRWFGVnE3Vzd4YnNwUXZadjdHWXFOQWozbkhqZ3FtRGhHZ3gzZHZZTG4rYVZGNTZu%0D%0AYW9VNlErMk16ck1GU0pOTnUzUDFrd3VZYXFBUzAvRWNvUlk3elRQOXdXRUNFUUxLMkpuOTVNNXhu%0D%0AbnpxN0xYZ1hKM2h6ajc3aTZlNTk2dVAycTl2TlJuVXpteWpVS25RcUZpOVlNeWV0WWpmTG1WUXpF%0D%0AelBkcTlJQ0dlZlBudGRzSEFEZ0FHT1AvSjF2dmprVTl6NThSTkV0YXdRczUzNWpjdkJiNkxVYWtB%0D%0AeUhhT1FPMlNkZVY4VkhuLzBhMVJYWHVPQkU4ZFhsMTFyMTVYRXF2Mzl3dlA4NXJ2ZjQ4L1BYV0Nl%0D%0AV1FSYXJYYTVtYW40ajJkak9ncEVaenBqYVEzZ202ZFA4WTFIVDExanBmVjIwNENIOXN2dmZKOEkv%0D%0AT1RiUDZCVzArOWNMZUJxN0FDeGxHWVo0c3pwVSt6dUhPY1ROOGptT250SGdOZlpIODlmNElYblhp%0D%0AQWhuRHA5OHd4ZXovNEhLVUcvOHlqUG9Lc0FBQUFBU1VWT1JLNUNZSUk9Ii8+PC9nPjwvZz48L2c+%0D%0APC9zdmc+",
+                                  "width": "35px",
+                                  "height": "35px"
+                                }
+                              ],
+                              "width": "auto"
+                            },
+                            {
+                              "type": "Column",
+                              "height": "stretch",
+                              "verticalContentAlignment": "Center",
+                              "items": [
+                                {
+                                  "type": "TextBlock",
+                                  "size": "Large",
+                                  "weight": "Bolder",
+                                  "color": "Dark",
+                                  "text": "Your orders"
+                                }
+                              ],
+                              "width": "stretch"
+                            }
+                          ]
+                        }
+                      ],
+                      "width": 60
+                    }
+                  ]
+                }
+              ],
+              "width": "stretch"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "Container",
+      "separator": "true",
+      "items": [
+        {
+          "type": "Container",
+          "items": [
+            {
+              "type": "ColumnSet",
+              "columns": [
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Center",
+                      "size": "Medium",
+                      "weight": "Bolder",
+                      "color": "Dark",
+                      "text": "ID"
+                    }
+                  ],
+                  "width": 15
+                },
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Left",
+                      "size": "Medium",
+                      "weight": "Bolder",
+                      "color": "Dark",
+                      "text": "Location"
+                    }
+                  ],
+                  "width": 60
+                },
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Right",
+                      "size": "Medium",
+                      "weight": "Bolder",
+                      "color": "Dark",
+                      "text": "Status"
+                    }
+                  ],
+                  "width": 25
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "selectAction": {
+            "type": "Action.Submit",
+            "title": "Show the status of Mom & Pop's Shop",
+            "data": "Show the status of Mom & Pop's Shop"
+          },
+          "style": "emphasis",
+          "items": [
+            {
+              "type": "ColumnSet",
+              "columns": [
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Left",
+                      "size": "Medium",
+                      "text": "100"
+                    }
+                  ],
+                  "width": 15
+                },
+                {
+                  "type": "Column",
+                  "horizontalAlignment": "Center",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Left",
+                      "size": "Medium",
+                      "text": "Mom & Pop's Shop",
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "color": "Dark",
+                      "text": "Augusta"
+                    }
+                  ],
+                  "width": 60
+                },
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Right",
+                      "size": "Medium",
+                      "weight": "Bolder",
+                      "color": "Dark",
+                      "text": "En Route"
+                    }
+                  ],
+                  "width": 25
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "selectAction": {
+            "type": "Action.Submit",
+            "title": "Show the status of McDonald's",
+            "data": "Show the status of McDonald's"
+          },
+          "style": "emphasis",
+          "items": [
+            {
+              "type": "ColumnSet",
+              "columns": [
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Left",
+                      "size": "Medium",
+                      "text": "102"
+                    }
+                  ],
+                  "width": 15
+                },
+                {
+                  "type": "Column",
+                  "horizontalAlignment": "Center",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Left",
+                      "size": "Medium",
+                      "text": "McDonald's",
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "color": "Dark",
+                      "text": "Decatur"
+                    }
+                  ],
+                  "width": 60
+                },
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Right",
+                      "size": "Medium",
+                      "weight": "Bolder",
+                      "color": "Attention",
+                      "text": "DELAYED"
+                    }
+                  ],
+                  "width": 25
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Container",
+          "selectAction": {
+            "type": "Action.Submit",
+            "title": "Show the status of Chick-Fil-A",
+            "data": "Show the status of Chick-Fil-A"
+          },
+          "style": "emphasis",
+          "items": [
+            {
+              "type": "ColumnSet",
+              "columns": [
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Left",
+                      "size": "Medium",
+                      "text": "103"
+                    }
+                  ],
+                  "width": 15
+                },
+                {
+                  "type": "Column",
+                  "horizontalAlignment": "Center",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Left",
+                      "size": "Medium",
+                      "text": "Chick-Fil-A",
+                      "wrap": true
+                    },
+                    {
+                      "type": "TextBlock",
+                      "color": "Dark",
+                      "text": "Sandy Springs"
+                    }
+                  ],
+                  "width": 60
+                },
+                {
+                  "type": "Column",
+                  "items": [
+                    {
+                      "type": "TextBlock",
+                      "horizontalAlignment": "Right",
+                      "size": "Medium",
+                      "weight": "Bolder",
+                      "color": "Dark",
+                      "text": "Delivered"
+                    }
+                  ],
+                  "width": 25
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.0"
+}

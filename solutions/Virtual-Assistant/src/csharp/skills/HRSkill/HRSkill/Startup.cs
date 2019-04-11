@@ -24,6 +24,7 @@ using HRSkill.Dialogs.Main.Resources;
 using HRSkill.Dialogs.Shared.Resources;
 using HRSkill.ServiceClients;
 using HRSkill.Dialogs.ChangeAddress.Resources;
+using HRSkill.Dialogs.ShowOrders.Resources;
 
 namespace HRSkill
 {
@@ -67,7 +68,8 @@ namespace HRSkill
                 connectedServices.LocaleConfigurations.Keys.ToArray(),
                 new MainResponses(),
                 new SharedResponses(),
-                new ChangeAddressResponses());
+                new ChangeAddressResponses(),
+                new ShowOrderResponses());
 
             services.AddSingleton(sp => responseManager);
 

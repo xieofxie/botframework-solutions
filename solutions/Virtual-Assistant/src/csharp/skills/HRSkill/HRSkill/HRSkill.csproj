@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Dialogs\ShowOrders\Resources\CustomerDetails.json" />
+    <Content Remove="Dialogs\ShowOrders\Resources\NewProduct.json" />
+    <Content Remove="Dialogs\ShowOrders\Resources\OrderStatus.json" />
+    <Content Remove="Dialogs\ShowOrders\Resources\ShowOrderResponses.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
     <PackageReference Include="Microsoft.Azure.CognitiveServices.Language" Version="1.0.1-preview" />
@@ -37,9 +44,16 @@
     <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.it.json" />
     <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.json" />
     <EmbeddedResource Include="Dialogs\Shared\Resources\SharedResponses.zh.json" />
+    <EmbeddedResource Include="Dialogs\ShowOrders\Resources\CustomerDetails.json" />
+    <EmbeddedResource Include="Dialogs\ShowOrders\Resources\OrderStatus.json" />
+    <EmbeddedResource Include="Dialogs\ShowOrders\Resources\ShowOrderResponses.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Dialogs\ShowOrders\Resources\ShowOrderResponses.tt">
+      <LastGenOutput>ShowOrderResponses.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
     <None Update="Dialogs\Main\Resources\MainResponses.tt">
       <LastGenOutput>MainResponses.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -55,6 +69,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Dialogs\ShowOrders\Resources\ShowOrderResponses.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ShowOrderResponses.tt</DependentUpon>
+    </Compile>
     <Compile Update="Dialogs\ChangeAddress\Resources\ChangeAddressResponses.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -87,6 +106,10 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Dialogs\ShowOrders\Resources\NewProduct.json" />
   </ItemGroup>
 
 </Project>

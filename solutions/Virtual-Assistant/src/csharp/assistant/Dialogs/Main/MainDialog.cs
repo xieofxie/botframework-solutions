@@ -431,10 +431,11 @@ namespace VirtualAssistant.Dialogs.Main
                             }
 
                         case Events.StartConversation:
+                        case "webchat/join":
                             {
                                 forward = false;
 
-                                if (!_conversationStarted)
+                                //if (!_conversationStarted)
                                 {
                                     if (string.IsNullOrWhiteSpace(dc.Context.Activity.Locale))
                                     {
@@ -450,7 +451,7 @@ namespace VirtualAssistant.Dialogs.Main
                                 }
 
                                 break;
-                            }
+                            }                       
 
                         default:
                             {

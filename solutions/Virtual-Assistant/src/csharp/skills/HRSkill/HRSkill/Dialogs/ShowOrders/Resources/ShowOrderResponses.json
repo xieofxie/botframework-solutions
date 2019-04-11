@@ -1,0 +1,51 @@
+{
+  "ShowOrdersPrompt": {
+    "replies": [
+      {
+        "text": "Here are the latest orders",
+        "speak": "Here are the latest orders"
+      },
+      {
+        "text": "This is the latest status on your orders",
+        "speak": "This is the latest status on your orders"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "CustomerDetailsPrompt": {
+    "replies": [
+      {
+        "text": "Here are the customer details",
+        "speak": "Here are the customer details"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "NotificationPrompt": {
+    "replies": [
+      {
+        "text": "Thank you. This has been submitted to Workday. Would you like a notification when the change is complete?",
+        "speak": "Thank you. This has been submitted to Workday. Would you like a notification when the change is complete?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "ContactCustomer": {
+    "replies": [
+      {
+        "text": "Click here to contact the customer",
+        "speak": "Click here to contact the customer"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  },
+  "NewProductsPrompt": {
+    "replies": [
+      {
+        "text": "Before you call, here are some new products you could tell them about?",
+        "speak": "Before you call, here are some new products you could tell them about?"
+      }
+    ],
+    "inputHint": "acceptingInput"
+  }
+}

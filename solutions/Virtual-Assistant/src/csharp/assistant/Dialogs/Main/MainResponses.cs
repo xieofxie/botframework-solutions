@@ -110,6 +110,19 @@ namespace VirtualAssistant.Dialogs.Main
                 response.Speak = answer;
             }
 
+            if (response.Text.StartsWith("https://www.youtube.com"))
+            {
+                response.Attachments = new List<Attachment>();
+                Attachment attachment = new Attachment();
+                attachment.ContentType = "video/mp4";
+                attachment.ContentUrl = response.Text;
+                attachment.Name = "Video";
+                attachment.ThumbnailUrl = "https://img.youtube.com/vi/3K7pX0gkKQU/0.jpg";
+                response.Attachments.Add(attachment);
+
+                response.Text = "Here you go:"; 
+            }
+
             // Ensure the InputHint is set to accepting
             response.InputHint = InputHints.AcceptingInput;
 

@@ -20,6 +20,7 @@ using HRSkill.Dialogs.Shared;
 using HRSkill.Dialogs.Shared.DialogOptions;
 using HRSkill.Dialogs.Shared.Resources;
 using HRSkill.ServiceClients;
+using HRSkill.Dialogs.ShowOrders;
 
 namespace HRSkill.Dialogs.Main
 {
@@ -100,6 +101,12 @@ namespace HRSkill.Dialogs.Main
                     case HRSkillLU.Intent.ChangeAddress:
                         {
                             turnResult = await dc.BeginDialogAsync(nameof(ChangeAddressDialog), skillOptions);
+                            break;
+                        }
+
+                    case HRSkillLU.Intent.ShowOrders:
+                        {
+                            turnResult = await dc.BeginDialogAsync(nameof(ShowOrdersDialog), skillOptions);
                             break;
                         }
 
@@ -287,6 +294,8 @@ namespace HRSkill.Dialogs.Main
         private void RegisterDialogs()
         {
             AddDialog(new ChangeAddressDialog(_services, _responseManager, _conversationStateAccessor, _userStateAccessor, _serviceManager, TelemetryClient));
+            AddDialog(new ShowOrdersDialog(_services, _responseManager, _conversationStateAccessor, _userStateAccessor, _serviceManager, TelemetryClient));
+
         }
 
         private class Events

@@ -17,6 +17,7 @@ using HRSkill.Dialogs.ChangeAddress.Resources;
 using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Builder.Solutions.Proactive;
 using Microsoft.Bot.Builder.Solutions.TaskExtensions;
+using HRSkill.Dialogs.ShowOrders.Resources;
 
 namespace HRSkill
 {
@@ -59,7 +60,8 @@ namespace HRSkill
                     _services.LocaleConfigurations.Keys.ToArray(),
                     new MainResponses(),
                     new SharedResponses(),
-                    new ChangeAddressResponses());
+                    new ChangeAddressResponses(),
+                    new ShowOrderResponses());
             }
 
             _responseManager = responseManager;

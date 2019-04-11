@@ -57,8 +57,6 @@ namespace CalendarSkill.Dialogs.Summary
                 GetAuthToken,
                 AfterGetAuthToken,
                 ShowEventsList,
-                CallReadEventDialog,
-                AskForShowOverview,
                 AfterAskForShowOverview
             };
 
@@ -282,7 +280,8 @@ namespace CalendarSkill.Dialogs.Summary
                     }
                 }
 
-                return await sc.PromptAsync(Actions.Prompt, new PromptOptions { Prompt = ResponseManager.GetResponse(SummaryResponses.ReadOutMorePrompt) });
+                //return await sc.PromptAsync(Actions.Prompt, new PromptOptions { Prompt = ResponseManager.GetResponse(SummaryResponses.ReadOutMorePrompt) });
+                return await sc.NextAsync(false);
             }
             catch (SkillException ex)
             {

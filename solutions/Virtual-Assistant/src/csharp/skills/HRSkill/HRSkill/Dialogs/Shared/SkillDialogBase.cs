@@ -69,6 +69,14 @@ namespace HRSkill.Dialogs.Shared
             return await base.OnContinueDialogAsync(dc, cancellationToken);
         }
 
+        public override async Task EndDialogAsync(ITurnContext turnContext, DialogInstance instance, DialogReason reason, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var state = await ConversationStateAccessor.GetAsync(turnContext);
+            state.Clear();
+
+            await base.EndDialogAsync(turnContext, instance, reason, cancellationToken);
+        }
+
         // Shared steps
         protected async Task<DialogTurnResult> GetAuthToken(WaterfallStepContext sc, CancellationToken cancellationToken = default(CancellationToken))
         {
