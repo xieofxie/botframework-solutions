@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28606.126
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Skills", "Skills", "{34280F2E-60EB-4566-9ECD-56F114372037}"
 EndProject
@@ -32,6 +32,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoSkill", "todoskill\todoskill\ToDoSkill.csproj", "{3E44915A-1A7A-4229-9B7F-291FFC0EC075}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoSkillTest", "todoskill\todoskilltest\ToDoSkillTest.csproj", "{9A2677E6-21E5-47EE-A42F-9D25079496D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Experimental", "Experimental", "{0F4E18A8-44C1-4967-B105-15F61CBDB979}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingSearchSkill", "experimental\bingsearchskill\bingsearchskill\BingSearchSkill.csproj", "{8E273BD6-25EC-4E70-9825-270FADD3E67C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BingSearchSkill.Tests", "experimental\bingsearchskill\bingsearchskill.tests\BingSearchSkill.Tests.csproj", "{D59B88DE-9832-4ACC-A94C-F292C7E3A404}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +143,22 @@ Global
 		{9A2677E6-21E5-47EE-A42F-9D25079496D8}.Documentation|Any CPU.Build.0 = Debug|Any CPU
 		{9A2677E6-21E5-47EE-A42F-9D25079496D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A2677E6-21E5-47EE-A42F-9D25079496D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C}.Debug - NuGet Packages|Any CPU.Build.0 = Debug|Any CPU
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C}.Documentation|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C}.Documentation|Any CPU.Build.0 = Debug|Any CPU
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404}.Debug - NuGet Packages|Any CPU.ActiveCfg = Debug|Any CPU
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404}.Debug - NuGet Packages|Any CPU.Build.0 = Debug|Any CPU
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404}.Documentation|Any CPU.ActiveCfg = Debug|Any CPU
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404}.Documentation|Any CPU.Build.0 = Debug|Any CPU
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,6 +176,9 @@ Global
 		{30E3BEA1-CC07-4E0E-9671-28DC0C32F828} = {15B08548-1311-4749-8816-186C3268386E}
 		{3E44915A-1A7A-4229-9B7F-291FFC0EC075} = {34280F2E-60EB-4566-9ECD-56F114372037}
 		{9A2677E6-21E5-47EE-A42F-9D25079496D8} = {15B08548-1311-4749-8816-186C3268386E}
+		{0F4E18A8-44C1-4967-B105-15F61CBDB979} = {15B08548-1311-4749-8816-186C3268386E}
+		{8E273BD6-25EC-4E70-9825-270FADD3E67C} = {3665D242-1A88-4860-B148-BAB695B7B5E4}
+		{D59B88DE-9832-4ACC-A94C-F292C7E3A404} = {0F4E18A8-44C1-4967-B105-15F61CBDB979}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7B849B7E-CCF5-4031-91F7-CA835433B457}
