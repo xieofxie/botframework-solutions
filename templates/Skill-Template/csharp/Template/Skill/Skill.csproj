@@ -142,10 +142,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SharedResponses.cs</LastGenOutput>
     </None>
-    <None Update="__TemplateIcon.ico">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>__TemplateIcon.cs</LastGenOutput>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -227,11 +223,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SharedResponses.tt</DependentUpon>
-    </Compile>
-    <Compile Update="__TemplateIcon.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>__TemplateIcon.ico</DependentUpon>
     </Compile>
   </ItemGroup>
 
