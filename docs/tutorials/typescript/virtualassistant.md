@@ -30,22 +30,19 @@
    ```
    npm install -g yo
    ```
-1. Install the [Azure Command Line Tools (CLI)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest)
-1. Retrieve your LUIS Authoring Key
+1. Install the [Virtual Assistant Generator]
+   ```
+   npm install -g generator-botbuilder-assistant
+   ```
+2. Install the [Azure Command Line Tools (CLI)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest)
+3. Retrieve your LUIS Authoring Key
    - Review the [LUIS regions](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-reference-regions) documentation page for the correct LUIS portal for the region you plan to deploy to. Note that www.luis.ai refers to the US region and an authoring key retrieved from this portal will not work within a europe deployment. 
    - Once signed in click on your name in the top right hand corner.
    - Choose Settings and make a note of the Authoring Key for the next step.
 
 ## Create your project
 
->//Temporary ahead of package publishing>
-
-- Clone the [Microsoft AI](https://github.com/Microsoft/AI) repository
-- Go to `templates\Virtual-Assistant-Template\typescript\generator-botbuilder-assistant` folder in a command line
-- Run npm link to symlink the package folder
->//
-
-Now you can execute the Virtual Assistant generator with this command.
+Create your Virtual Assistant using yeoman with this command:
 
 ```bash
 yo botbuilder-assistant
