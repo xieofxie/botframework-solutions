@@ -34,7 +34,7 @@ namespace BingSearchSkill.Dialogs
             ResponseManager responseManager,
             UserState userState,
             ConversationState conversationState,
-            SampleDialog sampleDialog,
+            SearchDialog sampleDialog,
             IBotTelemetryClient telemetryClient)
             : base(nameof(MainDialog), telemetryClient)
         {
@@ -81,9 +81,10 @@ namespace BingSearchSkill.Dialogs
 
                 switch (intent)
                 {
-                    case BingSearchSkillLuis.Intent.Sample:
+                    case BingSearchSkillLuis.Intent.GetCelebrityInfo:
+                    case BingSearchSkillLuis.Intent.SearchMovieInfo:
                         {
-                            turnResult = await dc.BeginDialogAsync(nameof(SampleDialog));
+                            turnResult = await dc.BeginDialogAsync(nameof(SearchDialog));
                             break;
                         }
 

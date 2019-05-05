@@ -2,8 +2,8 @@
   "WelcomeMessage": {
     "replies": [
       {
-        "text": "[Enter your intro message here]",
-        "speak": "[Enter your intro message here]"
+        "text": "Welcome! I can search movie info, celebrity info for you.",
+        "speak": "Welcome! I can search movie info, celebrity info for you."
       }
     ],
     "suggestedActions": [],
@@ -12,8 +12,8 @@
   "HelpMessage": {
     "replies": [
       {
-        "text": "[Enter your help message here]",
-        "speak": "[Enter your help message here]"
+        "text": "You can say 'who is Bill Gates' or 'how is Titanic' to start query.",
+        "speak": "You can say 'who is Bill Gates' or 'how is Titanic' to start query."
       }
     ],
     "suggestedActions": [],

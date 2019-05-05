@@ -64,7 +64,7 @@ namespace BingSearchSkill.Tests
 
             Services.AddSingleton(ResponseManager);
             Services.AddTransient<MainDialog>();
-            Services.AddTransient<SampleDialog>();
+            Services.AddTransient<SearchDialog>();
             Services.AddSingleton<TestAdapter, DefaultTestAdapter>();
             Services.AddTransient<IBot, DialogBot<MainDialog>>();
         }

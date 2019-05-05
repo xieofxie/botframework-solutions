@@ -10,30 +10,30 @@ using System.Threading.Tasks;
 
 namespace BingSearchSkill.Dialogs
 {
-    public class SampleDialog : SkillDialogBase
+    public class SearchDialog : SkillDialogBase
     {
-        public SampleDialog(
+        public SearchDialog(
             BotSettings settings,
             BotServices services,
             ResponseManager responseManager,
             ConversationState conversationState,
             IBotTelemetryClient telemetryClient)
-            : base(nameof(SampleDialog), settings, services, responseManager, conversationState, telemetryClient)
+            : base(nameof(SearchDialog), settings, services, responseManager, conversationState, telemetryClient)
         {
             var sample = new WaterfallStep[]
             {
                 // NOTE: Uncomment these lines to include authentication steps to this dialog
                 // GetAuthToken,
                 // AfterGetAuthToken,
-                PromptForName,
-                GreetUser,
+                //PromptForName,
+                //GreetUser,
                 End,
             };
 
-            AddDialog(new WaterfallDialog(nameof(SampleDialog), sample));
+            AddDialog(new WaterfallDialog(nameof(SearchDialog), sample));
             AddDialog(new TextPrompt(DialogIds.NamePrompt));
 
-            InitialDialogId = nameof(SampleDialog);
+            InitialDialogId = nameof(SearchDialog);
         }
 
         private async Task<DialogTurnResult> PromptForName(WaterfallStepContext stepContext, CancellationToken cancellationToken)

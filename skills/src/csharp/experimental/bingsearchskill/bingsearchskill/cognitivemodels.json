@@ -3,22 +3,22 @@
     "en": {
       "languageModels": [
         {
-          "id": "general",
-          "name": "",
-          "appid": "",
-          "version": "0.1",
-          "region": "",
-          "authoringkey": "",
-          "subscriptionkey": ""
+          "id": "BingSearchSkill",
+          "authoringkey": "fa24469556fe41caa1a0119741cbf280",
+          "subscriptionkey": "fa24469556fe41caa1a0119741cbf280",
+          "region": "westus",
+          "name": "qiowuBingSearchSkillen_BingSearchSkill",
+          "appid": "ee17ce15-4597-4001-849a-602abbacd1ff",
+          "version": "0.1"
         },
         {
-          "id": "skill",
-          "name": "",
-          "appid": "",
-          "version": "0.1",
-          "region": "",
-          "authoringkey": "",
-          "subscriptionkey": ""
+          "id": "General",
+          "authoringkey": "fa24469556fe41caa1a0119741cbf280",
+          "subscriptionkey": "fa24469556fe41caa1a0119741cbf280",
+          "region": "westus",
+          "name": "qiowuBingSearchSkillen_General",
+          "appid": "cad6af85-1c67-4c00-8877-1058d7bb3fc9",
+          "version": "0.1"
         }
       ]
     }

@@ -15,17 +15,29 @@ namespace Luis
         public string Text;
         public string AlteredText;
         public enum Intent {
-            Sample, 
+            GetCelebrityInfo,
+            SearchMovieInfo,
             None
         };
         public Dictionary<Intent, IntentScore> Intents;
 
         public class _Entities
         {
+            // Simple entities
+            public string[] CelebrityName;
+            public string[] MovieTitle;
+
+            // Pattern.any
+            public string[] CelebrityNamePatten;
+            public string[] MovieTitlePatten;
 
             // Instance
             public class _Instance
             {
+                public InstanceData[] CelebrityName;
+                public InstanceData[] MovieTitle;
+                public InstanceData[] CelebrityNamePatten;
+                public InstanceData[] MovieTitlePatten;
             }
             [JsonProperty("$instance")]
             public _Instance _instance;

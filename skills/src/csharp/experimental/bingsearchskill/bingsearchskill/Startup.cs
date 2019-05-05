@@ -94,7 +94,7 @@ namespace BingSearchSkill
                 new SampleResponses()));
 
             // Register dialogs
-            services.AddTransient<SampleDialog>();
+            services.AddTransient<SearchDialog>();
             services.AddTransient<MainDialog>();
 
             // Configure adapters
