@@ -12,7 +12,7 @@
     - [Scenario](#scenario)
   - [Download and install](#download-and-install)
   - [Create your assistant](#create-your-assistant)
-  - [Deploy your assistant](#deploy-your-assistant)
+  - [Deploy your Azure resources](#deploy-your-azure-resources)
   - [Run your assistant](#run-your-assistant)
   - [Next Steps](#next-steps)
 
@@ -50,7 +50,7 @@ A Virtual Assistant app (in C#) that greets a new user.
    * [Download PowerShell Core on macOS and Linux](https://aka.ms/getps6-linux)
 5. Download and install the Bot Framework (CLI) tool dependencies. It's important to do this even if you have earlier versions as the Virtual Assistant makes use of the latest capabilities: 
    ```
-   npm install -g botdispatch ludown luis-apis qnamaker luisgen botskills
+   npm install -g botdispatch ludown@1.2.0 luis-apis qnamaker luisgen botskills
    ```
 6. Download and install the [Azure Command Line Tools (CLI)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest).
 7. Download and install the [Bot Framework Emulator](https://aka.ms/botframework-emulator).
@@ -64,7 +64,7 @@ A Virtual Assistant app (in C#) that greets a new user.
 
 You now have your own Virtual Assistant! Before trying to run your assistant locally, continue with the deployment steps (it creates vital dependencies requires to run correctly).
 
-## Deploy your assistant
+## Deploy your Azure resources
 
 The Virtual Assistant requires the following Azure dependencies to run correctly. These are created through an [ARM (Azure Resource Manager)](https://azure.microsoft.com/en-us/features/resource-manager/) script (you can modify this to meet your requirements).
 

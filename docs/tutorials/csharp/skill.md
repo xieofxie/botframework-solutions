@@ -12,7 +12,7 @@
     - [Scenario](#scenario)
   - [Download and install](#download-and-install)
   - [Create your Skill](#create-your-skill)
-  - [Deploy your Skill](#deploy-your-skill)
+  - [Deploy your Azure resources](#deploy-your-azure-resources)
   - [Test your Skill](#test-your-skill)
   - [Update your Skill manifest](#update-your-skill-manifest)
   - [Publish your Skill](#publish-your-skill)
@@ -53,7 +53,7 @@ A Bot Framework Skill app (in C#) that greets a new user.
    * [Download PowerShell Core on macOS and Linux](https://aka.ms/getps6-linux)
 5. Install  Bot Framework (CLI) tool dependencies. It's important to do this even if you have earlier versions as we make use of the latest capabilities: 
    ```
-   npm install -g botdispatch ludown luis-apis luisgen botskills
+   npm install -g botdispatch ludown@1.2.0 luis-apis luisgen botskills
    ```
 6. Install the [Azure Command Line Tools (CLI)](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?view=azure-cli-latest)
 
@@ -66,7 +66,7 @@ A Bot Framework Skill app (in C#) that greets a new user.
 
 You now have your new Skill! Follow the Deployment steps below before you try and run the project as deployment creates key dependencies required for operation.
 
-## Deploy your Skill
+## Deploy your Azure resources
 
 The Virtual Assistant require the following dependencies for end to end operation which are created through an ARM script which you can modify as required.
 

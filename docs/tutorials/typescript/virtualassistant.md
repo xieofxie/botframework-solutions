@@ -15,7 +15,7 @@
     - [Generate the assistant using prompts](#generate-the-assistant-using-prompts)
     - [Generate the sample using CLI parameters](#generate-the-sample-using-cli-parameters)
       - [Example](#example)
-  - [Deploy your assistant](#deploy-your-assistant)
+  - [Deploy your Azure resources](#deploy-your-azure-resources)
   - [Run your assistant](#run-your-assistant)
   - [Next Steps](#next-steps)
 
@@ -51,7 +51,7 @@ A Virtual Assistant app (in TypeScript) that greets a new user.
    * [Download PowerShell Core on macOS and Linux](https://aka.ms/getps6-linux)
 3. Download and install Bot Framework (CLI) tool dependencies. It's important to do this even if you have earlier versions as the Virtual Assistant makes use of the latest capabilities: 
    ```
-   npm install -g botdispatch ludown luis-apis qnamaker luisgen
+   npm install -g botdispatch ludown@1.2.0 luis-apis qnamaker luisgen
    ```
 4. Install [Yeoman](http://yeoman.io)
    ```
@@ -128,7 +128,7 @@ After this, you can check the summary in your screen:
 
 You now have your own Virtual Assistant! Before trying to run your assistant locally, continue with the deployment steps (it creates vital dependencies requires to run correctly).
 
-## Deploy your assistant
+## Deploy your Azure resources
 
 The Virtual Assistant requires the following Azure dependencies to run correctly. These are created through an [ARM (Azure Resource Manager)](https://azure.microsoft.com/en-us/features/resource-manager/) script (you can modify this to meet your requirements).
 

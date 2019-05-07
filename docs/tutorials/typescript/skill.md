@@ -11,7 +11,7 @@
     - [Generate the assistant using prompts](#generate-the-assistant-using-prompts)
     - [Generate the sample using CLI parameters](#generate-the-sample-using-cli-parameters)
       - [Example](#example)
-  - [Deployment](#deployment)
+  - [Deploy your Azure resources](#deploy-your-azure-resources)
   - [Starting your skill](#starting-your-skill)
   - [Testing](#testing)
   - [Update Manifest](#update-manifest)
@@ -29,7 +29,7 @@
    * [Download PowerShell Core on macOS and Linux](https://aka.ms/getps6-linux)
 3. Install  Bot Framework (CLI) tool dependencies. It's important to do this even if you have earlier versions as the Skill template makes use of the latest capabilities: 
    ```
-   npm install -g botdispatch ludown luis-apis luisgen
+   npm install -g botdispatch ludown@1.2.0 luis-apis luisgen
    ```
 4. Install [Yeoman](http://yeoman.io)
    ```
@@ -110,7 +110,7 @@ After this, you can check the summary in your screen:
 
 You now have your own Skill! Follow the Deployment steps below before you try and run the project as deployment creates key dependencies required for operation.
 
-## Deployment
+## Deploy your Azure resources
 
 The Skill require the following dependencies for end to end operation which are created through an ARM script which you can modify as required.
 
