@@ -33,7 +33,7 @@ namespace Microsoft.Bot.Builder.Skills
 		}
 
         public async Task<bool> ForwardToSkillAsync(ITurnContext turnContext, Activity activity, Action<Activity> tokenRequestHandler = null)
-        {
+            {
             if (_streamingTransportClient == null)
             {
                 // acquire AAD token
@@ -53,6 +53,10 @@ namespace Microsoft.Bot.Builder.Skills
                         GetHandoffActivityCallback()),
                     headers);
 
+                await _streamingTransportClient.ConnectAsync();
+            }
+            else
+            {
                 await _streamingTransportClient.ConnectAsync();
             }
 
