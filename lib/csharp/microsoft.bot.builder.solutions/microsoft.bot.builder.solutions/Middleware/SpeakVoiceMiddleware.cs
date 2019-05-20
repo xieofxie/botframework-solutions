@@ -25,7 +25,11 @@ namespace Microsoft.Bot.Builder.Solutions.Middleware
                     {
                         case ActivityTypes.Message:
                             activity.Speak = activity.Speak ?? activity.Text;
-                            activity.Speak = SsmlDecorator.Decorate(activity.Speak, _locale, _voiceName);
+                            if (activity.ChannelId.Equals("directlinespeech"))
+                            {
+                                activity.Speak = SsmlDecorator.Decorate(activity.Speak, _locale, _voiceName);
+                            }
+
                             break;
                     }
                 }
