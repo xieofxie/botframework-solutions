@@ -86,7 +86,7 @@ namespace BingSearchSkill.Dialogs
             {
                 var tokens = new StringDictionary
                 {
-                    { "Name", entitiesResult[0].Name },
+                    { "Name", entitiesResult[0].Name }
                 };
 
                 if (entitiesResult[0].Type == SearchResultModel.EntityType.Movie)
@@ -100,11 +100,13 @@ namespace BingSearchSkill.Dialogs
                         Image = movieInfo.Image,
                         Rating = $"{movieInfo.Rating}",
                         GenreArray = string.Join(" ▪ ", movieInfo.Genre),
-                        Speak = movieInfo.Description,
+                        //Speak = movieInfo.Description,
                         ContentRating = movieInfo.ContentRating,
                         Duration = movieInfo.Duration,
                         Year = movieInfo.Year,
                     };
+
+                    tokens.Add("Speak", movieInfo.Description);
 
                     prompt = ResponseManager.GetCardResponse(
                                 SearchResponses.EntityKnowledge,
@@ -121,6 +123,8 @@ namespace BingSearchSkill.Dialogs
                         Link_View = entitiesResult[0].Url,
                         EntityTypeDisplayHint = entitiesResult[0].EntityTypeDisplayHint
                     };
+
+                    tokens.Add("Speak", entitiesResult[0].Description);
 
                     prompt = ResponseManager.GetCardResponse(
                                 SearchResponses.EntityKnowledge,
