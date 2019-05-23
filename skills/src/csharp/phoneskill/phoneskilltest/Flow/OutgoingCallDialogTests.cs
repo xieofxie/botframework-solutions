@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PhoneSkill.Responses.OutgoingCall;
@@ -16,7 +17,8 @@ namespace PhoneSkillTest.Flow
                .Send(OutgoingCallUtterances.OutgoingCallPhoneNumber)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
-               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary() {
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
                    { "contactOrPhoneNumber", "0118 999 88199 9119 725 3" },
                }))
                .StartTestAsync();
@@ -31,7 +33,8 @@ namespace PhoneSkillTest.Flow
                .Send(GetAuthResponse())
                .AssertReply(Message(OutgoingCallResponses.RecipientPrompt))
                .Send(OutgoingCallUtterances.RecipientPhoneNumber)
-               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary() {
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
                    { "contactOrPhoneNumber", "0118 999 88199 9119 725 3" },
                }))
                .StartTestAsync();
@@ -44,7 +47,8 @@ namespace PhoneSkillTest.Flow
                .Send(OutgoingCallUtterances.OutgoingCallContactName)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
-               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary() {
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
                    { "contactOrPhoneNumber", "Bob Botter" },
                }))
                .StartTestAsync();
@@ -59,8 +63,81 @@ namespace PhoneSkillTest.Flow
                .Send(GetAuthResponse())
                .AssertReply(Message(OutgoingCallResponses.RecipientPrompt))
                .Send(OutgoingCallUtterances.RecipientContactName)
-               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary() {
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
                    { "contactOrPhoneNumber", "Bob Botter" },
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionByIndexNumerical()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "narthwani" },
+               },
+               new List<string>()
+               {
+                   "Ditha Narthwani",
+                   "Sanjay Narthwani",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelection1st)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Ditha Narthwani" },
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionByIndexWord()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "narthwani" },
+               },
+               new List<string>()
+               {
+                   "Ditha Narthwani",
+                   "Sanjay Narthwani",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionFirst)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Ditha Narthwani" },
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionByIndexLast()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "narthwani" },
+               },
+               new List<string>()
+               {
+                   "Ditha Narthwani",
+                   "Sanjay Narthwani",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionLast)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
                }))
                .StartTestAsync();
         }

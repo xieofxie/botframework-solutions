@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Threading.Tasks;
-using Microsoft.Bot.Schema;
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PhoneSkill.Responses.Main;
 using PhoneSkill.Responses.Shared;
@@ -17,7 +14,7 @@ namespace PhoneSkillTest.Flow
         {
             await GetTestFlow()
                 .Send(GeneralUtterances.Help)
-                .AssertReply(HelpMessage())
+                .AssertReply(Message(PhoneMainResponses.HelpMessage))
                 .StartTestAsync();
         }
 
@@ -25,27 +22,9 @@ namespace PhoneSkillTest.Flow
         public async Task Test_Unhandled_Message()
         {
             await GetTestFlow()
-                .Send("dnghkfgsdghl")
-                .AssertReply(DidntUnderstandMessage())
+                .Send(GeneralUtterances.Incomprehensible)
+                .AssertReply(Message(PhoneSharedResponses.DidntUnderstandMessage))
                 .StartTestAsync();
-        }
-
-        private Action<IActivity> HelpMessage()
-        {
-            return activity =>
-            {
-                var messageActivity = activity.AsMessageActivity();
-                CollectionAssert.Contains(ParseReplies(PhoneMainResponses.HelpMessage, new StringDictionary()), messageActivity.Text);
-            };
-        }
-
-        private Action<IActivity> DidntUnderstandMessage()
-        {
-            return activity =>
-            {
-                var messageActivity = activity.AsMessageActivity();
-                CollectionAssert.Contains(ParseReplies(PhoneSharedResponses.DidntUnderstandMessage, new StringDictionary()), messageActivity.Text);
-            };
         }
     }
 }

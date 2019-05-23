@@ -19,6 +19,15 @@
           "subscriptionKey": "",
           "version": "",
           "region": ""
+        },
+        {
+          "id": "contactSelection",
+          "name": "",
+          "appId": "",
+          "authoringKey": "",
+          "subscriptionKey": "",
+          "version": "",
+          "region": ""
         }
       ]
     }

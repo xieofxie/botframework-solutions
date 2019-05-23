@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Text;
 using System.Threading;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Adapters;
@@ -25,7 +26,6 @@ using PhoneSkill.Responses.OutgoingCall;
 using PhoneSkill.Responses.Shared;
 using PhoneSkill.ServiceClients;
 using PhoneSkill.Services;
-using PhoneSkillTest.Flow.LuisTestUtils;
 using PhoneSkillTest.TestDouble;
 
 namespace PhoneSkillTest.Flow
@@ -73,8 +73,9 @@ namespace PhoneSkillTest.Flow
                         {
                             LuisServices = new Dictionary<string, ITelemetryRecognizer>
                             {
-                                { "general", GeneralTestUtil.CreateRecognizer() },
-                                { "phone", PhoneSkillTestUtil.CreateRecognizer() },
+                                { "general", PhoneSkillMockLuisRecognizerFactory.CreateMockGeneralLuisRecognizer() },
+                                { "phone", PhoneSkillMockLuisRecognizerFactory.CreateMockPhoneLuisRecognizer() },
+                                { "contactSelection", PhoneSkillMockLuisRecognizerFactory.CreateMockContactSelectionLuisRecognizer() },
                             }
                         }
                     }
@@ -132,7 +133,8 @@ namespace PhoneSkillTest.Flow
             {
                 Assert.AreEqual("message", activity.Type);
                 var message = activity.AsMessageActivity();
-                Assert.AreEqual(1, message.Attachments.Count);
+                Assert.IsNull(message.Text);
+                Assert.AreEqual(1, message.Attachments.Count, $"Expected 1 attachment to the auth message, but found {message.Attachments.Count}");
                 Assert.AreEqual("application/vnd.microsoft.card.oauth", message.Attachments[0].ContentType);
             };
         }
@@ -147,7 +149,7 @@ namespace PhoneSkillTest.Flow
             return new Activity(ActivityTypes.Event, name: "tokens/response", value: providerTokenResponse);
         }
 
-        protected Action<IActivity> Message(string templateId, StringDictionary tokens = null)
+        protected Action<IActivity> Message(string templateId, StringDictionary tokens = null, IList<string> selectionItems = null)
         {
             return activity =>
             {
@@ -162,6 +164,47 @@ namespace PhoneSkillTest.Flow
                 }
 
                 var expectedTexts = ParseReplies(templateId, tokens);
+
+                if (selectionItems != null)
+                {
+                    var selectionListBuilder = new StringBuilder();
+                    for (var i = 0; i < selectionItems.Count; ++i)
+                    {
+                        if (i > 0)
+                        {
+                            if (i == selectionItems.Count - 1)
+                            {
+                                // Use an Oxford comma if there are more than two.
+                                if (selectionItems.Count > 2)
+                                {
+                                    selectionListBuilder.Append(",");
+                                }
+
+                                selectionListBuilder.Append(" or ");
+                            }
+                            else
+                            {
+                                selectionListBuilder.Append(", ");
+                            }
+                        }
+
+                        selectionListBuilder.Append("(");
+                        selectionListBuilder.Append(i + 1);
+                        selectionListBuilder.Append(") ");
+                        selectionListBuilder.Append(selectionItems[i]);
+                    }
+
+                    var selectionListString = selectionListBuilder.ToString();
+
+                    var newExpectedTexts = new string[expectedTexts.Length];
+                    for (int i = 0; i < expectedTexts.Length; ++i)
+                    {
+                        newExpectedTexts[i] = string.Join(" ", expectedTexts[i], selectionListString);
+                    }
+
+                    expectedTexts = newExpectedTexts;
+                }
+
                 var actualText = messageActivity.Text;
                 CollectionAssert.Contains(expectedTexts, actualText, $"Expected one of: {expectedTexts.ToPrettyString()}\nActual: {actualText}\n");
             };

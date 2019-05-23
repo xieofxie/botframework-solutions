@@ -153,16 +153,20 @@ namespace PhoneSkill.Dialogs.Shared
             if (dc.Context.Activity.Type == ActivityTypes.Message)
             {
                 var state = await PhoneStateAccessor.GetAsync(dc.Context);
-
-                // Get luis service for current locale
-                var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-                var localeConfig = Services.CognitiveModelSets[locale];
-                var luisService = localeConfig.LuisServices["phone"];
-
-                // Get intent and entities for activity
-                var result = await luisService.RecognizeAsync<PhoneLuis>(dc.Context, CancellationToken.None);
-                state.LuisResult = result;
+                state.LuisResult = await RunLuis<PhoneLuis>(dc.Context, "phone");
             }
+        }
+
+        protected async Task<T> RunLuis<T>(ITurnContext context, string luisServiceName)
+            where T : IRecognizerConvert, new()
+        {
+            // Get luis service for current locale
+            var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            var localeConfig = Services.CognitiveModelSets[locale];
+            var luisService = localeConfig.LuisServices[luisServiceName];
+
+            // Get intent and entities for activity
+            return await luisService.RecognizeAsync<T>(context, CancellationToken.None);
         }
 
         // This method is called by any waterfall step that throws an exception to ensure consistency

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Threading.Tasks;
-using Microsoft.Bot.Schema;
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PhoneSkill.Responses.Main;
 using PhoneSkill.Responses.OutgoingCall;
@@ -19,10 +16,10 @@ namespace PhoneSkillTest.Flow
                .Send(OutgoingCallUtterances.OutgoingCallNoEntities)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
-               .AssertReply(RecipientPrompt())
+               .AssertReply(Message(OutgoingCallResponses.RecipientPrompt))
                .Send(GeneralUtterances.Help)
-               .AssertReply(HelpResponse())
-               .AssertReply(RecipientPrompt())
+               .AssertReply(Message(PhoneMainResponses.HelpMessage))
+               .AssertReply(Message(OutgoingCallResponses.RecipientPrompt))
                .StartTestAsync();
         }
 
@@ -33,40 +30,10 @@ namespace PhoneSkillTest.Flow
                .Send(OutgoingCallUtterances.OutgoingCallNoEntities)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
-               .AssertReply(RecipientPrompt())
+               .AssertReply(Message(OutgoingCallResponses.RecipientPrompt))
                .Send(GeneralUtterances.Cancel)
-               .AssertReply(CancelResponse())
+               .AssertReply(Message(PhoneMainResponses.CancelMessage))
                .StartTestAsync();
-        }
-
-        private Action<IActivity> RecipientPrompt()
-        {
-            return activity =>
-            {
-                Assert.AreEqual("message", activity.Type);
-                var messageActivity = activity.AsMessageActivity();
-                CollectionAssert.Contains(ParseReplies(OutgoingCallResponses.RecipientPrompt, new StringDictionary()), messageActivity.Text);
-            };
-        }
-
-        private Action<IActivity> HelpResponse()
-        {
-            return activity =>
-            {
-                Assert.AreEqual("message", activity.Type);
-                var messageActivity = activity.AsMessageActivity();
-                CollectionAssert.Contains(ParseReplies(PhoneMainResponses.HelpMessage, new StringDictionary()), messageActivity.Text);
-            };
-        }
-
-        private Action<IActivity> CancelResponse()
-        {
-            return activity =>
-            {
-                Assert.AreEqual("message", activity.Type);
-                var messageActivity = activity.AsMessageActivity();
-                CollectionAssert.Contains(ParseReplies(PhoneMainResponses.CancelMessage, new StringDictionary()), messageActivity.Text);
-            };
         }
     }
 }

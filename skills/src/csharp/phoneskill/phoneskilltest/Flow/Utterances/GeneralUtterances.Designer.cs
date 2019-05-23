@@ -19,7 +19,7 @@ namespace PhoneSkillTest.Flow.Utterances {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class GeneralUtterances {
@@ -84,6 +84,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         internal static string Help {
             get {
                 return ResourceManager.GetString("Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dnghkfgsdghl.
+        /// </summary>
+        internal static string Incomprehensible {
+            get {
+                return ResourceManager.GetString("Incomprehensible", resourceCulture);
             }
         }
         

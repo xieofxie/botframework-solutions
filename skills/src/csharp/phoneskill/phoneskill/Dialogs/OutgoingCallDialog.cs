@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Luis;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -59,7 +62,7 @@ namespace PhoneSkill.Dialogs.OutgoingCall
                 var contactProvider = GetContactProvider(state);
                 contactFilter.Filter(state, contactProvider);
 
-                if (state.ContactResult.Matches.Count != 0 || !string.IsNullOrEmpty(state.PhoneNumber))
+                if (state.ContactResult.Matches.Count != 0 || state.PhoneNumber.Any())
                 {
                     return await stepContext.NextAsync();
                 }
@@ -79,7 +82,46 @@ namespace PhoneSkill.Dialogs.OutgoingCall
         {
             try
             {
-                return await stepContext.NextAsync();
+                var state = await PhoneStateAccessor.GetAsync(stepContext.Context);
+                var contactProvider = GetContactProvider(state);
+                contactFilter.Filter(state, contactProvider);
+
+                if (contactFilter.IsContactDisambiguated(state))
+                {
+                    return await stepContext.NextAsync();
+                }
+
+                var tokens = new StringDictionary
+                {
+                    // TODO only fill if confident enough about ASR result
+                    { "contactName", state.ContactResult.SearchQuery },
+                };
+
+                var prompt = ResponseManager.GetResponse(OutgoingCallResponses.ContactSelection, tokens);
+
+                var options = new PromptOptions()
+                {
+                    Prompt = prompt,
+                    Choices = new List<Choice>(),
+                };
+
+                for (var i = 0; i < state.ContactResult.Matches.Count; ++i)
+                {
+                    var item = state.ContactResult.Matches[i].Name;
+                    var synonyms = new List<string>
+                    {
+                        item,
+                        (i + 1).ToString(),
+                    };
+                    var choice = new Choice()
+                    {
+                        Value = item,
+                        Synonyms = synonyms,
+                    };
+                    options.Choices.Add(choice);
+                }
+
+                return await stepContext.PromptAsync(DialogIds.ContactSelection, options);
             }
             catch (Exception ex)
             {
@@ -91,7 +133,16 @@ namespace PhoneSkill.Dialogs.OutgoingCall
 
         private async Task<bool> ValidateContactChoice(PromptValidatorContext<FoundChoice> promptContext, CancellationToken cancellationToken)
         {
-            return false;
+            var state = await PhoneStateAccessor.GetAsync(promptContext.Context);
+
+            var contactSelectionResult = await RunLuis<ContactSelectionLuis>(promptContext.Context, "contactSelection");
+            // TODO override entities on state
+
+            contactFilter.Filter(state, contactProvider: null);
+
+            contactFilter.SelectContactByIndex(state, contactSelectionResult.Entities.index);
+
+            return contactFilter.IsContactDisambiguated(state);
         }
 
         private async Task<DialogTurnResult> AskToSelectPhoneNumber(WaterfallStepContext stepContext, CancellationToken cancellationToken)
