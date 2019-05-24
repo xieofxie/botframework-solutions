@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.PhoneticMatching.Matchers.ContactMatcher;
 using PhoneSkill.Models;
@@ -13,8 +12,6 @@ namespace PhoneSkill.Common
     /// </summary>
     public class ContactFilter
     {
-        private static readonly Regex DigitSequence = new Regex("[0-9]+", RegexOptions.Compiled);
-
         /// <summary>
         /// Filters the user's contact list repeatedly based on the user's input to determine the right contact and phone number to call.
         /// </summary>
