@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Luis;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.PhoneticMatching.Matchers.ContactMatcher;
 using PhoneSkill.Models;
@@ -92,6 +93,26 @@ namespace PhoneSkill.Common
         public bool IsContactDisambiguated(PhoneSkillState state)
         {
             return state.ContactResult.Matches.Count == 1 || state.PhoneNumber.Any();
+        }
+
+        /// <summary>
+        /// Override the entities on the state with the ones from the given LUIS result.
+        /// </summary>
+        /// <param name="state">The current state. This will be modified.</param>
+        /// <param name="contactSelectionResult">The LUIS result.</param>
+        public void OverrideEntities(PhoneSkillState state, ContactSelectionLuis contactSelectionResult)
+        {
+            state.LuisResult.Entities.contactName = contactSelectionResult.Entities.contactName;
+            state.LuisResult.Entities._instance.contactName = contactSelectionResult.Entities._instance.contactName;
+
+            state.LuisResult.Entities.contactRelation = new string[0][];
+            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+
+            state.LuisResult.Entities.phoneNumber = new string[0];
+            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+
+            state.LuisResult.Entities.phoneNumberSpelledOut = new string[0];
+            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
         }
 
         private List<InstanceData> SortAndRemoveOverlappingEntities(List<InstanceData> entities)

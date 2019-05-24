@@ -70,6 +70,24 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I mean sanjay narthwani.
+        /// </summary>
+        internal static string ContactSelectionFullName {
+            get {
+                return ResourceManager.GetString("ContactSelectionFullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to select sanjay.
+        /// </summary>
+        internal static string ContactSelectionPartialName {
+            get {
+                return ResourceManager.GetString("ContactSelectionPartialName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to call bob.
         /// </summary>
         internal static string OutgoingCallContactName {

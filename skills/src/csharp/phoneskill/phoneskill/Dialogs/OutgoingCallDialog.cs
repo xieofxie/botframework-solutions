@@ -134,13 +134,22 @@ namespace PhoneSkill.Dialogs.OutgoingCall
         private async Task<bool> ValidateContactChoice(PromptValidatorContext<FoundChoice> promptContext, CancellationToken cancellationToken)
         {
             var state = await PhoneStateAccessor.GetAsync(promptContext.Context);
+            if (contactFilter.IsContactDisambiguated(state))
+            {
+                return true;
+            }
 
             var contactSelectionResult = await RunLuis<ContactSelectionLuis>(promptContext.Context, "contactSelection");
-            // TODO override entities on state
-
+            contactFilter.OverrideEntities(state, contactSelectionResult);
             contactFilter.Filter(state, contactProvider: null);
+            if (contactFilter.IsContactDisambiguated(state))
+            {
+                return true;
+            }
 
-            if (promptContext.Recognized.Value != null && promptContext.Recognized.Value.Index >= 0 && promptContext.Recognized.Value.Index < state.ContactResult.Matches.Count)
+            if (promptContext.Recognized.Value != null
+                && promptContext.Recognized.Value.Index >= 0
+                && promptContext.Recognized.Value.Index < state.ContactResult.Matches.Count)
             {
                 state.ContactResult.Matches = new List<ContactCandidate>() { state.ContactResult.Matches[promptContext.Recognized.Value.Index] };
             }

@@ -63,6 +63,16 @@ namespace PhoneSkillTest.TestDouble
 
             builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFirst, ContactSelectionLuis.Intent.ContactSelection);
 
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFullName, ContactSelectionLuis.Intent.ContactSelection, new List<InstanceData>()
+            {
+                MockLuisUtil.CreateEntity("contactName", "sanjay narthwani", 7),
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionPartialName, ContactSelectionLuis.Intent.ContactSelection, new List<InstanceData>()
+            {
+                MockLuisUtil.CreateEntity("contactName", "sanjay", 7),
+            });
+
             return builder.Build();
         }
     }

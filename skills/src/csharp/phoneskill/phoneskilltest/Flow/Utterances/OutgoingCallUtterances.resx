@@ -120,6 +120,12 @@
   <data name="ContactSelectionFirst" xml:space="preserve">
     <value>the first one</value>
   </data>
+  <data name="ContactSelectionFullName" xml:space="preserve">
+    <value>I mean sanjay narthwani</value>
+  </data>
+  <data name="ContactSelectionPartialName" xml:space="preserve">
+    <value>select sanjay</value>
+  </data>
   <data name="OutgoingCallContactName" xml:space="preserve">
     <value>call bob</value>
   </data>

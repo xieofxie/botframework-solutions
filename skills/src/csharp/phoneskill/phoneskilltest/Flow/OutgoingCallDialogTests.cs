@@ -93,5 +93,53 @@ namespace PhoneSkillTest.Flow
                }))
                .StartTestAsync();
         }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionByPartialName()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "narthwani" },
+               },
+               new List<string>()
+               {
+                   "Ditha Narthwani",
+                   "Sanjay Narthwani",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionPartialName)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionByFullName()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "narthwani" },
+               },
+               new List<string>()
+               {
+                   "Ditha Narthwani",
+                   "Sanjay Narthwani",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionFullName)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
+               }))
+               .StartTestAsync();
+        }
     }
 }
