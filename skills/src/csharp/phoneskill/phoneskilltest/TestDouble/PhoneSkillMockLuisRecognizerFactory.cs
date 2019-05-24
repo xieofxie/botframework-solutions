@@ -61,20 +61,7 @@ namespace PhoneSkillTest.TestDouble
         {
             var builder = new MockLuisRecognizerBuilder<ContactSelectionLuis, ContactSelectionLuis.Intent>();
 
-            builder.AddUtterance(OutgoingCallUtterances.ContactSelection1st, ContactSelectionLuis.Intent.ContactSelection, new List<InstanceData>()
-            {
-                MockLuisUtil.CreateEntity("index", "1st", 4),
-            });
-
-            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFirst, ContactSelectionLuis.Intent.ContactSelection, new List<InstanceData>()
-            {
-                MockLuisUtil.CreateEntity("index", "first", 4),
-            });
-
-            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionLast, ContactSelectionLuis.Intent.ContactSelection, new List<InstanceData>()
-            {
-                MockLuisUtil.CreateEntity("index", "last", 4),
-            });
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFirst, ContactSelectionLuis.Intent.ContactSelection);
 
             return builder.Build();
         }

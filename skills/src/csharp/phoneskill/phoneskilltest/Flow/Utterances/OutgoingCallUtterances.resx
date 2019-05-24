@@ -117,14 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ContactSelection1st" xml:space="preserve">
-    <value>the 1st one</value>
-  </data>
   <data name="ContactSelectionFirst" xml:space="preserve">
     <value>the first one</value>
-  </data>
-  <data name="ContactSelectionLast" xml:space="preserve">
-    <value>the last one</value>
   </data>
   <data name="OutgoingCallContactName" xml:space="preserve">
     <value>call bob</value>

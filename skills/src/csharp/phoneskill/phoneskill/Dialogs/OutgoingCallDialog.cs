@@ -140,7 +140,10 @@ namespace PhoneSkill.Dialogs.OutgoingCall
 
             contactFilter.Filter(state, contactProvider: null);
 
-            contactFilter.SelectContactByIndex(state, contactSelectionResult.Entities.index);
+            if (promptContext.Recognized.Value != null && promptContext.Recognized.Value.Index >= 0 && promptContext.Recognized.Value.Index < state.ContactResult.Matches.Count)
+            {
+                state.ContactResult.Matches = new List<ContactCandidate>() { state.ContactResult.Matches[promptContext.Recognized.Value.Index] };
+            }
 
             return contactFilter.IsContactDisambiguated(state);
         }

@@ -61,29 +61,11 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to the 1st one.
-        /// </summary>
-        internal static string ContactSelection1st {
-            get {
-                return ResourceManager.GetString("ContactSelection1st", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to the first one.
         /// </summary>
         internal static string ContactSelectionFirst {
             get {
                 return ResourceManager.GetString("ContactSelectionFirst", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to the last one.
-        /// </summary>
-        internal static string ContactSelectionLast {
-            get {
-                return ResourceManager.GetString("ContactSelectionLast", resourceCulture);
             }
         }
         

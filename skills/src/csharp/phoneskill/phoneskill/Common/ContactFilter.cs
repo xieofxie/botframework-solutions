@@ -94,37 +94,6 @@ namespace PhoneSkill.Common
             return state.ContactResult.Matches.Count == 1 || state.PhoneNumber.Any();
         }
 
-        /// <summary>
-        /// Selects the correct contact candidate by index.
-        /// </summary>
-        /// <param name="state">The current state. This will be modified.</param>
-        /// <param name="indexEntityValues">The extracted index entity values.</param>
-        public void SelectContactByIndex(PhoneSkillState state, string[] indexEntityValues)
-        {
-            if (!state.ContactResult.Matches.Any() || !indexEntityValues.Any() || IsContactDisambiguated(state))
-            {
-                return;
-            }
-
-            var index = ParseIndex(indexEntityValues[0]);
-            if (index == null || index > state.ContactResult.Matches.Count || index < -state.ContactResult.Matches.Count)
-            {
-                return;
-            }
-
-            ContactCandidate selectedCandidate;
-            if (index >= 0)
-            {
-                selectedCandidate = state.ContactResult.Matches[index.Value];
-            }
-            else
-            {
-                selectedCandidate = state.ContactResult.Matches[state.ContactResult.Matches.Count - index.Value];
-            }
-
-            state.ContactResult.Matches = new List<ContactCandidate>() { selectedCandidate };
-        }
-
         private List<InstanceData> SortAndRemoveOverlappingEntities(List<InstanceData> entities)
         {
             // TODO implement
@@ -137,34 +106,6 @@ namespace PhoneSkill.Common
             {
                 Name = contact.Name,
             };
-        }
-
-        /// <summary>
-        /// Parse the extracted index entity into a machine-readable index.
-        /// </summary>
-        /// <param name="indexEntityValue">The entity value to parse.</param>
-        /// <returns>The zero-based index to select in the list. Negative indices are to be counted from the end of the list with -1 referring to the last element of the list. If parsing fails, null is retruned.</returns>
-        private int? ParseIndex(string indexEntityValue)
-        {
-            var match = DigitSequence.Match(indexEntityValue);
-            if (match.Success)
-            {
-                try
-                {
-                    // Users tend to speak in one-based indices, but we need zero-based indices.
-                    return int.Parse(match.Value) - 1;
-                }
-                catch (FormatException)
-                {
-                }
-                catch (OverflowException)
-                {
-                }
-            }
-
-            // TODO number normalization
-
-            return null;
         }
     }
 }

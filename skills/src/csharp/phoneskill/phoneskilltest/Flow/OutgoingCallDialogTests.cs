@@ -71,31 +71,7 @@ namespace PhoneSkillTest.Flow
         }
 
         [TestMethod]
-        public async Task Test_OutgoingCall_ContactName_ContactSelectionByIndexNumerical()
-        {
-            await GetTestFlow()
-               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
-               .AssertReply(ShowAuth())
-               .Send(GetAuthResponse())
-               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
-               {
-                   { "contactName", "narthwani" },
-               },
-               new List<string>()
-               {
-                   "Ditha Narthwani",
-                   "Sanjay Narthwani",
-               }))
-               .Send(OutgoingCallUtterances.ContactSelection1st)
-               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
-               {
-                   { "contactOrPhoneNumber", "Ditha Narthwani" },
-               }))
-               .StartTestAsync();
-        }
-
-        [TestMethod]
-        public async Task Test_OutgoingCall_ContactName_ContactSelectionByIndexWord()
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionByIndex()
         {
             await GetTestFlow()
                .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
@@ -114,30 +90,6 @@ namespace PhoneSkillTest.Flow
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Ditha Narthwani" },
-               }))
-               .StartTestAsync();
-        }
-
-        [TestMethod]
-        public async Task Test_OutgoingCall_ContactName_ContactSelectionByIndexLast()
-        {
-            await GetTestFlow()
-               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
-               .AssertReply(ShowAuth())
-               .Send(GetAuthResponse())
-               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
-               {
-                   { "contactName", "narthwani" },
-               },
-               new List<string>()
-               {
-                   "Ditha Narthwani",
-                   "Sanjay Narthwani",
-               }))
-               .Send(OutgoingCallUtterances.ContactSelectionLast)
-               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
-               {
-                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
                }))
                .StartTestAsync();
         }

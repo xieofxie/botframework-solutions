@@ -24,13 +24,11 @@ namespace Luis
         {
             // Simple entities
             public string[] contactName;
-            public string[] index;
 
             // Instance
             public class _Instance
             {
                 public InstanceData[] contactName;
-                public InstanceData[] index;
             }
             [JsonProperty("$instance")]
             public _Instance _instance;
