@@ -4,11 +4,10 @@
 using System;
 using PhoneSkill.Common;
 using PhoneSkill.Models;
-using PhoneSkill.ServiceClients.GoogleAPI;
-using PhoneSkill.ServiceClients.MSGraphAPI;
-using PhoneSkill.Services;
+using PhoneSkill.Services.GoogleAPI;
+using PhoneSkill.Services.MSGraphAPI;
 
-namespace PhoneSkill.ServiceClients
+namespace PhoneSkill.Services
 {
     public class ServiceManager : IServiceManager
     {

@@ -1,7 +1,7 @@
 ﻿using PhoneSkill.Common;
 using PhoneSkill.Models;
 
-namespace PhoneSkill.ServiceClients
+namespace PhoneSkill.Services
 {
     public interface IServiceManager
     {

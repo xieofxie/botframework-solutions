@@ -7,7 +7,7 @@ using Google.Apis.Util.Store;
 using Microsoft.Bot.Builder.Skills;
 using PhoneSkill.Services;
 
-namespace PhoneSkill.ServiceClients.GoogleAPI
+namespace PhoneSkill.Services.GoogleAPI
 {
     public class GoogleClient
     {

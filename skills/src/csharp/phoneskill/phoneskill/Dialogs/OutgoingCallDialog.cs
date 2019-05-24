@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Luis;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
@@ -14,8 +13,8 @@ using PhoneSkill.Common;
 using PhoneSkill.Dialogs.Shared;
 using PhoneSkill.Models;
 using PhoneSkill.Responses.OutgoingCall;
-using PhoneSkill.ServiceClients;
 using PhoneSkill.Services;
+using PhoneSkill.Services.Luis;
 
 namespace PhoneSkill.Dialogs.OutgoingCall
 {

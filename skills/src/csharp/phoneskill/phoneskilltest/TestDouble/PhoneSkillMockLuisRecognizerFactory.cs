@@ -2,6 +2,7 @@
 using Luis;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.Bot.Builder.Solutions.Testing.Mocks;
+using PhoneSkill.Services.Luis;
 using PhoneSkillTest.Flow.Utterances;
 
 namespace PhoneSkillTest.TestDouble

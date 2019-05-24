@@ -25,7 +25,6 @@ using PhoneSkill.Dialogs.OutgoingCall;
 using PhoneSkill.Responses.Main;
 using PhoneSkill.Responses.OutgoingCall;
 using PhoneSkill.Responses.Shared;
-using PhoneSkill.ServiceClients;
 using PhoneSkill.Services;
 
 namespace PhoneSkill

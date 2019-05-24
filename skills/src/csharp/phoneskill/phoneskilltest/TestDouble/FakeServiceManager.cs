@@ -1,6 +1,6 @@
 ﻿using PhoneSkill.Common;
 using PhoneSkill.Models;
-using PhoneSkill.ServiceClients;
+using PhoneSkill.Services;
 
 namespace PhoneSkillTest.TestDouble
 {

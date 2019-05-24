@@ -1,5 +1,5 @@
-﻿using Luis;
-using Microsoft.Bot.Builder.Dialogs;
+﻿using Microsoft.Bot.Builder.Dialogs;
+using PhoneSkill.Services.Luis;
 
 namespace PhoneSkill.Models
 {

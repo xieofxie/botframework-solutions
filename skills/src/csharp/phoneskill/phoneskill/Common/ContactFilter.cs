@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Luis;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.PhoneticMatching.Matchers.ContactMatcher;
 using PhoneSkill.Models;
+using PhoneSkill.Services.Luis;
 
 namespace PhoneSkill.Common
 {

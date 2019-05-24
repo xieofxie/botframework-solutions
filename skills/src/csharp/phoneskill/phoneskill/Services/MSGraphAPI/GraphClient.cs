@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Graph;
 
-namespace PhoneSkill.ServiceClients.MSGraphAPI
+namespace PhoneSkill.Services.MSGraphAPI
 {
     public class GraphClient
     {

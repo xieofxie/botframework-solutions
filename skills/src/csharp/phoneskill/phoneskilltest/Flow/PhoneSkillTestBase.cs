@@ -24,7 +24,6 @@ using PhoneSkill.Models;
 using PhoneSkill.Responses.Main;
 using PhoneSkill.Responses.OutgoingCall;
 using PhoneSkill.Responses.Shared;
-using PhoneSkill.ServiceClients;
 using PhoneSkill.Services;
 using PhoneSkillTest.TestDouble;
 

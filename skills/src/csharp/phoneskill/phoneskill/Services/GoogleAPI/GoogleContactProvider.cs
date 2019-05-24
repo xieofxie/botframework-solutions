@@ -13,7 +13,7 @@ using PhoneSkill.Models;
 using GooglePhoneNumber = Google.Apis.People.v1.Data.PhoneNumber;
 using PhoneNumber = PhoneSkill.Models.PhoneNumber;
 
-namespace PhoneSkill.ServiceClients.GoogleAPI
+namespace PhoneSkill.Services.GoogleAPI
 {
     public class GoogleContactProvider : IContactProvider
     {

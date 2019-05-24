@@ -7,7 +7,7 @@ using Microsoft.Graph;
 using PhoneSkill.Common;
 using PhoneSkill.Models;
 
-namespace PhoneSkill.ServiceClients.MSGraphAPI
+namespace PhoneSkill.Services.MSGraphAPI
 {
     public class GraphContactProvider : IContactProvider
     {

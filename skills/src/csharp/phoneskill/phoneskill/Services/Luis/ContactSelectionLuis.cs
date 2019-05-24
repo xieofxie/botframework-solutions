@@ -8,15 +8,15 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.Luis;
-namespace Luis
+namespace PhoneSkill.Services.Luis
 {
-    public class PhoneLuis: IRecognizerConvert
+    public partial class ContactSelectionLuis: IRecognizerConvert
     {
         public string Text;
         public string AlteredText;
         public enum Intent {
-            None, 
-            OutgoingCall
+            ContactSelection, 
+            None
         };
         public Dictionary<Intent, IntentScore> Intents;
 
@@ -25,22 +25,10 @@ namespace Luis
             // Simple entities
             public string[] contactName;
 
-            // Lists
-            public string[][] contactRelation;
-            public string[][] phoneNumberType;
-
-            // Regex entities
-            public string[] phoneNumber;
-            public string[] phoneNumberSpelledOut;
-
             // Instance
             public class _Instance
             {
                 public InstanceData[] contactName;
-                public InstanceData[] contactRelation;
-                public InstanceData[] phoneNumberType;
-                public InstanceData[] phoneNumber;
-                public InstanceData[] phoneNumberSpelledOut;
             }
             [JsonProperty("$instance")]
             public _Instance _instance;
@@ -52,7 +40,7 @@ namespace Luis
 
         public void Convert(dynamic result)
         {
-            var app = JsonConvert.DeserializeObject<PhoneLuis>(JsonConvert.SerializeObject(result));
+            var app = JsonConvert.DeserializeObject<ContactSelectionLuis>(JsonConvert.SerializeObject(result, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
             Text = app.Text;
             AlteredText = app.AlteredText;
             Intents = app.Intents;
