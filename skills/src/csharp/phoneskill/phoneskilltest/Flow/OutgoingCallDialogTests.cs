@@ -2,8 +2,10 @@
 using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PhoneSkill.Models;
 using PhoneSkill.Responses.OutgoingCall;
 using PhoneSkillTest.Flow.Utterances;
+using PhoneSkillTest.TestDouble;
 
 namespace PhoneSkillTest.Flow
 {
@@ -21,6 +23,10 @@ namespace PhoneSkillTest.Flow
                {
                    { "contactOrPhoneNumber", "0118 999 88199 9119 725 3" },
                }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "0118 999 88199 9119 725 3",
+               }))
                .StartTestAsync();
         }
 
@@ -37,6 +43,10 @@ namespace PhoneSkillTest.Flow
                {
                    { "contactOrPhoneNumber", "0118 999 88199 9119 725 3" },
                }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "0118 999 88199 9119 725 3",
+               }))
                .StartTestAsync();
         }
 
@@ -50,6 +60,11 @@ namespace PhoneSkillTest.Flow
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Bob Botter" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 666 6666",
+                   Contact = StubContactProvider.BobBotter,
                }))
                .StartTestAsync();
         }
@@ -66,6 +81,11 @@ namespace PhoneSkillTest.Flow
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Bob Botter" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 666 6666",
+                   Contact = StubContactProvider.BobBotter,
                }))
                .StartTestAsync();
         }
@@ -91,6 +111,11 @@ namespace PhoneSkillTest.Flow
                {
                    { "contactOrPhoneNumber", "Ditha Narthwani" },
                }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 777 7777",
+                   Contact = StubContactProvider.DithaNarthwani,
+               }))
                .StartTestAsync();
         }
 
@@ -115,6 +140,11 @@ namespace PhoneSkillTest.Flow
                {
                    { "contactOrPhoneNumber", "Sanjay Narthwani" },
                }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 888 8888",
+                   Contact = StubContactProvider.SanjayNarthwani,
+               }))
                .StartTestAsync();
         }
 
@@ -138,6 +168,11 @@ namespace PhoneSkillTest.Flow
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Sanjay Narthwani" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 888 8888",
+                   Contact = StubContactProvider.SanjayNarthwani,
                }))
                .StartTestAsync();
         }

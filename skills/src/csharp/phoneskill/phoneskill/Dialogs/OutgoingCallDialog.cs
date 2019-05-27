@@ -9,14 +9,14 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Builder.Solutions.Util;
+using Microsoft.Bot.Schema;
 using PhoneSkill.Common;
-using PhoneSkill.Dialogs.Shared;
 using PhoneSkill.Models;
 using PhoneSkill.Responses.OutgoingCall;
 using PhoneSkill.Services;
 using PhoneSkill.Services.Luis;
 
-namespace PhoneSkill.Dialogs.OutgoingCall
+namespace PhoneSkill.Dialogs
 {
     public class OutgoingCallDialog : PhoneSkillDialogBase
     {
@@ -184,9 +184,14 @@ namespace PhoneSkill.Dialogs.OutgoingCall
                 contactFilter.Filter(state, contactProvider);
 
                 string contactOrPhoneNumber;
+                var outgoingCall = new OutgoingCall
+                {
+                    Number = state.PhoneNumber,
+                };
                 if (state.ContactResult.Matches.Count == 1)
                 {
                     contactOrPhoneNumber = state.ContactResult.Matches[0].Name;
+                    outgoingCall.Contact = state.ContactResult.Matches[0];
                 }
                 else
                 {
@@ -200,6 +205,8 @@ namespace PhoneSkill.Dialogs.OutgoingCall
 
                 var response = ResponseManager.GetResponse(OutgoingCallResponses.ExecuteCall, tokens);
                 await stepContext.Context.SendActivityAsync(response);
+
+                await SendEvent(stepContext, outgoingCall);
 
                 state.Clear();
 
@@ -222,6 +229,24 @@ namespace PhoneSkill.Dialogs.OutgoingCall
             }
 
             return ServiceManager.GetContactProvider(state.Token, state.SourceOfContacts.Value);
+        }
+
+        /// <summary>
+        /// Send an event activity to communicate to the client which phone number to call.
+        /// This event is meant to be processed by client code rather than shown to the user.
+        /// </summary>
+        /// <param name="stepContext">The WaterfallStepContext.</param>
+        /// <param name="outgoingCall">The phone call to make.</param>
+        /// <returns>A Task.</returns>
+        private async Task SendEvent(WaterfallStepContext stepContext, OutgoingCall outgoingCall)
+        {
+            var actionEvent = stepContext.Context.Activity.CreateReply();
+            actionEvent.Type = ActivityTypes.Event;
+
+            actionEvent.Name = "PhoneSkill.OutgoingCall";
+            actionEvent.Value = outgoingCall;
+
+            await stepContext.Context.SendActivityAsync(actionEvent);
         }
 
         private class DialogIds

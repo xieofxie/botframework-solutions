@@ -18,8 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PhoneSkill.Bots;
 using PhoneSkill.Common;
-using PhoneSkill.Dialogs.Main;
-using PhoneSkill.Dialogs.OutgoingCall;
+using PhoneSkill.Dialogs;
 using PhoneSkill.Models;
 using PhoneSkill.Responses.Main;
 using PhoneSkill.Responses.OutgoingCall;
@@ -206,6 +205,18 @@ namespace PhoneSkillTest.Flow
 
                 var actualText = messageActivity.Text;
                 CollectionAssert.Contains(expectedTexts, actualText, $"Expected one of: {expectedTexts.ToPrettyString()}\nActual: {actualText}\n");
+            };
+        }
+
+        protected Action<IActivity> OutgoingCallEvent(OutgoingCall expectedCall)
+        {
+            return activity =>
+            {
+                Assert.AreEqual("event", activity.Type);
+                var eventReceived = activity.AsEventActivity();
+                Assert.AreEqual("PhoneSkill.OutgoingCall", eventReceived.Name);
+                Assert.IsInstanceOfType(eventReceived.Value, typeof(OutgoingCall));
+                Assert.AreEqual(expectedCall, (OutgoingCall)eventReceived.Value);
             };
         }
     }

@@ -16,7 +16,7 @@ using PhoneSkill.Responses.Shared;
 using PhoneSkill.Services;
 using PhoneSkill.Services.Luis;
 
-namespace PhoneSkill.Dialogs.Shared
+namespace PhoneSkill.Dialogs
 {
     public class PhoneSkillDialogBase : ComponentDialog
     {

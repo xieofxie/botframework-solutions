@@ -12,14 +12,13 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Solutions.Dialogs;
 using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Schema;
-using PhoneSkill.Dialogs.OutgoingCall;
 using PhoneSkill.Models;
 using PhoneSkill.Responses.Main;
 using PhoneSkill.Responses.Shared;
 using PhoneSkill.Services;
 using PhoneSkill.Services.Luis;
 
-namespace PhoneSkill.Dialogs.Main
+namespace PhoneSkill.Dialogs
 {
     public class MainDialog : RouterDialog
     {

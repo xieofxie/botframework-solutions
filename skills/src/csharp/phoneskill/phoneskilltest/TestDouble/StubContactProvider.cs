@@ -7,72 +7,130 @@ namespace PhoneSkillTest.TestDouble
 {
     public class StubContactProvider : IContactProvider
     {
-        private IList<ContactCandidate> contacts;
-
-        public StubContactProvider()
+        public static readonly ContactCandidate AndrewSmith = new ContactCandidate
         {
-            contacts = new List<ContactCandidate>();
+            Name = "Andrew Smith",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 111 1111",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.HOME,
+                    },
+                },
+                new PhoneNumber
+                {
+                    Number = "555 222 2222",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.BUSINESS,
+                    },
+                },
+                new PhoneNumber
+                {
+                    Number = "555 333 3333",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+            },
+        };
 
-            var andrewSmith = new ContactCandidate();
-            andrewSmith.Name = "Andrew Smith";
-            var andrewSmithHome = new PhoneNumber();
-            andrewSmithHome.Number = "555 111 1111";
-            andrewSmithHome.Type.Standardized = PhoneNumberType.StandardType.HOME;
-            andrewSmith.PhoneNumbers.Add(andrewSmithHome);
-            var andrewSmithBusiness = new PhoneNumber();
-            andrewSmithBusiness.Number = "555 222 2222";
-            andrewSmithBusiness.Type.Standardized = PhoneNumberType.StandardType.BUSINESS;
-            andrewSmith.PhoneNumbers.Add(andrewSmithBusiness);
-            var andrewSmithMobile = new PhoneNumber();
-            andrewSmithMobile.Number = "555 333 3333";
-            andrewSmithMobile.Type.Standardized = PhoneNumberType.StandardType.MOBILE;
-            andrewSmith.PhoneNumbers.Add(andrewSmithMobile);
-            contacts.Add(andrewSmith);
+        public static readonly ContactCandidate AndrewJones = new ContactCandidate
+        {
+            Name = "Andrew Jones",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 444 4444",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.BUSINESS,
+                    },
+                },
+                new PhoneNumber
+                {
+                    Number = "555 555 5555",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+            },
+        };
 
-            var andrewJones = new ContactCandidate();
-            andrewJones.Name = "Andrew Jones";
-            var andrewJonesBusiness = new PhoneNumber();
-            andrewJonesBusiness.Number = "555 444 4444";
-            andrewJonesBusiness.Type.Standardized = PhoneNumberType.StandardType.BUSINESS;
-            andrewJones.PhoneNumbers.Add(andrewJonesBusiness);
-            var andrewJonesMobile = new PhoneNumber();
-            andrewJonesMobile.Number = "555 555 5555";
-            andrewJonesMobile.Type.Standardized = PhoneNumberType.StandardType.MOBILE;
-            andrewJones.PhoneNumbers.Add(andrewJonesMobile);
-            contacts.Add(andrewJones);
+        public static readonly ContactCandidate BobBotter = new ContactCandidate
+        {
+            Name = "Bob Botter",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 666 6666",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.HOME,
+                    },
+                },
+            },
+        };
 
-            var bob = new ContactCandidate();
-            bob.Name = "Bob Botter";
-            var bobHome = new PhoneNumber();
-            bobHome.Number = "555 666 6666";
-            bobHome.Type.Standardized = PhoneNumberType.StandardType.HOME;
-            bob.PhoneNumbers.Add(bobHome);
-            contacts.Add(bob);
+        public static readonly ContactCandidate ChristinaRodriguez = new ContactCandidate
+        {
+            Name = "Christina Rodriguez",
+        };
 
-            var christinaRodriguez = new ContactCandidate();
-            christinaRodriguez.Name = "Christina Rodriguez";
-            contacts.Add(christinaRodriguez);
+        public static readonly ContactCandidate ChristinaSanchez = new ContactCandidate
+        {
+            Name = "Christina Sanchez",
+        };
 
-            var christinaSanchez = new ContactCandidate();
-            christinaSanchez.Name = "Christina Sanchez";
-            contacts.Add(christinaSanchez);
+        public static readonly ContactCandidate DithaNarthwani = new ContactCandidate
+        {
+            Name = "Ditha Narthwani",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 777 7777",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+            },
+        };
 
-            var dithaNarthwani = new ContactCandidate();
-            dithaNarthwani.Name = "Ditha Narthwani";
-            var dithaNarthwaniHome = new PhoneNumber();
-            dithaNarthwaniHome.Number = "555 777 7777";
-            dithaNarthwaniHome.Type.Standardized = PhoneNumberType.StandardType.MOBILE;
-            dithaNarthwani.PhoneNumbers.Add(dithaNarthwaniHome);
-            contacts.Add(dithaNarthwani);
+        public static readonly ContactCandidate SanjayNarthwani = new ContactCandidate
+        {
+            Name = "Sanjay Narthwani",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 888 8888",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+            },
+        };
 
-            var sanjayNarthwani = new ContactCandidate();
-            sanjayNarthwani.Name = "Sanjay Narthwani";
-            var sanjayNarthwaniHome = new PhoneNumber();
-            sanjayNarthwaniHome.Number = "555 888 8888";
-            sanjayNarthwaniHome.Type.Standardized = PhoneNumberType.StandardType.MOBILE;
-            sanjayNarthwani.PhoneNumbers.Add(sanjayNarthwaniHome);
-            contacts.Add(sanjayNarthwani);
-        }
+        private IList<ContactCandidate> contacts = new List<ContactCandidate>
+        {
+            AndrewSmith,
+            AndrewJones,
+            BobBotter,
+            ChristinaRodriguez,
+            ChristinaSanchez,
+            DithaNarthwani,
+            SanjayNarthwani,
+        };
 
         public Task<IList<ContactCandidate>> GetContacts()
         {
