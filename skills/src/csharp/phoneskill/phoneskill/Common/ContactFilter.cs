@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.PhoneticMatching.Matchers.ContactMatcher;
 using PhoneSkill.Models;
@@ -13,13 +16,18 @@ namespace PhoneSkill.Common
     /// </summary>
     public class ContactFilter
     {
+        private static readonly Regex MultipleWhitespaceRegex = new Regex(@"\s{2,}");
+
         /// <summary>
         /// Filters the user's contact list repeatedly based on the user's input to determine the right contact and phone number to call.
         /// </summary>
         /// <param name="state">The current conversation state. This will be modified.</param>
         /// <param name="contactProvider">The provider for the user's contact list. This may be null if the contact list is not to be used.</param>
-        public async void Filter(PhoneSkillState state, IContactProvider contactProvider)
+        /// <returns>Whether filtering was actually performed. In some cases, no filtering is necessary.</returns>
+        public async Task<bool> Filter(PhoneSkillState state, IContactProvider contactProvider)
         {
+            var isFiltered = false;
+
             var entities = state.LuisResult.Entities;
             var entitiesForSearch = new List<InstanceData>();
             if (entities._instance.contactName != null)
@@ -57,29 +65,18 @@ namespace PhoneSkill.Common
                     var matcher = new EnContactMatcher<ContactCandidate>(contacts, ExtractContactFields);
                     var matches = matcher.FindByName(searchQuery);
 
-                    if (!state.ContactResult.RequestedPhoneNumberType.Any())
-                    {
-                        // TODO Get requested phone number type from LUIS result.
-                    }
-
-                    // TODO Filter by requested phone number type.
-
                     state.ContactResult.SearchQuery = searchQuery;
                     state.ContactResult.Matches = matches;
+                    isFiltered = true;
                 }
             }
 
-            if (!state.PhoneNumber.Any())
-            {
-                if (state.ContactResult.Matches.Count == 1 && state.ContactResult.Matches[0].PhoneNumbers.Count == 1)
-                {
-                    state.PhoneNumber = state.ContactResult.Matches[0].PhoneNumbers[0].Number;
-                }
-                else if (entities.phoneNumber != null && entities.phoneNumber.Any())
-                {
-                    state.PhoneNumber = string.Join(" ", entities.phoneNumber);
-                }
-            }
+            SetRequestedPhoneNumberType(state);
+            isFiltered = FilterPhoneNumbersByType(state, isFiltered);
+
+            SetPhoneNumber(state);
+
+            return isFiltered;
         }
 
         /// <summary>
@@ -151,6 +148,98 @@ namespace PhoneSkill.Common
             {
                 Name = contact.Name,
             };
+        }
+
+        private void SetRequestedPhoneNumberType(PhoneSkillState state)
+        {
+            if (!state.ContactResult.RequestedPhoneNumberType.Any())
+            {
+                var entities = state.LuisResult.Entities;
+                if (entities.phoneNumberType != null
+                    && entities.phoneNumberType.Length > 0
+                    && entities._instance.phoneNumberType != null
+                    && entities._instance.phoneNumberType.Length > 0)
+                {
+                    var instanceData = entities._instance.phoneNumberType[0];
+                    var resolvedValues = entities.phoneNumberType[0];
+                    foreach (var value in resolvedValues)
+                    {
+                        state.ContactResult.RequestedPhoneNumberType = ParsePhoneNumberType(value, instanceData);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private PhoneNumberType ParsePhoneNumberType(string resolvedValue, InstanceData entity)
+        {
+            var type = new PhoneNumberType
+            {
+                FreeForm = entity.Text,
+            };
+
+            if (Enum.TryParse(resolvedValue, out PhoneNumberType.StandardType standardType))
+            {
+                type.Standardized = standardType;
+            }
+
+            return type;
+        }
+
+        private bool FilterPhoneNumbersByType(PhoneSkillState state, bool isFiltered)
+        {
+            if (state.ContactResult.Matches.Count == 1 && state.ContactResult.RequestedPhoneNumberType.Any())
+            {
+                var phoneNumbersOfCorrectType = new List<PhoneNumber>();
+                foreach (var phoneNumber in state.ContactResult.Matches[0].PhoneNumbers)
+                {
+                    if (DoPhoneNumberTypesMatch(state.ContactResult.RequestedPhoneNumberType, phoneNumber.Type))
+                    {
+                        phoneNumbersOfCorrectType.Add(phoneNumber);
+                    }
+                }
+
+                if (phoneNumbersOfCorrectType.Any())
+                {
+                    state.ContactResult.Matches[0].PhoneNumbers = phoneNumbersOfCorrectType;
+                    isFiltered = true;
+                }
+            }
+
+            return isFiltered;
+        }
+
+        private bool DoPhoneNumberTypesMatch(PhoneNumberType requestedType, PhoneNumberType actualType)
+        {
+            if (requestedType.Standardized != PhoneNumberType.StandardType.NONE)
+            {
+                return requestedType.Standardized == actualType.Standardized;
+            }
+
+            return PreProcess(requestedType.FreeForm).Equals(PreProcess(actualType.FreeForm), StringComparison.OrdinalIgnoreCase);
+        }
+
+        private string PreProcess(string raw)
+        {
+            var preprocessed = raw.Normalize(NormalizationForm.FormKC);
+            preprocessed = MultipleWhitespaceRegex.Replace(preprocessed.Trim(), " ");
+            return preprocessed;
+        }
+
+        private void SetPhoneNumber(PhoneSkillState state)
+        {
+            if (!state.PhoneNumber.Any())
+            {
+                var entities = state.LuisResult.Entities;
+                if (state.ContactResult.Matches.Count == 1 && state.ContactResult.Matches[0].PhoneNumbers.Count == 1)
+                {
+                    state.PhoneNumber = state.ContactResult.Matches[0].PhoneNumbers[0].Number;
+                }
+                else if (entities.phoneNumber != null && entities.phoneNumber.Any())
+                {
+                    state.PhoneNumber = string.Join(" ", entities.phoneNumber);
+                }
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Luis;
-using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.Bot.Builder.Solutions.Testing.Mocks;
 using PhoneSkill.Services.Luis;
 using PhoneSkillTest.Flow.Utterances;
@@ -28,36 +27,76 @@ namespace PhoneSkillTest.TestDouble
 
             builder.AddUtterance(GeneralUtterances.Incomprehensible, PhoneLuis.Intent.None);
 
-            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactName, PhoneLuis.Intent.OutgoingCall, new List<InstanceData>()
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactName, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
-                MockLuisUtil.CreateEntity("contactName", "bob", 5),
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "bob",
+                    StartIndex = 5,
+                },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches, PhoneLuis.Intent.OutgoingCall, new List<InstanceData>()
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
-                MockLuisUtil.CreateEntity("contactName", "narthwani", 5),
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "narthwani",
+                    StartIndex = 5,
+                },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbers, PhoneLuis.Intent.OutgoingCall, new List<InstanceData>()
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbers, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
-                MockLuisUtil.CreateEntity("contactName", "andrew smith", 5),
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "andrew smith",
+                    StartIndex = 5,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbersWithSameType, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "eve smith",
+                    StartIndex = 5,
+                },
             });
 
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallNoEntities, PhoneLuis.Intent.OutgoingCall);
 
-            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallPhoneNumber, PhoneLuis.Intent.OutgoingCall, new List<InstanceData>()
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallPhoneNumber, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
-                MockLuisUtil.CreateEntity("phoneNumber", "0118 999 88199 9119 725 3", 5),
+                new MockLuisEntity
+                {
+                    Type = "phoneNumber",
+                    Text = "0118 999 88199 9119 725 3",
+                    StartIndex = 5,
+                },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.RecipientContactName, PhoneLuis.Intent.OutgoingCall, new List<InstanceData>()
+            builder.AddUtterance(OutgoingCallUtterances.RecipientContactName, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
-                MockLuisUtil.CreateEntity("contactName", "bob", 0),
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "bob",
+                    StartIndex = 0,
+                },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.RecipientPhoneNumber, PhoneLuis.Intent.OutgoingCall, new List<InstanceData>()
+            builder.AddUtterance(OutgoingCallUtterances.RecipientPhoneNumber, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
-                MockLuisUtil.CreateEntity("phoneNumber", "0118 999 88199 9119 725 3", 0),
+                new MockLuisEntity
+                {
+                    Type = "phoneNumber",
+                    Text = "0118 999 88199 9119 725 3",
+                    StartIndex = 0,
+                },
             });
 
             return builder.Build();
@@ -67,14 +106,24 @@ namespace PhoneSkillTest.TestDouble
         {
             var builder = new MockLuisRecognizerBuilder<ContactSelectionLuis, ContactSelectionLuis.Intent>();
 
-            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFullName, ContactSelectionLuis.Intent.ContactSelection, new List<InstanceData>()
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFullName, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
             {
-                MockLuisUtil.CreateEntity("contactName", "sanjay narthwani", 7),
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "sanjay narthwani",
+                    StartIndex = 7,
+                },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionPartialName, ContactSelectionLuis.Intent.ContactSelection, new List<InstanceData>()
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionPartialName, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
             {
-                MockLuisUtil.CreateEntity("contactName", "sanjay", 7),
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "sanjay",
+                    StartIndex = 7,
+                },
             });
 
             builder.AddUtterance(OutgoingCallUtterances.SelectionFirst, ContactSelectionLuis.Intent.ContactSelection);
@@ -85,6 +134,17 @@ namespace PhoneSkillTest.TestDouble
         public static MockLuisRecognizer CreateMockPhoneNumberSelectionLuisRecognizer()
         {
             var builder = new MockLuisRecognizerBuilder<PhoneNumberSelectionLuis, PhoneNumberSelectionLuis.Intent>();
+
+            builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "phoneNumberType",
+                    Text = "mobile",
+                    StartIndex = 9,
+                    ResolvedValue = "MOBILE",
+                },
+            });
 
             builder.AddUtterance(OutgoingCallUtterances.SelectionFirst, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
 

@@ -121,7 +121,39 @@ namespace PhoneSkillTest.TestDouble
             },
         };
 
-        private IList<ContactCandidate> contacts = new List<ContactCandidate>
+        public static readonly ContactCandidate EveSmith = new ContactCandidate
+        {
+            Name = "Eve Smith",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 999 9999",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.HOME,
+                    },
+                },
+                new PhoneNumber
+                {
+                    Number = "555 101 0101",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+                new PhoneNumber
+                {
+                    Number = "555 121 2121",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+            },
+        };
+
+        private readonly IList<ContactCandidate> contacts = new List<ContactCandidate>
         {
             AndrewSmith,
             AndrewJones,
@@ -130,6 +162,7 @@ namespace PhoneSkillTest.TestDouble
             ChristinaSanchez,
             DithaNarthwani,
             SanjayNarthwani,
+            EveSmith,
         };
 
         public Task<IList<ContactCandidate>> GetContacts()

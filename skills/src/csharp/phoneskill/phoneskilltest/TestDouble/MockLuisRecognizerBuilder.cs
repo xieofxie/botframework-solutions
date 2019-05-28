@@ -62,15 +62,15 @@ namespace PhoneSkillTest.TestDouble
         /// </summary>
         /// <param name="userInput">The user's query.</param>
         /// <param name="intent">The intent to be returned by the MockLuisRecognizer.</param>
-        /// <param name="entities">The entities to be returned by the MockLuisRecognizer. You can use MockLuisUtil.CreateEntity to create the entities.</param>
+        /// <param name="entities">The entities to be returned by the MockLuisRecognizer.</param>
         /// <returns>This.</returns>
-        public MockLuisRecognizerBuilder<TLuisResult, TIntent> AddUtterance(string userInput, TIntent intent, IList<InstanceData> entities = null)
+        public MockLuisRecognizerBuilder<TLuisResult, TIntent> AddUtterance(string userInput, TIntent intent, IList<MockLuisEntity> entities = null)
         {
             utterances[userInput] = CreateIntent(userInput, intent, entities);
             return this;
         }
 
-        private static TLuisResult CreateIntent(string userInput, TIntent intent, IList<InstanceData> entities = null)
+        private static TLuisResult CreateIntent(string userInput, TIntent intent, IList<MockLuisEntity> entities = null)
         {
             var type = typeof(TLuisResult);
             var result = new TLuisResult();
@@ -93,12 +93,12 @@ namespace PhoneSkillTest.TestDouble
 
             if (entities != null)
             {
-                var typeToEntities = new Dictionary<string, List<InstanceData>>();
+                var typeToEntities = new Dictionary<string, List<MockLuisEntity>>();
                 foreach (var entity in entities)
                 {
                     if (!typeToEntities.TryGetValue(entity.Type, out var entityList))
                     {
-                        entityList = new List<InstanceData>();
+                        entityList = new List<MockLuisEntity>();
                     }
 
                     entityList.Add(entity);
@@ -108,21 +108,35 @@ namespace PhoneSkillTest.TestDouble
                 foreach (var (entityType, entityList) in typeToEntities)
                 {
                     var entityTypeField = entitiesType.GetField(entityType);
-                    var dimensions = entityTypeField.FieldType.GetArrayRank();
-                    if (dimensions == 1)
+                    if (entityTypeField.FieldType.FullName == "System.String[]")
                     {
                         entityTypeField.SetValue(entitiesObject, GetEntityValues(entityList));
                     }
-                    else if (dimensions == 2)
+                    else if (entityTypeField.FieldType.FullName == "System.String[][]")
                     {
                         entityTypeField.SetValue(entitiesObject, GetListEntityValues(entityList));
                     }
                     else
                     {
-                        throw new Exception($"Cannot set {type.FullName}._Entities.{entityType} because it's neither a one- nor two-dimensional array.");
+                        throw new Exception($"Cannot set {type.FullName}._Entities.{entityType} because the type {entityTypeField.FieldType.FullName} is not supported.");
                     }
 
-                    instanceType.GetField(entityType).SetValue(instanceObject, entityList.ToArray());
+                    var instanceDataArray = new InstanceData[entityList.Count];
+                    for (int i = 0; i < entityList.Count; ++i)
+                    {
+                        var entity = entityList[i];
+                        instanceDataArray[i] = new InstanceData
+                        {
+                            Type = entity.Type,
+                            Text = entity.Text,
+                            StartIndex = entity.StartIndex,
+
+                            // The end index is inclusive.
+                            EndIndex = entity.StartIndex + entity.Text.Length - 1,
+                        };
+                    }
+
+                    instanceType.GetField(entityType).SetValue(instanceObject, instanceDataArray);
                 }
             }
 
@@ -140,7 +154,7 @@ namespace PhoneSkillTest.TestDouble
             return type.GetConstructor(types: new Type[0]).Invoke(parameters: new object[0]);
         }
 
-        private static string[] GetEntityValues(IList<InstanceData> entities)
+        private static string[] GetEntityValues(IList<MockLuisEntity> entities)
         {
             var values = new string[entities.Count];
             for (int i = 0; i < entities.Count; ++i)
@@ -151,13 +165,18 @@ namespace PhoneSkillTest.TestDouble
             return values;
         }
 
-        private static string[][] GetListEntityValues(IList<InstanceData> entities)
+        private static string[][] GetListEntityValues(IList<MockLuisEntity> entities)
         {
             var values = new string[entities.Count][];
             for (int i = 0; i < entities.Count; ++i)
             {
-                // TODO Figure out the proper way to fill the 2d array.
-                values[i] = new string[1] { entities[i].Text };
+                var value = entities[i].ResolvedValue;
+                if (string.IsNullOrEmpty(value))
+                {
+                    value = entities[i].Text;
+                }
+
+                values[i] = new string[1] { value };
             }
 
             return values;

@@ -106,6 +106,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to call eve smith.
+        /// </summary>
+        internal static string OutgoingCallContactNameMultipleNumbersWithSameType {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameMultipleNumbersWithSameType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to make a call.
         /// </summary>
         internal static string OutgoingCallNoEntities {
@@ -120,6 +129,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         internal static string OutgoingCallPhoneNumber {
             get {
                 return ResourceManager.GetString("OutgoingCallPhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to call his mobile number.
+        /// </summary>
+        internal static string PhoneNumberSelectionStandardizedType {
+            get {
+                return ResourceManager.GetString("PhoneNumberSelectionStandardizedType", resourceCulture);
             }
         }
         

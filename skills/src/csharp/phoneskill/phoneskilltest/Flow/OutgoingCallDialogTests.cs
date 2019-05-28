@@ -214,5 +214,92 @@ namespace PhoneSkillTest.Flow
                }))
                .StartTestAsync();
         }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_PhoneNumberSelectionByStandardizedType()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbers)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
+               {
+                   { "contact", "Andrew Smith" },
+               },
+               new List<string>()
+               {
+                   "Home",
+                   "Business",
+                   "Mobile",
+               }))
+               .Send(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Andrew Smith" },
+                   // TODO say phone number type
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 333 3333",
+                   Contact = new ContactCandidate
+                   {
+                       Name = StubContactProvider.AndrewSmith.Name,
+                       PhoneNumbers = new List<PhoneNumber>
+                       {
+                           StubContactProvider.AndrewSmith.PhoneNumbers[2],
+                       },
+                   },
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_PhoneNumberSelectionByStandardizedTypeThenIndex()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbersWithSameType)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
+               {
+                   { "contact", "Eve Smith" },
+               },
+               new List<string>()
+               {
+                   "Home",
+                   "Mobile",
+                   "Mobile",
+               }))
+               .Send(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType)
+               .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
+               {
+                   { "contact", "Eve Smith" },
+               },
+               new List<string>()
+               {
+                   // TODO this isn't useful for the user
+                   "Mobile",
+                   "Mobile",
+               }))
+               .Send(OutgoingCallUtterances.SelectionFirst)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Eve Smith" },
+                   // TODO say phone number type
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 101 0101",
+                   Contact = new ContactCandidate
+                   {
+                       Name = StubContactProvider.EveSmith.Name,
+                       PhoneNumbers = new List<PhoneNumber>
+                       {
+                           StubContactProvider.EveSmith.PhoneNumbers[1],
+                       },
+                   },
+               }))
+               .StartTestAsync();
+        }
     }
 }

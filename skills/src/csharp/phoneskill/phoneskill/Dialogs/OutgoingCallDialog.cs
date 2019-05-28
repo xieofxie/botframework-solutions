@@ -59,7 +59,7 @@ namespace PhoneSkill.Dialogs
             {
                 var state = await PhoneStateAccessor.GetAsync(stepContext.Context);
                 var contactProvider = GetContactProvider(state);
-                contactFilter.Filter(state, contactProvider);
+                await contactFilter.Filter(state, contactProvider);
 
                 if (state.ContactResult.Matches.Count != 0 || state.PhoneNumber.Any())
                 {
@@ -83,7 +83,7 @@ namespace PhoneSkill.Dialogs
             {
                 var state = await PhoneStateAccessor.GetAsync(stepContext.Context);
                 var contactProvider = GetContactProvider(state);
-                contactFilter.Filter(state, contactProvider);
+                await contactFilter.Filter(state, contactProvider);
 
                 if (contactFilter.IsContactDisambiguated(state))
                 {
@@ -140,7 +140,7 @@ namespace PhoneSkill.Dialogs
 
             var contactSelectionResult = await RunLuis<ContactSelectionLuis>(promptContext.Context, "contactSelection");
             contactFilter.OverrideEntities(state, contactSelectionResult);
-            contactFilter.Filter(state, contactProvider: null);
+            await contactFilter.Filter(state, contactProvider: null);
             if (contactFilter.IsContactDisambiguated(state))
             {
                 return true;
@@ -162,7 +162,7 @@ namespace PhoneSkill.Dialogs
             {
                 var state = await PhoneStateAccessor.GetAsync(stepContext.Context);
                 var contactProvider = GetContactProvider(state);
-                contactFilter.Filter(state, contactProvider);
+                await contactFilter.Filter(state, contactProvider);
 
                 if (contactFilter.IsPhoneNumberDisambiguated(state))
                 {
@@ -239,10 +239,14 @@ namespace PhoneSkill.Dialogs
 
             var phoneNumberSelectionResult = await RunLuis<PhoneNumberSelectionLuis>(promptContext.Context, "phoneNumberSelection");
             contactFilter.OverrideEntities(state, phoneNumberSelectionResult);
-            contactFilter.Filter(state, contactProvider: null);
+            var isFiltered = await contactFilter.Filter(state, contactProvider: null);
             if (contactFilter.IsPhoneNumberDisambiguated(state))
             {
                 return true;
+            }
+            else if (isFiltered)
+            {
+                return false;
             }
 
             var phoneNumberList = state.ContactResult.Matches[0].PhoneNumbers;
@@ -262,7 +266,7 @@ namespace PhoneSkill.Dialogs
             {
                 var state = await PhoneStateAccessor.GetAsync(stepContext.Context);
                 var contactProvider = GetContactProvider(state);
-                contactFilter.Filter(state, contactProvider);
+                await contactFilter.Filter(state, contactProvider);
 
                 string contactOrPhoneNumber;
                 var outgoingCall = new OutgoingCall
