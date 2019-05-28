@@ -38,6 +38,11 @@ namespace PhoneSkillTest.TestDouble
                 MockLuisUtil.CreateEntity("contactName", "narthwani", 5),
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbers, PhoneLuis.Intent.OutgoingCall, new List<InstanceData>()
+            {
+                MockLuisUtil.CreateEntity("contactName", "andrew smith", 5),
+            });
+
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallNoEntities, PhoneLuis.Intent.OutgoingCall);
 
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallPhoneNumber, PhoneLuis.Intent.OutgoingCall, new List<InstanceData>()
@@ -62,8 +67,6 @@ namespace PhoneSkillTest.TestDouble
         {
             var builder = new MockLuisRecognizerBuilder<ContactSelectionLuis, ContactSelectionLuis.Intent>();
 
-            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFirst, ContactSelectionLuis.Intent.ContactSelection);
-
             builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFullName, ContactSelectionLuis.Intent.ContactSelection, new List<InstanceData>()
             {
                 MockLuisUtil.CreateEntity("contactName", "sanjay narthwani", 7),
@@ -73,6 +76,17 @@ namespace PhoneSkillTest.TestDouble
             {
                 MockLuisUtil.CreateEntity("contactName", "sanjay", 7),
             });
+
+            builder.AddUtterance(OutgoingCallUtterances.SelectionFirst, ContactSelectionLuis.Intent.ContactSelection);
+
+            return builder.Build();
+        }
+
+        public static MockLuisRecognizer CreateMockPhoneNumberSelectionLuisRecognizer()
+        {
+            var builder = new MockLuisRecognizerBuilder<PhoneNumberSelectionLuis, PhoneNumberSelectionLuis.Intent>();
+
+            builder.AddUtterance(OutgoingCallUtterances.SelectionFirst, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
 
             return builder.Build();
         }

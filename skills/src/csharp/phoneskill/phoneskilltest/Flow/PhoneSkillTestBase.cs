@@ -74,6 +74,7 @@ namespace PhoneSkillTest.Flow
                                 { "general", PhoneSkillMockLuisRecognizerFactory.CreateMockGeneralLuisRecognizer() },
                                 { "phone", PhoneSkillMockLuisRecognizerFactory.CreateMockPhoneLuisRecognizer() },
                                 { "contactSelection", PhoneSkillMockLuisRecognizerFactory.CreateMockContactSelectionLuisRecognizer() },
+                                { "phoneNumberSelection", PhoneSkillMockLuisRecognizerFactory.CreateMockPhoneNumberSelectionLuisRecognizer() },
                             }
                         }
                     }

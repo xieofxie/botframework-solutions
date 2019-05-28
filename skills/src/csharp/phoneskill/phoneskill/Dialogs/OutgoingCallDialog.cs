@@ -160,7 +160,66 @@ namespace PhoneSkill.Dialogs
         {
             try
             {
-                return await stepContext.NextAsync();
+                var state = await PhoneStateAccessor.GetAsync(stepContext.Context);
+                var contactProvider = GetContactProvider(state);
+                contactFilter.Filter(state, contactProvider);
+
+                if (contactFilter.IsPhoneNumberDisambiguated(state))
+                {
+                    return await stepContext.NextAsync();
+                }
+
+                var tokens = new StringDictionary
+                {
+                    { "contact", state.ContactResult.Matches[0].Name },
+                };
+
+                var prompt = ResponseManager.GetResponse(OutgoingCallResponses.PhoneNumberSelection, tokens);
+
+                var options = new PromptOptions()
+                {
+                    Prompt = prompt,
+                    Choices = new List<Choice>(),
+                };
+
+                var phoneNumberList = state.ContactResult.Matches[0].PhoneNumbers;
+                for (var i = 0; i < phoneNumberList.Count; ++i)
+                {
+                    var phoneNumber = phoneNumberList[i];
+                    string speakableType;
+                    switch (phoneNumber.Type.Standardized)
+                    {
+                        case PhoneNumberType.StandardType.BUSINESS:
+                            speakableType = "Business";
+                            break;
+                        case PhoneNumberType.StandardType.HOME:
+                            speakableType = "Home";
+                            break;
+                        case PhoneNumberType.StandardType.MOBILE:
+                            speakableType = "Mobile";
+                            break;
+                        case PhoneNumberType.StandardType.NONE:
+                        default:
+                            speakableType = phoneNumber.Type.FreeForm;
+                            break;
+                    }
+
+                    var synonyms = new List<string>
+                    {
+                        speakableType,
+                        phoneNumber.Type.FreeForm,
+                        phoneNumber.Number,
+                        (i + 1).ToString(),
+                    };
+                    var choice = new Choice()
+                    {
+                        Value = speakableType,
+                        Synonyms = synonyms,
+                    };
+                    options.Choices.Add(choice);
+                }
+
+                return await stepContext.PromptAsync(DialogIds.PhoneNumberSelection, options);
             }
             catch (Exception ex)
             {
@@ -172,7 +231,29 @@ namespace PhoneSkill.Dialogs
 
         private async Task<bool> ValidatePhoneNumberChoice(PromptValidatorContext<FoundChoice> promptContext, CancellationToken cancellationToken)
         {
-            return false;
+            var state = await PhoneStateAccessor.GetAsync(promptContext.Context);
+            if (contactFilter.IsPhoneNumberDisambiguated(state))
+            {
+                return true;
+            }
+
+            var phoneNumberSelectionResult = await RunLuis<PhoneNumberSelectionLuis>(promptContext.Context, "phoneNumberSelection");
+            contactFilter.OverrideEntities(state, phoneNumberSelectionResult);
+            contactFilter.Filter(state, contactProvider: null);
+            if (contactFilter.IsPhoneNumberDisambiguated(state))
+            {
+                return true;
+            }
+
+            var phoneNumberList = state.ContactResult.Matches[0].PhoneNumbers;
+            if (promptContext.Recognized.Value != null
+                && promptContext.Recognized.Value.Index >= 0
+                && promptContext.Recognized.Value.Index < phoneNumberList.Count)
+            {
+                state.ContactResult.Matches[0].PhoneNumbers = new List<PhoneNumber>() { phoneNumberList[promptContext.Recognized.Value.Index] };
+            }
+
+            return contactFilter.IsPhoneNumberDisambiguated(state);
         }
 
         private async Task<DialogTurnResult> ExecuteCall(WaterfallStepContext stepContext, CancellationToken cancellationToken)

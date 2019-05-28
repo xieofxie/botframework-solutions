@@ -106,7 +106,7 @@ namespace PhoneSkillTest.Flow
                    "Ditha Narthwani",
                    "Sanjay Narthwani",
                }))
-               .Send(OutgoingCallUtterances.ContactSelectionFirst)
+               .Send(OutgoingCallUtterances.SelectionFirst)
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Ditha Narthwani" },
@@ -173,6 +173,44 @@ namespace PhoneSkillTest.Flow
                {
                    Number = "555 888 8888",
                    Contact = StubContactProvider.SanjayNarthwani,
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_PhoneNumberSelectionByIndex()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbers)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
+               {
+                   { "contact", "Andrew Smith" },
+               },
+               new List<string>()
+               {
+                   "Home",
+                   "Business",
+                   "Mobile",
+               }))
+               .Send(OutgoingCallUtterances.SelectionFirst)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Andrew Smith" },
+                   // TODO say phone number type
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 111 1111",
+                   Contact = new ContactCandidate
+                   {
+                       Name = StubContactProvider.AndrewSmith.Name,
+                       PhoneNumbers = new List<PhoneNumber>
+                       {
+                           StubContactProvider.AndrewSmith.PhoneNumbers[0],
+                       },
+                   },
                }))
                .StartTestAsync();
         }

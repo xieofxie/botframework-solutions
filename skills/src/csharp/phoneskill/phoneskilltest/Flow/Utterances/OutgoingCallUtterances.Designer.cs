@@ -61,15 +61,6 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to the first one.
-        /// </summary>
-        internal static string ContactSelectionFirst {
-            get {
-                return ResourceManager.GetString("ContactSelectionFirst", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to I mean sanjay narthwani.
         /// </summary>
         internal static string ContactSelectionFullName {
@@ -106,6 +97,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to call andrew smith.
+        /// </summary>
+        internal static string OutgoingCallContactNameMultipleNumbers {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameMultipleNumbers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to make a call.
         /// </summary>
         internal static string OutgoingCallNoEntities {
@@ -138,6 +138,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         internal static string RecipientPhoneNumber {
             get {
                 return ResourceManager.GetString("RecipientPhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to the first one.
+        /// </summary>
+        internal static string SelectionFirst {
+            get {
+                return ResourceManager.GetString("SelectionFirst", resourceCulture);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Bot.Builder.AI.Luis;
 using Microsoft.PhoneticMatching.Matchers.ContactMatcher;
@@ -92,6 +93,16 @@ namespace PhoneSkill.Common
         }
 
         /// <summary>
+        /// Returns whether the contact's phone number has been completely disambiguated.
+        /// </summary>
+        /// <param name="state">The current state.</param>
+        /// <returns>Whether the contact's phone number has been completely disambiguated.</returns>
+        public bool IsPhoneNumberDisambiguated(PhoneSkillState state)
+        {
+            return (state.ContactResult.Matches.Count == 1 && state.ContactResult.Matches[0].PhoneNumbers.Count == 1) || state.PhoneNumber.Any();
+        }
+
+        /// <summary>
         /// Override the entities on the state with the ones from the given LUIS result.
         /// </summary>
         /// <param name="state">The current state. This will be modified.</param>
@@ -109,6 +120,23 @@ namespace PhoneSkill.Common
 
             state.LuisResult.Entities.phoneNumberSpelledOut = new string[0];
             state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+        }
+
+        /// <summary>
+        /// Override the entities on the state with the ones from the given LUIS result.
+        /// </summary>
+        /// <param name="state">The current state. This will be modified.</param>
+        /// <param name="phoneNumberSelectionResult">The LUIS result.</param>
+        public void OverrideEntities(PhoneSkillState state, PhoneNumberSelectionLuis phoneNumberSelectionResult)
+        {
+            state.LuisResult.Entities.phoneNumber = new string[0];
+            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+
+            state.LuisResult.Entities.phoneNumberSpelledOut = new string[0];
+            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+
+            state.LuisResult.Entities.phoneNumberType = phoneNumberSelectionResult.Entities.phoneNumberType;
+            state.LuisResult.Entities._instance.phoneNumberType = phoneNumberSelectionResult.Entities._instance.phoneNumberType;
         }
 
         private List<InstanceData> SortAndRemoveOverlappingEntities(List<InstanceData> entities)

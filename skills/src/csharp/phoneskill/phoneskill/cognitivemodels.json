@@ -28,6 +28,15 @@
           "subscriptionKey": "",
           "version": "",
           "region": ""
+        },
+        {
+          "id": "phoneNumberSelection",
+          "name": "",
+          "appId": "",
+          "authoringKey": "",
+          "subscriptionKey": "",
+          "version": "",
+          "region": ""
         }
       ]
     }
