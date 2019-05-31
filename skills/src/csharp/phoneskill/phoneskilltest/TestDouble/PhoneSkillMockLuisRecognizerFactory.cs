@@ -137,6 +137,8 @@ namespace PhoneSkillTest.TestDouble
 
             builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionFailure, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
 
+            builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionFullNumber, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
+
             builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection, new List<MockLuisEntity>()
             {
                 new MockLuisEntity

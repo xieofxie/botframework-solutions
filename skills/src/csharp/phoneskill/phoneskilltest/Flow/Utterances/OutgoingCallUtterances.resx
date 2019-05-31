@@ -144,6 +144,9 @@
   <data name="PhoneNumberSelectionFailure" xml:space="preserve">
     <value>all of them</value>
   </data>
+  <data name="PhoneNumberSelectionFullNumber" xml:space="preserve">
+    <value>555 222 2222</value>
+  </data>
   <data name="PhoneNumberSelectionStandardizedType" xml:space="preserve">
     <value>call the cell phone</value>
   </data>

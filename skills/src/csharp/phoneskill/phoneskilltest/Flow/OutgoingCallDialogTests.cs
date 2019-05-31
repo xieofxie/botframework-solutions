@@ -309,5 +309,42 @@ namespace PhoneSkillTest.Flow
                }))
                .StartTestAsync();
         }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_PhoneNumberSelectionByFullNumber()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbers)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
+               {
+                   { "contact", "Andrew Smith" },
+               },
+               new List<string>()
+               {
+                   "Home: 555 111 1111",
+                   "Business: 555 222 2222",
+                   "Mobile: 555 333 3333",
+               }))
+               .Send(OutgoingCallUtterances.PhoneNumberSelectionFullNumber)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Andrew Smith" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 222 2222",
+                   Contact = new ContactCandidate
+                   {
+                       Name = StubContactProvider.AndrewSmith.Name,
+                       PhoneNumbers = new List<PhoneNumber>
+                       {
+                           StubContactProvider.AndrewSmith.PhoneNumbers[1],
+                       },
+                   },
+               }))
+               .StartTestAsync();
+        }
     }
 }

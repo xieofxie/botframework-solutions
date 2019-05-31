@@ -142,6 +142,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 555 222 2222.
+        /// </summary>
+        internal static string PhoneNumberSelectionFullNumber {
+            get {
+                return ResourceManager.GetString("PhoneNumberSelectionFullNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to call the cell phone.
         /// </summary>
         internal static string PhoneNumberSelectionStandardizedType {
