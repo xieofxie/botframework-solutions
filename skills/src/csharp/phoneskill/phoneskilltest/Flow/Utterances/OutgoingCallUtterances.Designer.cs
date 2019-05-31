@@ -133,7 +133,16 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to call his mobile number.
+        ///   Looks up a localized string similar to all of them.
+        /// </summary>
+        internal static string PhoneNumberSelectionFailure {
+            get {
+                return ResourceManager.GetString("PhoneNumberSelectionFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to call the cell phone.
         /// </summary>
         internal static string PhoneNumberSelectionStandardizedType {
             get {

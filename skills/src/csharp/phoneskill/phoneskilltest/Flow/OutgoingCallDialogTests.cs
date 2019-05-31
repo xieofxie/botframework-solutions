@@ -253,7 +253,7 @@ namespace PhoneSkillTest.Flow
         }
 
         [TestMethod]
-        public async Task Test_OutgoingCall_ContactName_PhoneNumberSelectionByStandardizedTypeThenIndex()
+        public async Task Test_OutgoingCall_ContactName_PhoneNumberSelectionByStandardizedTypeThenFailureThenIndex()
         {
             await GetTestFlow()
                .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbersWithSameType)
@@ -270,6 +270,17 @@ namespace PhoneSkillTest.Flow
                    "Mobile",
                }))
                .Send(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType)
+               .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
+               {
+                   { "contact", "Eve Smith" },
+               },
+               new List<string>()
+               {
+                   // TODO this isn't useful for the user
+                   "Mobile",
+                   "Mobile",
+               }))
+               .Send(OutgoingCallUtterances.PhoneNumberSelectionFailure)
                .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
                {
                    { "contact", "Eve Smith" },

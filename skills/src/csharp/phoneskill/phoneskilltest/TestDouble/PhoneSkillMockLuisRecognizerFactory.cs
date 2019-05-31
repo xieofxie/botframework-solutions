@@ -135,12 +135,14 @@ namespace PhoneSkillTest.TestDouble
         {
             var builder = new MockLuisRecognizerBuilder<PhoneNumberSelectionLuis, PhoneNumberSelectionLuis.Intent>();
 
+            builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionFailure, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
+
             builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection, new List<MockLuisEntity>()
             {
                 new MockLuisEntity
                 {
                     Type = "phoneNumberType",
-                    Text = "mobile",
+                    Text = "cell phone",
                     StartIndex = 9,
                     ResolvedValue = "MOBILE",
                 },

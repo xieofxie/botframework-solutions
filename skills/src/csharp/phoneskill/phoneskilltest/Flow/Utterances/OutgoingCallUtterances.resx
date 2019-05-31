@@ -141,8 +141,11 @@
   <data name="OutgoingCallPhoneNumber" xml:space="preserve">
     <value>call 0118 999 88199 9119 725 3</value>
   </data>
+  <data name="PhoneNumberSelectionFailure" xml:space="preserve">
+    <value>all of them</value>
+  </data>
   <data name="PhoneNumberSelectionStandardizedType" xml:space="preserve">
-    <value>call his mobile number</value>
+    <value>call the cell phone</value>
   </data>
   <data name="RecipientContactName" xml:space="preserve">
     <value>bob</value>
