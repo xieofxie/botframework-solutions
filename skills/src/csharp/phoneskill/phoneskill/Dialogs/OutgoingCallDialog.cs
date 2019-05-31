@@ -45,8 +45,14 @@ namespace PhoneSkill.Dialogs
 
             AddDialog(new WaterfallDialog(nameof(OutgoingCallDialog), outgoingCall));
             AddDialog(new TextPrompt(DialogIds.RecipientPrompt));
-            AddDialog(new ChoicePrompt(DialogIds.ContactSelection, ValidateContactChoice));
-            AddDialog(new ChoicePrompt(DialogIds.PhoneNumberSelection, ValidatePhoneNumberChoice));
+            AddDialog(new ChoicePrompt(DialogIds.ContactSelection, ValidateContactChoice)
+            {
+                Style = ListStyle.List,
+            });
+            AddDialog(new ChoicePrompt(DialogIds.PhoneNumberSelection, ValidatePhoneNumberChoice)
+            {
+                Style = ListStyle.List,
+            });
 
             InitialDialogId = nameof(OutgoingCallDialog);
 
@@ -277,9 +283,9 @@ namespace PhoneSkill.Dialogs
         private void UpdatePhoneNumberSelectionPromptOptions(PromptOptions options, PhoneSkillState state)
         {
             var tokens = new StringDictionary
-                {
-                    { "contact", state.ContactResult.Matches[0].Name },
-                };
+            {
+                { "contact", state.ContactResult.Matches[0].Name },
+            };
 
             var prompt = ResponseManager.GetResponse(OutgoingCallResponses.PhoneNumberSelection, tokens);
 
@@ -290,15 +296,14 @@ namespace PhoneSkill.Dialogs
             for (var i = 0; i < phoneNumberList.Count; ++i)
             {
                 var phoneNumber = phoneNumberList[i];
-                var speakableType = GetSpeakablePhoneNumberType(phoneNumber.Type);
-
+                var speakableType = $"{GetSpeakablePhoneNumberType(phoneNumber.Type)}: {phoneNumber.Number}";
                 var synonyms = new List<string>
-                    {
-                        speakableType,
-                        phoneNumber.Type.FreeForm,
-                        phoneNumber.Number,
-                        (i + 1).ToString(),
-                    };
+                {
+                    speakableType,
+                    phoneNumber.Type.FreeForm,
+                    phoneNumber.Number,
+                    (i + 1).ToString(),
+                };
                 var choice = new Choice()
                 {
                     Value = speakableType,

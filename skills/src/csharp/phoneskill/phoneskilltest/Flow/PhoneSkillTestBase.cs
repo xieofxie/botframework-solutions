@@ -155,7 +155,6 @@ namespace PhoneSkillTest.Flow
                 Assert.AreEqual("message", activity.Type);
                 var messageActivity = activity.AsMessageActivity();
 
-                // TODO check if fixed
                 // Work around a bug in ParseReplies.
                 if (tokens == null)
                 {
@@ -166,30 +165,12 @@ namespace PhoneSkillTest.Flow
 
                 if (selectionItems != null)
                 {
-                    var selectionListBuilder = new StringBuilder();
+                    var selectionListBuilder = new StringBuilder("\n");
                     for (var i = 0; i < selectionItems.Count; ++i)
                     {
-                        if (i > 0)
-                        {
-                            if (i == selectionItems.Count - 1)
-                            {
-                                // Use an Oxford comma if there are more than two.
-                                if (selectionItems.Count > 2)
-                                {
-                                    selectionListBuilder.Append(",");
-                                }
-
-                                selectionListBuilder.Append(" or ");
-                            }
-                            else
-                            {
-                                selectionListBuilder.Append(", ");
-                            }
-                        }
-
-                        selectionListBuilder.Append("(");
+                        selectionListBuilder.Append("\n   ");
                         selectionListBuilder.Append(i + 1);
-                        selectionListBuilder.Append(") ");
+                        selectionListBuilder.Append(". ");
                         selectionListBuilder.Append(selectionItems[i]);
                     }
 
@@ -198,7 +179,7 @@ namespace PhoneSkillTest.Flow
                     var newExpectedTexts = new string[expectedTexts.Length];
                     for (int i = 0; i < expectedTexts.Length; ++i)
                     {
-                        newExpectedTexts[i] = string.Join(" ", expectedTexts[i], selectionListString);
+                        newExpectedTexts[i] = expectedTexts[i] + selectionListString;
                     }
 
                     expectedTexts = newExpectedTexts;

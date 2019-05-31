@@ -190,9 +190,9 @@ namespace PhoneSkillTest.Flow
                },
                new List<string>()
                {
-                   "Home",
-                   "Business",
-                   "Mobile",
+                   "Home: 555 111 1111",
+                   "Business: 555 222 2222",
+                   "Mobile: 555 333 3333",
                }))
                .Send(OutgoingCallUtterances.SelectionFirst)
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
@@ -227,9 +227,9 @@ namespace PhoneSkillTest.Flow
                },
                new List<string>()
                {
-                   "Home",
-                   "Business",
-                   "Mobile",
+                   "Home: 555 111 1111",
+                   "Business: 555 222 2222",
+                   "Mobile: 555 333 3333",
                }))
                .Send(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType)
                .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
@@ -265,9 +265,9 @@ namespace PhoneSkillTest.Flow
                },
                new List<string>()
                {
-                   "Home",
-                   "Mobile",
-                   "Mobile",
+                   "Home: 555 999 9999",
+                   "Mobile: 555 101 0101",
+                   "Mobile: 555 121 2121",
                }))
                .Send(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType)
                .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
@@ -276,9 +276,8 @@ namespace PhoneSkillTest.Flow
                },
                new List<string>()
                {
-                   // TODO this isn't useful for the user
-                   "Mobile",
-                   "Mobile",
+                   "Mobile: 555 101 0101",
+                   "Mobile: 555 121 2121",
                }))
                .Send(OutgoingCallUtterances.PhoneNumberSelectionFailure)
                .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
@@ -287,9 +286,8 @@ namespace PhoneSkillTest.Flow
                },
                new List<string>()
                {
-                   // TODO this isn't useful for the user
-                   "Mobile",
-                   "Mobile",
+                   "Mobile: 555 101 0101",
+                   "Mobile: 555 121 2121",
                }))
                .Send(OutgoingCallUtterances.SelectionFirst)
                .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
