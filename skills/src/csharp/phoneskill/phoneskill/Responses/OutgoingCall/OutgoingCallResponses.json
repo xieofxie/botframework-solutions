@@ -54,6 +54,14 @@
         "text": "Placing the call to {contactOrPhoneNumber}.",
         "speak": "Placing the call to {contactOrPhoneNumber}."
       }
+    ]
+  },
+  "ExecuteCallWithPhoneNumberType": {
+    "replies": [
+      {
+        "text": "Calling {contactOrPhoneNumber} on {phoneNumberType}.",
+        "speak": "Calling {contactOrPhoneNumber} on {phoneNumberType}."
+      }
     ],
     "inputHint": "acceptingInput"
   }

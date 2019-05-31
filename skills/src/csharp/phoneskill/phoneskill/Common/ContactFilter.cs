@@ -199,7 +199,7 @@ namespace PhoneSkill.Common
                     }
                 }
 
-                if (phoneNumbersOfCorrectType.Any())
+                if (phoneNumbersOfCorrectType.Any() && phoneNumbersOfCorrectType.Count != state.ContactResult.Matches[0].PhoneNumbers.Count)
                 {
                     state.ContactResult.Matches[0].PhoneNumbers = phoneNumbersOfCorrectType;
                     isFiltered = true;

@@ -206,6 +206,10 @@ namespace PhoneSkillTest.Flow
 
                 var actualText = messageActivity.Text;
                 CollectionAssert.Contains(expectedTexts, actualText, $"Expected one of: {expectedTexts.ToPrettyString()}\nActual: {actualText}\n");
+                foreach (string substring in tokens.Values)
+                {
+                    StringAssert.Contains(actualText, substring, $"Expected string that contains \"{substring}\"\nActual: {actualText}\n");
+                }
             };
         }
 

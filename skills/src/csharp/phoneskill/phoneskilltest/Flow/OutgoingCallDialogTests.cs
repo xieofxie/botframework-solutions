@@ -198,7 +198,6 @@ namespace PhoneSkillTest.Flow
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Andrew Smith" },
-                   // TODO say phone number type
                }))
                .AssertReply(OutgoingCallEvent(new OutgoingCall
                {
@@ -233,10 +232,10 @@ namespace PhoneSkillTest.Flow
                    "Mobile",
                }))
                .Send(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType)
-               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Andrew Smith" },
-                   // TODO say phone number type
+                   { "phoneNumberType", "Mobile" },
                }))
                .AssertReply(OutgoingCallEvent(new OutgoingCall
                {
@@ -253,7 +252,7 @@ namespace PhoneSkillTest.Flow
                .StartTestAsync();
         }
 
-        // TODO [TestMethod]
+        [TestMethod]
         public async Task Test_OutgoingCall_ContactName_PhoneNumberSelectionByStandardizedTypeThenIndex()
         {
             await GetTestFlow()
@@ -282,10 +281,10 @@ namespace PhoneSkillTest.Flow
                    "Mobile",
                }))
                .Send(OutgoingCallUtterances.SelectionFirst)
-               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Eve Smith" },
-                   // TODO say phone number type
+                   { "phoneNumberType", "Mobile" },
                }))
                .AssertReply(OutgoingCallEvent(new OutgoingCall
                {

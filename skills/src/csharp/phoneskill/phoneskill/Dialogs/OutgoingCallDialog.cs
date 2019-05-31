@@ -169,55 +169,8 @@ namespace PhoneSkill.Dialogs
                     return await stepContext.NextAsync();
                 }
 
-                var tokens = new StringDictionary
-                {
-                    { "contact", state.ContactResult.Matches[0].Name },
-                };
-
-                var prompt = ResponseManager.GetResponse(OutgoingCallResponses.PhoneNumberSelection, tokens);
-
-                var options = new PromptOptions()
-                {
-                    Prompt = prompt,
-                    Choices = new List<Choice>(),
-                };
-
-                var phoneNumberList = state.ContactResult.Matches[0].PhoneNumbers;
-                for (var i = 0; i < phoneNumberList.Count; ++i)
-                {
-                    var phoneNumber = phoneNumberList[i];
-                    string speakableType;
-                    switch (phoneNumber.Type.Standardized)
-                    {
-                        case PhoneNumberType.StandardType.BUSINESS:
-                            speakableType = "Business";
-                            break;
-                        case PhoneNumberType.StandardType.HOME:
-                            speakableType = "Home";
-                            break;
-                        case PhoneNumberType.StandardType.MOBILE:
-                            speakableType = "Mobile";
-                            break;
-                        case PhoneNumberType.StandardType.NONE:
-                        default:
-                            speakableType = phoneNumber.Type.FreeForm;
-                            break;
-                    }
-
-                    var synonyms = new List<string>
-                    {
-                        speakableType,
-                        phoneNumber.Type.FreeForm,
-                        phoneNumber.Number,
-                        (i + 1).ToString(),
-                    };
-                    var choice = new Choice()
-                    {
-                        Value = speakableType,
-                        Synonyms = synonyms,
-                    };
-                    options.Choices.Add(choice);
-                }
+                var options = new PromptOptions();
+                UpdatePhoneNumberSelectionPromptOptions(options, state);
 
                 return await stepContext.PromptAsync(DialogIds.PhoneNumberSelection, options);
             }
@@ -246,6 +199,7 @@ namespace PhoneSkill.Dialogs
             }
             else if (isFiltered)
             {
+                UpdatePhoneNumberSelectionPromptOptions(promptContext.Options, state);
                 return false;
             }
 
@@ -268,27 +222,31 @@ namespace PhoneSkill.Dialogs
                 var contactProvider = GetContactProvider(state);
                 await contactFilter.Filter(state, contactProvider);
 
-                string contactOrPhoneNumber;
+                var templateId = OutgoingCallResponses.ExecuteCall;
+                var tokens = new StringDictionary();
                 var outgoingCall = new OutgoingCall
                 {
                     Number = state.PhoneNumber,
                 };
                 if (state.ContactResult.Matches.Count == 1)
                 {
-                    contactOrPhoneNumber = state.ContactResult.Matches[0].Name;
+                    tokens["contactOrPhoneNumber"] = state.ContactResult.Matches[0].Name;
                     outgoingCall.Contact = state.ContactResult.Matches[0];
                 }
                 else
                 {
-                    contactOrPhoneNumber = state.PhoneNumber;
+                    tokens["contactOrPhoneNumber"] = state.PhoneNumber;
                 }
 
-                var tokens = new StringDictionary
+                if (state.ContactResult.RequestedPhoneNumberType.Any()
+                    && state.ContactResult.Matches.Count == 1
+                    && state.ContactResult.Matches[0].PhoneNumbers.Count == 1)
                 {
-                    { "contactOrPhoneNumber", contactOrPhoneNumber },
-                };
+                    templateId = OutgoingCallResponses.ExecuteCallWithPhoneNumberType;
+                    tokens["phoneNumberType"] = GetSpeakablePhoneNumberType(state.ContactResult.Matches[0].PhoneNumbers[0].Type);
+                }
 
-                var response = ResponseManager.GetResponse(OutgoingCallResponses.ExecuteCall, tokens);
+                var response = ResponseManager.GetResponse(templateId, tokens);
                 await stepContext.Context.SendActivityAsync(response);
 
                 await SendEvent(stepContext, outgoingCall);
@@ -314,6 +272,63 @@ namespace PhoneSkill.Dialogs
             }
 
             return ServiceManager.GetContactProvider(state.Token, state.SourceOfContacts.Value);
+        }
+
+        private void UpdatePhoneNumberSelectionPromptOptions(PromptOptions options, PhoneSkillState state)
+        {
+            var tokens = new StringDictionary
+                {
+                    { "contact", state.ContactResult.Matches[0].Name },
+                };
+
+            var prompt = ResponseManager.GetResponse(OutgoingCallResponses.PhoneNumberSelection, tokens);
+
+            options.Prompt = prompt;
+            options.Choices = new List<Choice>();
+
+            var phoneNumberList = state.ContactResult.Matches[0].PhoneNumbers;
+            for (var i = 0; i < phoneNumberList.Count; ++i)
+            {
+                var phoneNumber = phoneNumberList[i];
+                var speakableType = GetSpeakablePhoneNumberType(phoneNumber.Type);
+
+                var synonyms = new List<string>
+                    {
+                        speakableType,
+                        phoneNumber.Type.FreeForm,
+                        phoneNumber.Number,
+                        (i + 1).ToString(),
+                    };
+                var choice = new Choice()
+                {
+                    Value = speakableType,
+                    Synonyms = synonyms,
+                };
+                options.Choices.Add(choice);
+            }
+        }
+
+        private string GetSpeakablePhoneNumberType(PhoneNumberType phoneNumberType)
+        {
+            string speakableType;
+            switch (phoneNumberType.Standardized)
+            {
+                case PhoneNumberType.StandardType.BUSINESS:
+                    speakableType = "Business";
+                    break;
+                case PhoneNumberType.StandardType.HOME:
+                    speakableType = "Home";
+                    break;
+                case PhoneNumberType.StandardType.MOBILE:
+                    speakableType = "Mobile";
+                    break;
+                case PhoneNumberType.StandardType.NONE:
+                default:
+                    speakableType = phoneNumberType.FreeForm;
+                    break;
+            }
+
+            return speakableType;
         }
 
         /// <summary>
