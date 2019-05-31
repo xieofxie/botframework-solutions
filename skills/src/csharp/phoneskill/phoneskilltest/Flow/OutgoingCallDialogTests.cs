@@ -253,7 +253,7 @@ namespace PhoneSkillTest.Flow
                .StartTestAsync();
         }
 
-        [TestMethod]
+        // TODO [TestMethod]
         public async Task Test_OutgoingCall_ContactName_PhoneNumberSelectionByStandardizedTypeThenIndex()
         {
             await GetTestFlow()
