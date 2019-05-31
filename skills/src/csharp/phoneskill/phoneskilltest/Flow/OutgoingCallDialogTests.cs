@@ -94,7 +94,7 @@ namespace PhoneSkillTest.Flow
         public async Task Test_OutgoingCall_ContactName_ContactSelectionByIndex()
         {
             await GetTestFlow()
-               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesNarthwani)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
                .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
@@ -103,18 +103,18 @@ namespace PhoneSkillTest.Flow
                },
                new List<string>()
                {
-                   "Ditha Narthwani",
                    "Sanjay Narthwani",
+                   "Ditha Narthwani",
                }))
                .Send(OutgoingCallUtterances.SelectionFirst)
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
                {
-                   { "contactOrPhoneNumber", "Ditha Narthwani" },
+                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
                }))
                .AssertReply(OutgoingCallEvent(new OutgoingCall
                {
-                   Number = "555 777 7777",
-                   Contact = StubContactProvider.DithaNarthwani,
+                   Number = "555 888 8888",
+                   Contact = StubContactProvider.SanjayNarthwani,
                }))
                .StartTestAsync();
         }
@@ -123,7 +123,7 @@ namespace PhoneSkillTest.Flow
         public async Task Test_OutgoingCall_ContactName_ContactSelectionByPartialName()
         {
             await GetTestFlow()
-               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesNarthwani)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
                .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
@@ -132,10 +132,10 @@ namespace PhoneSkillTest.Flow
                },
                new List<string>()
                {
-                   "Ditha Narthwani",
                    "Sanjay Narthwani",
+                   "Ditha Narthwani",
                }))
-               .Send(OutgoingCallUtterances.ContactSelectionPartialName)
+               .Send(OutgoingCallUtterances.ContactSelectionPartialNameSanjay)
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
                {
                    { "contactOrPhoneNumber", "Sanjay Narthwani" },
@@ -152,7 +152,7 @@ namespace PhoneSkillTest.Flow
         public async Task Test_OutgoingCall_ContactName_ContactSelectionByFullName()
         {
             await GetTestFlow()
-               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches)
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesNarthwani)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
                .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
@@ -161,8 +161,8 @@ namespace PhoneSkillTest.Flow
                },
                new List<string>()
                {
-                   "Ditha Narthwani",
                    "Sanjay Narthwani",
+                   "Ditha Narthwani",
                }))
                .Send(OutgoingCallUtterances.ContactSelectionFullName)
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
@@ -173,6 +173,46 @@ namespace PhoneSkillTest.Flow
                {
                    Number = "555 888 8888",
                    Contact = StubContactProvider.SanjayNarthwani,
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionByPartialNameTwice()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesAndrew)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "andrew" },
+               },
+               new List<string>()
+               {
+                   "Andrew John Keith",
+                   "Andrew John Fitzroy",
+                   "Andrew Smith",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionPartialNameAndrewJohn)
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "andrew john" },
+               },
+               new List<string>()
+               {
+                   "Andrew John Keith",
+                   "Andrew John Fitzroy",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionPartialNameKeith)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Andrew John Keith" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 444 5555",
+                   Contact = StubContactProvider.AndrewJohnKeith,
                }))
                .StartTestAsync();
         }
@@ -273,6 +313,7 @@ namespace PhoneSkillTest.Flow
                .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
                {
                    { "contact", "Eve Smith" },
+                   // TODO speak phone number type
                },
                new List<string>()
                {
@@ -283,6 +324,7 @@ namespace PhoneSkillTest.Flow
                .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
                {
                    { "contact", "Eve Smith" },
+                   // TODO speak phone number type
                },
                new List<string>()
                {

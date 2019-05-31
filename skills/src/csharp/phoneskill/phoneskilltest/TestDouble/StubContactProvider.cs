@@ -39,9 +39,9 @@ namespace PhoneSkillTest.TestDouble
             },
         };
 
-        public static readonly ContactCandidate AndrewJones = new ContactCandidate
+        public static readonly ContactCandidate AndrewJohnFitzroy = new ContactCandidate
         {
-            Name = "Andrew Jones",
+            Name = "Andrew John Fitzroy",
             PhoneNumbers = new List<PhoneNumber>
             {
                 new PhoneNumber
@@ -58,6 +58,22 @@ namespace PhoneSkillTest.TestDouble
                     Type = new PhoneNumberType
                     {
                         Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+            },
+        };
+
+        public static readonly ContactCandidate AndrewJohnKeith = new ContactCandidate
+        {
+            Name = "Andrew John Keith",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 444 5555",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.BUSINESS,
                     },
                 },
             },
@@ -156,7 +172,8 @@ namespace PhoneSkillTest.TestDouble
         private readonly IList<ContactCandidate> contacts = new List<ContactCandidate>
         {
             AndrewSmith,
-            AndrewJones,
+            AndrewJohnFitzroy,
+            AndrewJohnKeith,
             BobBotter,
             ChristinaRodriguez,
             ChristinaSanchez,

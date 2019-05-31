@@ -37,12 +37,22 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatches, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesNarthwani, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
                 new MockLuisEntity
                 {
                     Type = "contactName",
                     Text = "narthwani",
+                    StartIndex = 5,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesAndrew, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "andrew",
                     StartIndex = 5,
                 },
             });
@@ -116,7 +126,27 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionPartialName, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionPartialNameKeith, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "keith",
+                    StartIndex = 7,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionPartialNameAndrewJohn, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "andrew john",
+                    StartIndex = 0,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionPartialNameSanjay, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
             {
                 new MockLuisEntity
                 {

@@ -43,7 +43,7 @@ namespace PhoneSkill.Common
             entitiesForSearch = SortAndRemoveOverlappingEntities(entitiesForSearch);
             var searchQuery = string.Join(" ", entitiesForSearch.Select(entity => entity.Text));
 
-            if (searchQuery.Any())
+            if (searchQuery.Any() && !(searchQuery == state.ContactResult.SearchQuery && state.ContactResult.Matches.Any()))
             {
                 IList<ContactCandidate> contacts;
                 if (state.ContactResult.Matches.Any())
@@ -65,9 +65,15 @@ namespace PhoneSkill.Common
                     var matcher = new EnContactMatcher<ContactCandidate>(contacts, ExtractContactFields);
                     var matches = matcher.FindByName(searchQuery);
 
-                    state.ContactResult.SearchQuery = searchQuery;
-                    state.ContactResult.Matches = matches;
-                    isFiltered = true;
+                    if (!state.ContactResult.Matches.Any() || matches.Count != state.ContactResult.Matches.Count)
+                    {
+                        isFiltered = true;
+                        if (!state.ContactResult.Matches.Any() || matches.Any())
+                        {
+                            state.ContactResult.SearchQuery = searchQuery;
+                            state.ContactResult.Matches = matches;
+                        }
+                    }
                 }
             }
 
@@ -77,6 +83,16 @@ namespace PhoneSkill.Common
             SetPhoneNumber(state);
 
             return isFiltered;
+        }
+
+        /// <summary>
+        /// Returns whether a recipient has been specified.
+        /// </summary>
+        /// <param name="state">The current state.</param>
+        /// <returns>Whether a recipient has been specified.</returns>
+        public bool HasRecipient(PhoneSkillState state)
+        {
+            return state.ContactResult.Matches.Any() || state.PhoneNumber.Any();
         }
 
         /// <summary>

@@ -70,11 +70,29 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to andrew john please.
+        /// </summary>
+        internal static string ContactSelectionPartialNameAndrewJohn {
+            get {
+                return ResourceManager.GetString("ContactSelectionPartialNameAndrewJohn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to choose keith.
+        /// </summary>
+        internal static string ContactSelectionPartialNameKeith {
+            get {
+                return ResourceManager.GetString("ContactSelectionPartialNameKeith", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to select sanjay.
         /// </summary>
-        internal static string ContactSelectionPartialName {
+        internal static string ContactSelectionPartialNameSanjay {
             get {
-                return ResourceManager.GetString("ContactSelectionPartialName", resourceCulture);
+                return ResourceManager.GetString("ContactSelectionPartialNameSanjay", resourceCulture);
             }
         }
         
@@ -88,11 +106,20 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to call andrew.
+        /// </summary>
+        internal static string OutgoingCallContactNameMultipleMatchesAndrew {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameMultipleMatchesAndrew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to call narthwani.
         /// </summary>
-        internal static string OutgoingCallContactNameMultipleMatches {
+        internal static string OutgoingCallContactNameMultipleMatchesNarthwani {
             get {
-                return ResourceManager.GetString("OutgoingCallContactNameMultipleMatches", resourceCulture);
+                return ResourceManager.GetString("OutgoingCallContactNameMultipleMatchesNarthwani", resourceCulture);
             }
         }
         

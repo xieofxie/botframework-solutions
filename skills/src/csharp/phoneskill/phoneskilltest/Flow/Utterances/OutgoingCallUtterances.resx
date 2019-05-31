@@ -120,13 +120,22 @@
   <data name="ContactSelectionFullName" xml:space="preserve">
     <value>I mean sanjay narthwani</value>
   </data>
-  <data name="ContactSelectionPartialName" xml:space="preserve">
+  <data name="ContactSelectionPartialNameAndrewJohn" xml:space="preserve">
+    <value>andrew john please</value>
+  </data>
+  <data name="ContactSelectionPartialNameKeith" xml:space="preserve">
+    <value>choose keith</value>
+  </data>
+  <data name="ContactSelectionPartialNameSanjay" xml:space="preserve">
     <value>select sanjay</value>
   </data>
   <data name="OutgoingCallContactName" xml:space="preserve">
     <value>call bob</value>
   </data>
-  <data name="OutgoingCallContactNameMultipleMatches" xml:space="preserve">
+  <data name="OutgoingCallContactNameMultipleMatchesAndrew" xml:space="preserve">
+    <value>call andrew</value>
+  </data>
+  <data name="OutgoingCallContactNameMultipleMatchesNarthwani" xml:space="preserve">
     <value>call narthwani</value>
   </data>
   <data name="OutgoingCallContactNameMultipleNumbers" xml:space="preserve">
