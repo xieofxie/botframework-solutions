@@ -119,6 +119,34 @@ namespace PhoneSkill.Common
         /// Override the entities on the state with the ones from the given LUIS result.
         /// </summary>
         /// <param name="state">The current state. This will be modified.</param>
+        /// <param name="phoneResult">The LUIS result.</param>
+        public void OverrideEntities(PhoneSkillState state, PhoneLuis phoneResult)
+        {
+            state.LuisResult.Entities.contactName = phoneResult.Entities.contactName;
+            state.LuisResult.Entities._instance.contactName = phoneResult.Entities._instance.contactName;
+
+            state.LuisResult.Entities.contactRelation = phoneResult.Entities.contactRelation;
+            state.LuisResult.Entities._instance.contactRelation = phoneResult.Entities._instance.contactRelation;
+
+            state.LuisResult.Entities.phoneNumber = phoneResult.Entities.phoneNumber;
+            state.LuisResult.Entities._instance.contactRelation = phoneResult.Entities._instance.phoneNumber;
+
+            state.LuisResult.Entities.phoneNumberSpelledOut = phoneResult.Entities.phoneNumberSpelledOut;
+            state.LuisResult.Entities._instance.contactRelation = phoneResult.Entities._instance.phoneNumberSpelledOut;
+
+            if (state.LuisResult.Entities.phoneNumberType == null
+                || !state.LuisResult.Entities.phoneNumberType.Any()
+                || (phoneResult.Entities.phoneNumberType != null && phoneResult.Entities.phoneNumberType.Any()))
+            {
+                state.LuisResult.Entities.phoneNumberType = phoneResult.Entities.phoneNumberType;
+                state.LuisResult.Entities._instance.phoneNumberType = phoneResult.Entities._instance.phoneNumberType;
+            }
+        }
+
+        /// <summary>
+        /// Override the entities on the state with the ones from the given LUIS result.
+        /// </summary>
+        /// <param name="state">The current state. This will be modified.</param>
         /// <param name="contactSelectionResult">The LUIS result.</param>
         public void OverrideEntities(PhoneSkillState state, ContactSelectionLuis contactSelectionResult)
         {
@@ -148,8 +176,13 @@ namespace PhoneSkill.Common
             state.LuisResult.Entities.phoneNumberSpelledOut = new string[0];
             state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
 
-            state.LuisResult.Entities.phoneNumberType = phoneNumberSelectionResult.Entities.phoneNumberType;
-            state.LuisResult.Entities._instance.phoneNumberType = phoneNumberSelectionResult.Entities._instance.phoneNumberType;
+            if (state.LuisResult.Entities.phoneNumberType == null
+                || !state.LuisResult.Entities.phoneNumberType.Any()
+                || (phoneNumberSelectionResult.Entities.phoneNumberType != null && phoneNumberSelectionResult.Entities.phoneNumberType.Any()))
+            {
+                state.LuisResult.Entities.phoneNumberType = phoneNumberSelectionResult.Entities.phoneNumberType;
+                state.LuisResult.Entities._instance.phoneNumberType = phoneNumberSelectionResult.Entities._instance.phoneNumberType;
+            }
         }
 
         private List<InstanceData> SortAndRemoveOverlappingEntities(List<InstanceData> entities)
@@ -217,6 +250,7 @@ namespace PhoneSkill.Common
 
                 if (phoneNumbersOfCorrectType.Any() && phoneNumbersOfCorrectType.Count != state.ContactResult.Matches[0].PhoneNumbers.Count)
                 {
+                    state.ContactResult.Matches[0] = (ContactCandidate)state.ContactResult.Matches[0].Clone();
                     state.ContactResult.Matches[0].PhoneNumbers = phoneNumbersOfCorrectType;
                     isFiltered = true;
                 }

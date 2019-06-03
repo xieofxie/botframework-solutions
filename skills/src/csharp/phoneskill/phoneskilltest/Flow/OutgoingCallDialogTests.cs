@@ -89,6 +89,33 @@ namespace PhoneSkillTest.Flow
         }
 
         [TestMethod]
+        public async Task Test_OutgoingCall_ContactNameWithPhoneNumberType()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberType)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Andrew Smith" },
+                   { "phoneNumberType", "Business" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 222 2222",
+                   Contact = new ContactCandidate
+                   {
+                       Name = StubContactProvider.AndrewSmith.Name,
+                       PhoneNumbers = new List<PhoneNumber>
+                       {
+                           StubContactProvider.AndrewSmith.PhoneNumbers[1],
+                       },
+                   },
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
         public async Task Test_OutgoingCall_RecipientPromptContactName()
         {
             await GetTestFlow()
@@ -126,6 +153,35 @@ namespace PhoneSkillTest.Flow
                {
                    Number = "555 888 8888",
                    Contact = StubContactProvider.SanjayNarthwani,
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_RecipientPromptContactNameWithPhoneNumberType()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallNoEntities)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.RecipientPrompt))
+               .Send(OutgoingCallUtterances.RecipientContactNameWithPhoneNumberType)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Andrew Smith" },
+                   { "phoneNumberType", "Business" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 222 2222",
+                   Contact = new ContactCandidate
+                   {
+                       Name = StubContactProvider.AndrewSmith.Name,
+                       PhoneNumbers = new List<PhoneNumber>
+                       {
+                           StubContactProvider.AndrewSmith.PhoneNumbers[1],
+                       },
+                   },
                }))
                .StartTestAsync();
         }

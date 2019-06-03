@@ -147,6 +147,9 @@
   <data name="OutgoingCallContactNameMultipleNumbersWithSameType" xml:space="preserve">
     <value>call eve smith</value>
   </data>
+  <data name="OutgoingCallContactNameWithPhoneNumberType" xml:space="preserve">
+    <value>call andrew smith at work</value>
+  </data>
   <data name="OutgoingCallContactNameWithSpeechRecognitionError" xml:space="preserve">
     <value>call sunday not funny</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="RecipientContactName" xml:space="preserve">
     <value>bob</value>
+  </data>
+  <data name="RecipientContactNameWithPhoneNumberType" xml:space="preserve">
+    <value>andrew smith at work</value>
   </data>
   <data name="RecipientContactNameWithSpeechRecognitionError" xml:space="preserve">
     <value>sunday not funny</value>

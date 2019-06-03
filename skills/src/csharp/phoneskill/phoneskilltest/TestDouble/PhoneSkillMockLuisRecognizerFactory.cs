@@ -77,6 +77,23 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberType, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "andrew smith",
+                    StartIndex = 5,
+                },
+                new MockLuisEntity
+                {
+                    Type = "phoneNumberType",
+                    Text = "work",
+                    StartIndex = 21,
+                    ResolvedValue = "BUSINESS",
+                },
+            });
+
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameWithSpeechRecognitionError, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
                 new MockLuisEntity
@@ -106,6 +123,23 @@ namespace PhoneSkillTest.TestDouble
                     Type = "contactName",
                     Text = "bob",
                     StartIndex = 0,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.RecipientContactNameWithPhoneNumberType, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "andrew smith",
+                    StartIndex = 0,
+                },
+                new MockLuisEntity
+                {
+                    Type = "phoneNumberType",
+                    Text = "work",
+                    StartIndex = 16,
+                    ResolvedValue = "BUSINESS",
                 },
             });
 

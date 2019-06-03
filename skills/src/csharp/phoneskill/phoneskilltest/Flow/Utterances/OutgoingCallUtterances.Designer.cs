@@ -151,6 +151,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to call andrew smith at work.
+        /// </summary>
+        internal static string OutgoingCallContactNameWithPhoneNumberType {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameWithPhoneNumberType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to call sunday not funny.
         /// </summary>
         internal static string OutgoingCallContactNameWithSpeechRecognitionError {
@@ -201,6 +210,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         internal static string RecipientContactName {
             get {
                 return ResourceManager.GetString("RecipientContactName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to andrew smith at work.
+        /// </summary>
+        internal static string RecipientContactNameWithPhoneNumberType {
+            get {
+                return ResourceManager.GetString("RecipientContactNameWithPhoneNumberType", resourceCulture);
             }
         }
         

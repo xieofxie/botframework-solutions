@@ -67,7 +67,7 @@ namespace PhoneSkill.Dialogs
 
         protected override async Task<DialogTurnResult> OnContinueDialogAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await GetLuisResult(dc);
+            // For follow-up queries, we want to run a different LUIS recognizer depending on the prompt that was given to the user. We leave this up to the subclass.
             return await base.OnContinueDialogAsync(dc, cancellationToken);
         }
 

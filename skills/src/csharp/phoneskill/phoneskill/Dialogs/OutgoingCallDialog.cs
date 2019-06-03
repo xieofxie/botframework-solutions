@@ -86,6 +86,10 @@ namespace PhoneSkill.Dialogs
         private async Task<bool> ValidateRecipient(PromptValidatorContext<string> promptContext, CancellationToken cancellationToken)
         {
             var state = await PhoneStateAccessor.GetAsync(promptContext.Context);
+
+            var phoneResult = await RunLuis<PhoneLuis>(promptContext.Context, "phone");
+            contactFilter.OverrideEntities(state, phoneResult);
+
             var contactProvider = GetContactProvider(state);
             await contactFilter.Filter(state, contactProvider);
 
