@@ -70,6 +70,25 @@ namespace PhoneSkillTest.Flow
         }
 
         [TestMethod]
+        public async Task Test_OutgoingCall_ContactNameWithSpeechRecognitionError()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameWithSpeechRecognitionError)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 888 8888",
+                   Contact = StubContactProvider.SanjayNarthwani,
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
         public async Task Test_OutgoingCall_RecipientPromptContactName()
         {
             await GetTestFlow()
@@ -86,6 +105,27 @@ namespace PhoneSkillTest.Flow
                {
                    Number = "555 666 6666",
                    Contact = StubContactProvider.BobBotter,
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_RecipientPromptContactNameWithSpeechRecognitionError()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallNoEntities)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.RecipientPrompt))
+               .Send(OutgoingCallUtterances.RecipientContactNameWithSpeechRecognitionError)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 888 8888",
+                   Contact = StubContactProvider.SanjayNarthwani,
                }))
                .StartTestAsync();
         }
@@ -178,12 +218,52 @@ namespace PhoneSkillTest.Flow
         }
 
         [TestMethod]
-        public async Task Test_OutgoingCall_ContactName_ContactSelectionByPartialNameTwice()
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionByFullNameWithSpeechRecognitionError()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesNarthwani)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "narthwani" },
+               },
+               new List<string>()
+               {
+                   "Sanjay Narthwani",
+                   "Ditha Narthwani",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionFullNameWithSpeechRecognitionError)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 888 8888",
+                   Contact = StubContactProvider.SanjayNarthwani,
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactName_ContactSelectionFailureThenByPartialNameTwice()
         {
             await GetTestFlow()
                .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesAndrew)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "andrew" },
+               },
+               new List<string>()
+               {
+                   "Andrew John Keith",
+                   "Andrew John Fitzroy",
+                   "Andrew Smith",
+               }))
+               .Send(OutgoingCallUtterances.SelectionFailure)
                .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
                {
                    { "contactName", "andrew" },
@@ -320,7 +400,7 @@ namespace PhoneSkillTest.Flow
                    "Mobile: 555 101 0101",
                    "Mobile: 555 121 2121",
                }))
-               .Send(OutgoingCallUtterances.PhoneNumberSelectionFailure)
+               .Send(OutgoingCallUtterances.SelectionFailure)
                .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
                {
                    { "contact", "Eve Smith" },

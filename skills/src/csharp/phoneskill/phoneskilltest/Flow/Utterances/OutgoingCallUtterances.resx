@@ -120,6 +120,9 @@
   <data name="ContactSelectionFullName" xml:space="preserve">
     <value>I mean sanjay narthwani</value>
   </data>
+  <data name="ContactSelectionFullNameWithSpeechRecognitionError" xml:space="preserve">
+    <value>I want sunday not funny</value>
+  </data>
   <data name="ContactSelectionPartialNameAndrewJohn" xml:space="preserve">
     <value>andrew john please</value>
   </data>
@@ -144,14 +147,14 @@
   <data name="OutgoingCallContactNameMultipleNumbersWithSameType" xml:space="preserve">
     <value>call eve smith</value>
   </data>
+  <data name="OutgoingCallContactNameWithSpeechRecognitionError" xml:space="preserve">
+    <value>call sunday not funny</value>
+  </data>
   <data name="OutgoingCallNoEntities" xml:space="preserve">
     <value>make a call</value>
   </data>
   <data name="OutgoingCallPhoneNumber" xml:space="preserve">
     <value>call 0118 999 88199 9119 725 3</value>
-  </data>
-  <data name="PhoneNumberSelectionFailure" xml:space="preserve">
-    <value>all of them</value>
   </data>
   <data name="PhoneNumberSelectionFullNumber" xml:space="preserve">
     <value>555 222 2222</value>
@@ -162,8 +165,14 @@
   <data name="RecipientContactName" xml:space="preserve">
     <value>bob</value>
   </data>
+  <data name="RecipientContactNameWithSpeechRecognitionError" xml:space="preserve">
+    <value>sunday not funny</value>
+  </data>
   <data name="RecipientPhoneNumber" xml:space="preserve">
     <value>0118 999 88199 9119 725 3</value>
+  </data>
+  <data name="SelectionFailure" xml:space="preserve">
+    <value>all of them</value>
   </data>
   <data name="SelectionFirst" xml:space="preserve">
     <value>the first one</value>

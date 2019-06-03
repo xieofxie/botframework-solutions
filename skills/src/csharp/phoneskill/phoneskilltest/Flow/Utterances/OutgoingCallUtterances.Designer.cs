@@ -70,6 +70,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I want sunday not funny.
+        /// </summary>
+        internal static string ContactSelectionFullNameWithSpeechRecognitionError {
+            get {
+                return ResourceManager.GetString("ContactSelectionFullNameWithSpeechRecognitionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to andrew john please.
         /// </summary>
         internal static string ContactSelectionPartialNameAndrewJohn {
@@ -142,6 +151,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to call sunday not funny.
+        /// </summary>
+        internal static string OutgoingCallContactNameWithSpeechRecognitionError {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameWithSpeechRecognitionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to make a call.
         /// </summary>
         internal static string OutgoingCallNoEntities {
@@ -156,15 +174,6 @@ namespace PhoneSkillTest.Flow.Utterances {
         internal static string OutgoingCallPhoneNumber {
             get {
                 return ResourceManager.GetString("OutgoingCallPhoneNumber", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to all of them.
-        /// </summary>
-        internal static string PhoneNumberSelectionFailure {
-            get {
-                return ResourceManager.GetString("PhoneNumberSelectionFailure", resourceCulture);
             }
         }
         
@@ -196,11 +205,29 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to sunday not funny.
+        /// </summary>
+        internal static string RecipientContactNameWithSpeechRecognitionError {
+            get {
+                return ResourceManager.GetString("RecipientContactNameWithSpeechRecognitionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 0118 999 88199 9119 725 3.
         /// </summary>
         internal static string RecipientPhoneNumber {
             get {
                 return ResourceManager.GetString("RecipientPhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to all of them.
+        /// </summary>
+        internal static string SelectionFailure {
+            get {
+                return ResourceManager.GetString("SelectionFailure", resourceCulture);
             }
         }
         

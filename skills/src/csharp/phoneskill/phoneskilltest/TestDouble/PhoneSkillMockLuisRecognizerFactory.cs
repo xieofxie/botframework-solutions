@@ -77,6 +77,16 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameWithSpeechRecognitionError, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "sunday not funny",
+                    StartIndex = 5,
+                },
+            });
+
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallNoEntities, PhoneLuis.Intent.OutgoingCall);
 
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallPhoneNumber, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
@@ -95,6 +105,16 @@ namespace PhoneSkillTest.TestDouble
                 {
                     Type = "contactName",
                     Text = "bob",
+                    StartIndex = 0,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.RecipientContactNameWithSpeechRecognitionError, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "sunday not funny",
                     StartIndex = 0,
                 },
             });
@@ -122,6 +142,16 @@ namespace PhoneSkillTest.TestDouble
                 {
                     Type = "contactName",
                     Text = "sanjay narthwani",
+                    StartIndex = 7,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionFullNameWithSpeechRecognitionError, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "sunday not funny",
                     StartIndex = 7,
                 },
             });
@@ -156,6 +186,8 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.SelectionFailure, ContactSelectionLuis.Intent.ContactSelection);
+
             builder.AddUtterance(OutgoingCallUtterances.SelectionFirst, ContactSelectionLuis.Intent.ContactSelection);
 
             return builder.Build();
@@ -164,8 +196,6 @@ namespace PhoneSkillTest.TestDouble
         public static MockLuisRecognizer CreateMockPhoneNumberSelectionLuisRecognizer()
         {
             var builder = new MockLuisRecognizerBuilder<PhoneNumberSelectionLuis, PhoneNumberSelectionLuis.Intent>();
-
-            builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionFailure, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
 
             builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionFullNumber, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
 
@@ -179,6 +209,8 @@ namespace PhoneSkillTest.TestDouble
                     ResolvedValue = "MOBILE",
                 },
             });
+
+            builder.AddUtterance(OutgoingCallUtterances.SelectionFailure, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
 
             builder.AddUtterance(OutgoingCallUtterances.SelectionFirst, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
 
