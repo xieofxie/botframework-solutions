@@ -95,9 +95,9 @@ namespace PhoneSkillTest.TestDouble
             },
         };
 
-        public static readonly ContactCandidate ChristinaRodriguez = new ContactCandidate
+        public static readonly ContactCandidate ChristinaBotter = new ContactCandidate
         {
-            Name = "Christina Rodriguez",
+            Name = "Christina Botter",
         };
 
         public static readonly ContactCandidate ChristinaSanchez = new ContactCandidate
@@ -169,17 +169,51 @@ namespace PhoneSkillTest.TestDouble
             },
         };
 
+        public static readonly ContactCandidate FernandaSanchez = new ContactCandidate
+        {
+            Name = "Fernanda Sanchez",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 131 3131",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+            },
+        };
+
+        public static readonly ContactCandidate GerardoSanchez = new ContactCandidate
+        {
+            Name = "Gerardo Sanchez",
+            PhoneNumbers = new List<PhoneNumber>
+            {
+                new PhoneNumber
+                {
+                    Number = "555 141 4141",
+                    Type = new PhoneNumberType
+                    {
+                        Standardized = PhoneNumberType.StandardType.MOBILE,
+                    },
+                },
+            },
+        };
+
         private readonly IList<ContactCandidate> contacts = new List<ContactCandidate>
         {
             AndrewSmith,
             AndrewJohnFitzroy,
             AndrewJohnKeith,
             BobBotter,
-            ChristinaRodriguez,
+            ChristinaBotter,
             ChristinaSanchez,
             DithaNarthwani,
             SanjayNarthwani,
             EveSmith,
+            FernandaSanchez,
+            GerardoSanchez,
         };
 
         public Task<IList<ContactCandidate>> GetContacts()

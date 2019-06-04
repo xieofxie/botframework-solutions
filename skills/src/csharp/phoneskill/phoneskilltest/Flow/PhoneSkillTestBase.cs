@@ -186,7 +186,29 @@ namespace PhoneSkillTest.Flow
                 }
 
                 var actualText = messageActivity.Text;
-                CollectionAssert.Contains(expectedTexts, actualText, $"Expected one of: {expectedTexts.ToPrettyString()}\nActual: {actualText}\n");
+
+                string bestMatchingExpectedText = string.Empty;
+                int longestCommonPrefix = 0;
+                foreach (var expectedText in expectedTexts)
+                {
+                    for (int i = 0; i < expectedText.Length && i < actualText.Length; ++i)
+                    {
+                        if (expectedText[i] != actualText[i])
+                        {
+                            if (i > longestCommonPrefix)
+                            {
+                                bestMatchingExpectedText = expectedText;
+                                longestCommonPrefix = i;
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+                CollectionAssert.Contains(expectedTexts, actualText,
+                    $"Expected one of: {expectedTexts.ToPrettyString()}\nActual: {actualText}\nBest matching expected text matches up to {longestCommonPrefix}: {bestMatchingExpectedText.Substring(0, longestCommonPrefix)}\n");
+
                 foreach (string substring in tokens.Values)
                 {
                     StringAssert.Contains(actualText, substring, $"Expected string that contains \"{substring}\"\nActual: {actualText}\n");

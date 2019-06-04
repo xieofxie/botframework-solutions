@@ -124,11 +124,29 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to call botter.
+        /// </summary>
+        internal static string OutgoingCallContactNameMultipleMatchesBotter {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameMultipleMatchesBotter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to call narthwani.
         /// </summary>
         internal static string OutgoingCallContactNameMultipleMatchesNarthwani {
             get {
                 return ResourceManager.GetString("OutgoingCallContactNameMultipleMatchesNarthwani", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to call sanchez.
+        /// </summary>
+        internal static string OutgoingCallContactNameMultipleMatchesSanchez {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameMultipleMatchesSanchez", resourceCulture);
             }
         }
         
@@ -147,6 +165,33 @@ namespace PhoneSkillTest.Flow.Utterances {
         internal static string OutgoingCallContactNameMultipleNumbersWithSameType {
             get {
                 return ResourceManager.GetString("OutgoingCallContactNameMultipleNumbersWithSameType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to call christina botter.
+        /// </summary>
+        internal static string OutgoingCallContactNameNoPhoneNumber {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameNoPhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to call christina.
+        /// </summary>
+        internal static string OutgoingCallContactNameNoPhoneNumberMultipleMatches {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameNoPhoneNumberMultipleMatches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to call qqq.
+        /// </summary>
+        internal static string OutgoingCallContactNameNotFound {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameNotFound", resourceCulture);
             }
         }
         

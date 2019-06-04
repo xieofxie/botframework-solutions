@@ -37,6 +37,26 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesAndrew, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "andrew",
+                    StartIndex = 5,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesBotter, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "botter",
+                    StartIndex = 5,
+                },
+            });
+
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesNarthwani, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
                 new MockLuisEntity
@@ -47,12 +67,12 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesAndrew, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesSanchez, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
                 new MockLuisEntity
                 {
                     Type = "contactName",
-                    Text = "andrew",
+                    Text = "sanchez",
                     StartIndex = 5,
                 },
             });
@@ -73,6 +93,36 @@ namespace PhoneSkillTest.TestDouble
                 {
                     Type = "contactName",
                     Text = "eve smith",
+                    StartIndex = 5,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameNoPhoneNumber, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "christina botter",
+                    StartIndex = 5,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameNoPhoneNumberMultipleMatches, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "christina",
+                    StartIndex = 5,
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameNotFound, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "qqq",
                     StartIndex = 5,
                 },
             });

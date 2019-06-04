@@ -67,7 +67,8 @@ namespace PhoneSkill.Dialogs
                 var contactProvider = GetContactProvider(state);
                 await contactFilter.Filter(state, contactProvider);
 
-                if (state.ContactResult.Matches.Count != 0 || state.PhoneNumber.Any())
+                var hasRecipient = await CheckRecipientAndExplainFailureToUser(stepContext.Context, state);
+                if (hasRecipient)
                 {
                     return await stepContext.NextAsync();
                 }
@@ -93,7 +94,7 @@ namespace PhoneSkill.Dialogs
             var contactProvider = GetContactProvider(state);
             await contactFilter.Filter(state, contactProvider);
 
-            return contactFilter.HasRecipient(state);
+            return await CheckRecipientAndExplainFailureToUser(promptContext.Context, state);
         }
 
         private async Task<DialogTurnResult> AskToSelectContact(WaterfallStepContext stepContext, CancellationToken cancellationToken)
@@ -266,6 +267,54 @@ namespace PhoneSkill.Dialogs
             }
 
             return ServiceManager.GetContactProvider(state.Token, state.SourceOfContacts.Value);
+        }
+
+        private async Task<bool> CheckRecipientAndExplainFailureToUser(ITurnContext context, PhoneSkillState state)
+        {
+            if (contactFilter.HasRecipient(state))
+            {
+                var contactsWithNoPhoneNumber = contactFilter.RemoveContactsWithNoPhoneNumber(state);
+
+                if (contactFilter.HasRecipient(state))
+                {
+                    return true;
+                }
+
+                if (contactsWithNoPhoneNumber.Count == 1)
+                {
+                    var tokens = new StringDictionary()
+                    {
+                        { "contact", contactsWithNoPhoneNumber[0].Name },
+                    };
+                    var response = ResponseManager.GetResponse(OutgoingCallResponses.ContactHasNoPhoneNumber, tokens);
+                    await context.SendActivityAsync(response);
+
+                    return false;
+                }
+                else
+                {
+                    var tokens = new StringDictionary()
+                    {
+                        { "contactName", state.ContactResult.SearchQuery },
+                    };
+                    var response = ResponseManager.GetResponse(OutgoingCallResponses.ContactsHaveNoPhoneNumber, tokens);
+                    await context.SendActivityAsync(response);
+
+                    return false;
+                }
+            }
+
+            if (state.ContactResult.SearchQuery.Any())
+            {
+                var tokens = new StringDictionary()
+                {
+                    { "contactName", state.ContactResult.SearchQuery },
+                };
+                var response = ResponseManager.GetResponse(OutgoingCallResponses.ContactNotFound, tokens);
+                await context.SendActivityAsync(response);
+            }
+
+            return false;
         }
 
         private void UpdateContactSelectionPromptOptions(PromptOptions options, PhoneSkillState state)

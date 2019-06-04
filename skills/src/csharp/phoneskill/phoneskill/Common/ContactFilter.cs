@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.AI.Luis;
+using Microsoft.Graph;
 using Microsoft.PhoneticMatching.Matchers.ContactMatcher;
 using PhoneSkill.Models;
 using PhoneSkill.Services.Luis;
@@ -65,14 +66,11 @@ namespace PhoneSkill.Common
                     var matcher = new EnContactMatcher<ContactCandidate>(contacts, ExtractContactFields);
                     var matches = matcher.FindByName(searchQuery);
 
-                    if (!state.ContactResult.Matches.Any() || matches.Count != state.ContactResult.Matches.Count)
+                    if (!state.ContactResult.Matches.Any() || matches.Any())
                     {
-                        isFiltered = true;
-                        if (!state.ContactResult.Matches.Any() || matches.Any())
-                        {
-                            state.ContactResult.SearchQuery = searchQuery;
-                            state.ContactResult.Matches = matches;
-                        }
+                        isFiltered = isFiltered || matches.Count != state.ContactResult.Matches.Count;
+                        state.ContactResult.SearchQuery = searchQuery;
+                        state.ContactResult.Matches = matches;
                     }
                 }
             }
@@ -185,6 +183,35 @@ namespace PhoneSkill.Common
             }
         }
 
+        /// <summary>
+        /// Remove and return contact candidates that don't have any phone number.
+        /// </summary>
+        /// <param name="state">The current state. This will be modified.</param>
+        /// <returns>The removed candidates.</returns>
+        public List<ContactCandidate> RemoveContactsWithNoPhoneNumber(PhoneSkillState state)
+        {
+            var newCandidates = new List<ContactCandidate>();
+            var removedCandidates = new List<ContactCandidate>();
+            foreach (var candidate in state.ContactResult.Matches)
+            {
+                if (candidate.PhoneNumbers.Any())
+                {
+                    newCandidates.Add(candidate);
+                }
+                else
+                {
+                    removedCandidates.Add(candidate);
+                }
+            }
+
+            if (newCandidates.Count != state.ContactResult.Matches.Count)
+            {
+                state.ContactResult.Matches = newCandidates;
+            }
+
+            return removedCandidates;
+        }
+
         private List<InstanceData> SortAndRemoveOverlappingEntities(List<InstanceData> entities)
         {
             // TODO implement
@@ -235,24 +262,36 @@ namespace PhoneSkill.Common
             return type;
         }
 
+        /// <summary>
+        /// If there is a requested phone number type, filter the phone numbers of each contact candidate by that type.
+        /// Exception: if this would remove all phone numbers of a candidate, keep them all, so the user can choose a different one.
+        /// </summary>
+        /// <param name="state">The current state. This will be modified.</param>
+        /// <param name="isFiltered">Whether filtering was actually performed before this method was called.</param>
+        /// <returns>Whether filtering was actually performed, either by this method or before.</returns>
         private bool FilterPhoneNumbersByType(PhoneSkillState state, bool isFiltered)
         {
-            if (state.ContactResult.Matches.Count == 1 && state.ContactResult.RequestedPhoneNumberType.Any())
+            for (int i = 0; i < state.ContactResult.Matches.Count; ++i)
             {
-                var phoneNumbersOfCorrectType = new List<PhoneNumber>();
-                foreach (var phoneNumber in state.ContactResult.Matches[0].PhoneNumbers)
+                var candidate = state.ContactResult.Matches[i];
+                if (state.ContactResult.RequestedPhoneNumberType.Any())
                 {
-                    if (DoPhoneNumberTypesMatch(state.ContactResult.RequestedPhoneNumberType, phoneNumber.Type))
+                    var phoneNumbersOfCorrectType = new List<PhoneNumber>();
+                    foreach (var phoneNumber in candidate.PhoneNumbers)
                     {
-                        phoneNumbersOfCorrectType.Add(phoneNumber);
+                        if (DoPhoneNumberTypesMatch(state.ContactResult.RequestedPhoneNumberType, phoneNumber.Type))
+                        {
+                            phoneNumbersOfCorrectType.Add(phoneNumber);
+                        }
                     }
-                }
 
-                if (phoneNumbersOfCorrectType.Any() && phoneNumbersOfCorrectType.Count != state.ContactResult.Matches[0].PhoneNumbers.Count)
-                {
-                    state.ContactResult.Matches[0] = (ContactCandidate)state.ContactResult.Matches[0].Clone();
-                    state.ContactResult.Matches[0].PhoneNumbers = phoneNumbersOfCorrectType;
-                    isFiltered = true;
+                    if (phoneNumbersOfCorrectType.Any())
+                    {
+                        isFiltered = isFiltered || phoneNumbersOfCorrectType.Count != candidate.PhoneNumbers.Count;
+                        candidate = (ContactCandidate)candidate.Clone();
+                        candidate.PhoneNumbers = phoneNumbersOfCorrectType;
+                        state.ContactResult.Matches[i] = candidate;
+                    }
                 }
             }
 

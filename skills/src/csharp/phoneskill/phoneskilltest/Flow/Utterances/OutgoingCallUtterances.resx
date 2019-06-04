@@ -138,14 +138,29 @@
   <data name="OutgoingCallContactNameMultipleMatchesAndrew" xml:space="preserve">
     <value>call andrew</value>
   </data>
+  <data name="OutgoingCallContactNameMultipleMatchesBotter" xml:space="preserve">
+    <value>call botter</value>
+  </data>
   <data name="OutgoingCallContactNameMultipleMatchesNarthwani" xml:space="preserve">
     <value>call narthwani</value>
+  </data>
+  <data name="OutgoingCallContactNameMultipleMatchesSanchez" xml:space="preserve">
+    <value>call sanchez</value>
   </data>
   <data name="OutgoingCallContactNameMultipleNumbers" xml:space="preserve">
     <value>call andrew smith</value>
   </data>
   <data name="OutgoingCallContactNameMultipleNumbersWithSameType" xml:space="preserve">
     <value>call eve smith</value>
+  </data>
+  <data name="OutgoingCallContactNameNoPhoneNumber" xml:space="preserve">
+    <value>call christina botter</value>
+  </data>
+  <data name="OutgoingCallContactNameNoPhoneNumberMultipleMatches" xml:space="preserve">
+    <value>call christina</value>
+  </data>
+  <data name="OutgoingCallContactNameNotFound" xml:space="preserve">
+    <value>call qqq</value>
   </data>
   <data name="OutgoingCallContactNameWithPhoneNumberType" xml:space="preserve">
     <value>call andrew smith at work</value>

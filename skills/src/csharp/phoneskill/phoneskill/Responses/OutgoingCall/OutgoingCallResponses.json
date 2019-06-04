@@ -26,6 +26,15 @@
     ],
     "inputHint": "expectingInput"
   },
+  "ContactsHaveNoPhoneNumber": {
+    "replies": [
+      {
+        "text": "None of the contacts matching {contactName} has a phone number.",
+        "speak": "None of the contacts matching {contactName} has a phone number."
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
   "ContactSelection": {
     "replies": [
       {
