@@ -88,7 +88,7 @@ namespace PhoneSkill.Models
         /// <returns>Whether the phone number type is specified.</returns>
         public bool Any()
         {
-            return Standardized != StandardType.NONE && FreeForm.Any();
+            return Standardized != StandardType.NONE || FreeForm.Any();
         }
     }
 }

@@ -61,6 +61,24 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to no.
+        /// </summary>
+        internal static string ConfirmationNo {
+            get {
+                return ResourceManager.GetString("ConfirmationNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to yes.
+        /// </summary>
+        internal static string ConfirmationYes {
+            get {
+                return ResourceManager.GetString("ConfirmationYes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I mean sanjay narthwani.
         /// </summary>
         internal static string ContactSelectionFullName {
@@ -210,6 +228,24 @@ namespace PhoneSkillTest.Flow.Utterances {
         internal static string OutgoingCallContactNameWithPhoneNumberType {
             get {
                 return ResourceManager.GetString("OutgoingCallContactNameWithPhoneNumberType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to call eve smith at work.
+        /// </summary>
+        internal static string OutgoingCallContactNameWithPhoneNumberTypeNotFoundMultipleAlternatives {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameWithPhoneNumberTypeNotFoundMultipleAlternatives", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to call bob botter on mobile.
+        /// </summary>
+        internal static string OutgoingCallContactNameWithPhoneNumberTypeNotFoundSingleAlternative {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameWithPhoneNumberTypeNotFoundSingleAlternative", resourceCulture);
             }
         }
         

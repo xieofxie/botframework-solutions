@@ -154,6 +154,40 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberTypeNotFoundMultipleAlternatives, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "eve smith",
+                    StartIndex = 5,
+                },
+                new MockLuisEntity
+                {
+                    Type = "phoneNumberType",
+                    Text = "work",
+                    StartIndex = 18,
+                    ResolvedValue = "BUSINESS",
+                },
+            });
+
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberTypeNotFoundSingleAlternative, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "bob botter",
+                    StartIndex = 5,
+                },
+                new MockLuisEntity
+                {
+                    Type = "phoneNumberType",
+                    Text = "mobile",
+                    StartIndex = 19,
+                    ResolvedValue = "MOBILE",
+                },
+            });
+
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameWithSpeechRecognitionError, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
                 new MockLuisEntity

@@ -1,4 +1,6 @@
-﻿using Microsoft.Bot.Builder.Dialogs;
+﻿using System.Collections.Generic;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Dialogs;
 using PhoneSkill.Services.Luis;
 
 namespace PhoneSkill.Models
@@ -50,11 +52,33 @@ namespace PhoneSkill.Models
         /// </value>
         public string PhoneNumber { get; set; }
 
+        /// <summary>
+        /// Clear the state.
+        /// </summary>
         public void Clear()
         {
             Token = string.Empty;
             SourceOfContacts = null;
-            LuisResult = new PhoneLuis();
+            ClearExceptAuth();
+        }
+
+        /// <summary>
+        /// Clear the state except for authentication information.
+        /// </summary>
+        public void ClearExceptAuth()
+        {
+            LuisResult = new PhoneLuis()
+            {
+                Text = string.Empty,
+                AlteredText = string.Empty,
+                Intents = new Dictionary<PhoneLuis.Intent, IntentScore>(),
+                Entities = new PhoneLuis._Entities()
+                {
+                    _instance = new PhoneLuis._Entities._Instance(),
+                },
+                Properties = new Dictionary<string, object>(),
+            };
+
             ContactResult = new ContactSearchResult();
             PhoneNumber = string.Empty;
         }

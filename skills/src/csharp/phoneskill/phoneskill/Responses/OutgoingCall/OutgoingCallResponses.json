@@ -35,6 +35,24 @@
     ],
     "inputHint": "expectingInput"
   },
+  "ContactHasNoPhoneNumberOfRequestedType": {
+    "replies": [
+      {
+        "text": "There is no {phoneNumberType} number for {contact} in your contact list.",
+        "speak": "There is no {phoneNumberType} number for {contact} in your contact list."
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "ConfirmAlternativePhoneNumberType": {
+    "replies": [
+      {
+        "text": "Would you like to call their {phoneNumberType} number instead?",
+        "speak": "Would you like to call their {phoneNumberType} number instead?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
   "ContactSelection": {
     "replies": [
       {

@@ -33,22 +33,41 @@ namespace PhoneSkill.Dialogs
         {
             TelemetryClient = telemetryClient;
 
-            var outgoingCall = new WaterfallStep[]
+            var outgoingCall = new List<WaterfallStep>
             {
                 GetAuthToken,
                 AfterGetAuthToken,
+            };
+
+            var outgoingCallNoAuth = new List<WaterfallStep>
+            {
                 PromptForRecipient,
                 AskToSelectContact,
+                ConfirmChangeOfPhoneNumberType,
                 AskToSelectPhoneNumber,
                 ExecuteCall,
             };
 
+            foreach (var step in outgoingCallNoAuth)
+            {
+                outgoingCall.Add(step);
+            }
+
             AddDialog(new WaterfallDialog(nameof(OutgoingCallDialog), outgoingCall));
+            AddDialog(new WaterfallDialog(DialogIds.OutgoingCallNoAuth, outgoingCallNoAuth));
+
             AddDialog(new TextPrompt(DialogIds.RecipientPrompt, ValidateRecipient));
+
             AddDialog(new ChoicePrompt(DialogIds.ContactSelection, ValidateContactChoice)
             {
                 Style = ListStyle.List,
             });
+
+            AddDialog(new ConfirmPrompt(DialogIds.PhoneNumberTypeConfirmation, ValidatePhoneNumberTypeConfirmation)
+            {
+                Style = ListStyle.None,
+            });
+
             AddDialog(new ChoicePrompt(DialogIds.PhoneNumberSelection, ValidatePhoneNumberChoice)
             {
                 Style = ListStyle.List,
@@ -132,7 +151,7 @@ namespace PhoneSkill.Dialogs
 
             var contactSelectionResult = await RunLuis<ContactSelectionLuis>(promptContext.Context, "contactSelection");
             contactFilter.OverrideEntities(state, contactSelectionResult);
-            var isFiltered = await contactFilter.Filter(state, contactProvider: null);
+            var (isFiltered, _) = await contactFilter.Filter(state, contactProvider: null);
             if (contactFilter.IsContactDisambiguated(state))
             {
                 return true;
@@ -153,11 +172,87 @@ namespace PhoneSkill.Dialogs
             return contactFilter.IsContactDisambiguated(state);
         }
 
+        private async Task<DialogTurnResult> ConfirmChangeOfPhoneNumberType(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var state = await PhoneStateAccessor.GetAsync(stepContext.Context);
+                var (isFiltered, hasPhoneNumberOfRequestedType) = await contactFilter.Filter(state, contactProvider: null);
+
+                if (hasPhoneNumberOfRequestedType
+                    || !state.ContactResult.Matches.Any()
+                    || !state.ContactResult.RequestedPhoneNumberType.Any())
+                {
+                    return await stepContext.NextAsync();
+                }
+
+                var notFoundTokens = new StringDictionary()
+                {
+                    { "contact", state.ContactResult.Matches[0].Name },
+                    { "phoneNumberType", GetSpeakablePhoneNumberType(state.ContactResult.RequestedPhoneNumberType) },
+                };
+                var response = ResponseManager.GetResponse(OutgoingCallResponses.ContactHasNoPhoneNumberOfRequestedType, notFoundTokens);
+                await stepContext.Context.SendActivityAsync(response);
+
+                if (state.ContactResult.Matches[0].PhoneNumbers.Count != 1)
+                {
+                    return await stepContext.NextAsync();
+                }
+
+                var confirmationTokens = new StringDictionary()
+                {
+                    { "phoneNumberType", GetSpeakablePhoneNumberType(state.ContactResult.Matches[0].PhoneNumbers[0].Type) },
+                };
+                var options = new PromptOptions();
+                options.Prompt = ResponseManager.GetResponse(OutgoingCallResponses.ConfirmAlternativePhoneNumberType, confirmationTokens);
+                return await stepContext.PromptAsync(DialogIds.PhoneNumberTypeConfirmation, options);
+            }
+            catch (Exception ex)
+            {
+                await HandleDialogExceptions(stepContext, ex);
+
+                return new DialogTurnResult(DialogTurnStatus.Cancelled, CommonUtil.DialogTurnResultCancelAllDialogs);
+            }
+        }
+
+        private async Task<bool> ValidatePhoneNumberTypeConfirmation(PromptValidatorContext<bool> promptContext, CancellationToken cancellationToken)
+        {
+            if (!promptContext.Recognized.Succeeded)
+            {
+                // The user said neither yes nor no.
+                return false;
+            }
+
+            var state = await PhoneStateAccessor.GetAsync(promptContext.Context);
+            if (promptContext.Recognized.Value)
+            {
+                // The user said yes.
+                state.ContactResult.RequestedPhoneNumberType = state.ContactResult.Matches[0].PhoneNumbers[0].Type;
+            }
+            else
+            {
+                // The user said no.
+                // We cannot restart the dialog from a validator function,
+                // so we have to delay that until the next waterfall step is called.
+                state.ClearExceptAuth();
+            }
+
+            return true;
+        }
+
         private async Task<DialogTurnResult> AskToSelectPhoneNumber(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             try
             {
                 var state = await PhoneStateAccessor.GetAsync(stepContext.Context);
+
+                // If the user said 'no' to the PhoneNumberTypeConfirmation prompt,
+                // then the state would have been cleared and we need to restart the whole dialog.
+                if (!contactFilter.HasRecipient(state))
+                {
+                    return await stepContext.ReplaceDialogAsync(DialogIds.OutgoingCallNoAuth);
+                }
+
                 await contactFilter.Filter(state, contactProvider: null);
 
                 if (contactFilter.IsPhoneNumberDisambiguated(state))
@@ -188,7 +283,7 @@ namespace PhoneSkill.Dialogs
 
             var phoneNumberSelectionResult = await RunLuis<PhoneNumberSelectionLuis>(promptContext.Context, "phoneNumberSelection");
             contactFilter.OverrideEntities(state, phoneNumberSelectionResult);
-            var isFiltered = await contactFilter.Filter(state, contactProvider: null);
+            var (isFiltered, _) = await contactFilter.Filter(state, contactProvider: null);
             if (contactFilter.IsPhoneNumberDisambiguated(state))
             {
                 return true;
@@ -436,8 +531,10 @@ namespace PhoneSkill.Dialogs
 
         private class DialogIds
         {
+            public const string OutgoingCallNoAuth = "OutgoingCallNoAuth";
             public const string RecipientPrompt = "RecipientPrompt";
             public const string ContactSelection = "ContactSelection";
+            public const string PhoneNumberTypeConfirmation = "PhoneNumberTypeConfirmation";
             public const string PhoneNumberSelection = "PhoneNumberSelection";
         }
     }

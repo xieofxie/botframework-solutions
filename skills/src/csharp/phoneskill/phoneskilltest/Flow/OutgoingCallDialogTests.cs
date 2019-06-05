@@ -116,6 +116,118 @@ namespace PhoneSkillTest.Flow
         }
 
         [TestMethod]
+        public async Task Test_OutgoingCall_ContactNameWithPhoneNumberTypeNotFound_ConfirmationYes()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberTypeNotFoundSingleAlternative)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactHasNoPhoneNumberOfRequestedType, new StringDictionary()
+               {
+                   { "contact", "Bob Botter" },
+                   { "phoneNumberType", "Mobile" },
+               }))
+               .AssertReply(Message(OutgoingCallResponses.ConfirmAlternativePhoneNumberType, new StringDictionary()
+               {
+                   { "phoneNumberType", "Home" },
+               }))
+               .Send(OutgoingCallUtterances.ConfirmationYes)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Bob Botter" },
+                   { "phoneNumberType", "Home" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 666 6666",
+                   Contact = StubContactProvider.BobBotter,
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactNameWithPhoneNumberTypeNotFound_ConfirmationNo()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberTypeNotFoundSingleAlternative)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactHasNoPhoneNumberOfRequestedType, new StringDictionary()
+               {
+                   { "contact", "Bob Botter" },
+                   { "phoneNumberType", "Mobile" },
+               }))
+               .AssertReply(Message(OutgoingCallResponses.ConfirmAlternativePhoneNumberType, new StringDictionary()
+               {
+                   { "phoneNumberType", "Home" },
+               }))
+               .Send(OutgoingCallUtterances.ConfirmationNo)
+               .AssertReply(Message(OutgoingCallResponses.RecipientPrompt))
+               .Send(OutgoingCallUtterances.RecipientContactNameWithPhoneNumberType)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Andrew Smith" },
+                   { "phoneNumberType", "Business" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 222 2222",
+                   Contact = new ContactCandidate
+                   {
+                       Name = StubContactProvider.AndrewSmith.Name,
+                       PhoneNumbers = new List<PhoneNumber>
+                       {
+                           StubContactProvider.AndrewSmith.PhoneNumbers[1],
+                       },
+                   },
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
+        public async Task Test_OutgoingCall_ContactNameWithPhoneNumberTypeNotFound_PhoneNumberSelectionByIndex()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberTypeNotFoundMultipleAlternatives)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactHasNoPhoneNumberOfRequestedType, new StringDictionary()
+               {
+                   { "contact", "Eve Smith" },
+                   { "phoneNumberType", "Business" },
+               }))
+               .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelection, new StringDictionary()
+               {
+                   { "contact", "Eve Smith" },
+               },
+               new List<string>()
+               {
+                   "Home: 555 999 9999",
+                   "Mobile: 555 101 0101",
+                   "Mobile: 555 121 2121",
+               }))
+               .Send(OutgoingCallUtterances.SelectionFirst)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Eve Smith" },
+                   { "phoneNumberType", "Home" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 999 9999",
+                   Contact = new ContactCandidate
+                   {
+                       Name = StubContactProvider.EveSmith.Name,
+                       PhoneNumbers = new List<PhoneNumber>
+                       {
+                           StubContactProvider.EveSmith.PhoneNumbers[0],
+                       },
+                   },
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
         public async Task Test_OutgoingCall_ContactNameNotFound()
         {
             await GetTestFlow()

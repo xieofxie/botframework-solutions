@@ -24,8 +24,9 @@ namespace PhoneSkill.Common
         /// </summary>
         /// <param name="state">The current conversation state. This will be modified.</param>
         /// <param name="contactProvider">The provider for the user's contact list. This may be null if the contact list is not to be used.</param>
-        /// <returns>Whether filtering was actually performed. In some cases, no filtering is necessary.</returns>
-        public async Task<bool> Filter(PhoneSkillState state, IContactProvider contactProvider)
+        /// <returns>The first boolean indicates whether filtering was actually performed. (In some cases, no filtering is necessary.)
+        /// The second boolean indicates whether any of the contacts has a phone number whose type matches the requested type.</returns>
+        public async Task<(bool, bool)> Filter(PhoneSkillState state, IContactProvider contactProvider)
         {
             var isFiltered = false;
 
@@ -76,11 +77,12 @@ namespace PhoneSkill.Common
             }
 
             SetRequestedPhoneNumberType(state);
-            isFiltered = FilterPhoneNumbersByType(state, isFiltered);
+            var hasPhoneNumberOfRequestedType = false;
+            (isFiltered, hasPhoneNumberOfRequestedType) = FilterPhoneNumbersByType(state, isFiltered);
 
             SetPhoneNumber(state);
 
-            return isFiltered;
+            return (isFiltered, hasPhoneNumberOfRequestedType);
         }
 
         /// <summary>
@@ -299,8 +301,9 @@ namespace PhoneSkill.Common
         /// <param name="state">The current state. This will be modified.</param>
         /// <param name="isFiltered">Whether filtering was actually performed before this method was called.</param>
         /// <returns>Whether filtering was actually performed, either by this method or before.</returns>
-        private bool FilterPhoneNumbersByType(PhoneSkillState state, bool isFiltered)
+        private (bool, bool) FilterPhoneNumbersByType(PhoneSkillState state, bool isFiltered)
         {
+            var hasPhoneNumberOfRequestedType = false;
             for (int i = 0; i < state.ContactResult.Matches.Count; ++i)
             {
                 var candidate = state.ContactResult.Matches[i];
@@ -312,6 +315,7 @@ namespace PhoneSkill.Common
                         if (DoPhoneNumberTypesMatch(state.ContactResult.RequestedPhoneNumberType, phoneNumber.Type))
                         {
                             phoneNumbersOfCorrectType.Add(phoneNumber);
+                            hasPhoneNumberOfRequestedType = true;
                         }
                     }
 
@@ -325,7 +329,7 @@ namespace PhoneSkill.Common
                 }
             }
 
-            return isFiltered;
+            return (isFiltered, hasPhoneNumberOfRequestedType);
         }
 
         private bool DoPhoneNumberTypesMatch(PhoneNumberType requestedType, PhoneNumberType actualType)

@@ -186,6 +186,7 @@ namespace PhoneSkillTest.Flow
                 }
 
                 var actualText = messageActivity.Text;
+                Assert.IsNotNull(actualText, $"Text of message activity was null. Expected one of: {expectedTexts.ToPrettyString()}\n");
 
                 string bestMatchingExpectedText = string.Empty;
                 int longestCommonPrefix = 0;
