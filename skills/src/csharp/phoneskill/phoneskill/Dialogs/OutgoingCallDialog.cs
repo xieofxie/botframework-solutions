@@ -346,17 +346,15 @@ namespace PhoneSkill.Dialogs
 
         private void UpdatePhoneNumberSelectionPromptOptions(PromptOptions options, PhoneSkillState state)
         {
+            var templateId = OutgoingCallResponses.PhoneNumberSelection;
             var tokens = new StringDictionary
             {
                 { "contact", state.ContactResult.Matches[0].Name },
             };
 
-            var prompt = ResponseManager.GetResponse(OutgoingCallResponses.PhoneNumberSelection, tokens);
-
-            options.Prompt = prompt;
             options.Choices = new List<Choice>();
-
             var phoneNumberList = state.ContactResult.Matches[0].PhoneNumbers;
+            var phoneNumberTypes = new HashSet<PhoneNumberType>();
             for (var i = 0; i < phoneNumberList.Count; ++i)
             {
                 var phoneNumber = phoneNumberList[i];
@@ -374,7 +372,17 @@ namespace PhoneSkill.Dialogs
                     Synonyms = synonyms,
                 };
                 options.Choices.Add(choice);
+
+                phoneNumberTypes.Add(phoneNumber.Type);
             }
+
+            if (state.ContactResult.RequestedPhoneNumberType.Any() && phoneNumberTypes.Count == 1)
+            {
+                templateId = OutgoingCallResponses.PhoneNumberSelectionWithPhoneNumberType;
+                tokens["phoneNumberType"] = GetSpeakablePhoneNumberType(phoneNumberTypes.First());
+            }
+
+            options.Prompt = ResponseManager.GetResponse(templateId, tokens);
         }
 
         private string GetSpeakablePhoneNumberType(PhoneNumberType phoneNumberType)

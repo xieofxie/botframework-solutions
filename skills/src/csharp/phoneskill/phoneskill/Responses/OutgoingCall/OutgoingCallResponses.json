@@ -53,6 +53,15 @@
     ],
     "inputHint": "expectingInput"
   },
+  "PhoneNumberSelectionWithPhoneNumberType": {
+    "replies": [
+      {
+        "text": "{contact} has multiple {phoneNumberType} numbers. Which one?",
+        "speak": "{contact} has multiple {phoneNumberType} numbers. Which one?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
   "ExecuteCall": {
     "replies": [
       {
