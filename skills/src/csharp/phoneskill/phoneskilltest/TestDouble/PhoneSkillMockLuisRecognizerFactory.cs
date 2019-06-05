@@ -77,6 +77,16 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesWithSpeechRecognitionError, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "not funny",
+                    StartIndex = 5,
+                },
+            });
+
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameMultipleNumbers, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
                 new MockLuisEntity

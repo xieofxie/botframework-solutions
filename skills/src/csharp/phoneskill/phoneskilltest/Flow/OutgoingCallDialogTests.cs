@@ -352,17 +352,14 @@ namespace PhoneSkillTest.Flow
         public async Task Test_OutgoingCall_ContactName_ContactSelectionByFullNameWithSpeechRecognitionError()
         {
             await GetTestFlow()
-               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesNarthwani)
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameMultipleMatchesWithSpeechRecognitionError)
                .AssertReply(ShowAuth())
                .Send(GetAuthResponse())
-               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
-               {
-                   { "contactName", "narthwani" },
-               },
+               .AssertReply(Message(OutgoingCallResponses.ContactSelectionWithoutName, new StringDictionary(),
                new List<string>()
                {
-                   "Ditha Narthwani",
                    "Sanjay Narthwani",
+                   "Ditha Narthwani",
                }))
                .Send(OutgoingCallUtterances.ContactSelectionFullNameWithSpeechRecognitionError)
                .AssertReply(Message(OutgoingCallResponses.ExecuteCall, new StringDictionary()

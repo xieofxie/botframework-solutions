@@ -319,14 +319,14 @@ namespace PhoneSkill.Dialogs
 
         private void UpdateContactSelectionPromptOptions(PromptOptions options, PhoneSkillState state)
         {
+            var templateId = OutgoingCallResponses.ContactSelection;
             var tokens = new StringDictionary
             {
-                // TODO only fill if confident enough about ASR result
                 { "contactName", state.ContactResult.SearchQuery },
             };
-            options.Prompt = ResponseManager.GetResponse(OutgoingCallResponses.ContactSelection, tokens);
 
             options.Choices = new List<Choice>();
+            var searchQueryPreProcessed = contactFilter.PreProcess(state.ContactResult.SearchQuery);
             for (var i = 0; i < state.ContactResult.Matches.Count; ++i)
             {
                 var item = state.ContactResult.Matches[i].Name;
@@ -341,7 +341,15 @@ namespace PhoneSkill.Dialogs
                     Synonyms = synonyms,
                 };
                 options.Choices.Add(choice);
+
+                if (!contactFilter.PreProcess(item).Contains(searchQueryPreProcessed, StringComparison.OrdinalIgnoreCase))
+                {
+                    templateId = OutgoingCallResponses.ContactSelectionWithoutName;
+                    tokens.Remove("contactName");
+                }
             }
+
+            options.Prompt = ResponseManager.GetResponse(templateId, tokens);
         }
 
         private void UpdatePhoneNumberSelectionPromptOptions(PromptOptions options, PhoneSkillState state)

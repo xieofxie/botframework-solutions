@@ -212,6 +212,18 @@ namespace PhoneSkill.Common
             return removedCandidates;
         }
 
+        /// <summary>
+        /// Pre-process the given string by normalizing unicode characters, trimming whitespace, and normalizing whitespace.
+        /// </summary>
+        /// <param name="raw">The string to pre-process.</param>
+        /// <returns>A pre-processed copy of the string.</returns>
+        public string PreProcess(string raw)
+        {
+            var preprocessed = raw.Normalize(NormalizationForm.FormKC);
+            preprocessed = MultipleWhitespaceRegex.Replace(preprocessed.Trim(), " ");
+            return preprocessed;
+        }
+
         private List<InstanceData> SortAndRemoveOverlappingEntities(List<InstanceData> entities)
         {
             // TODO implement
@@ -306,13 +318,6 @@ namespace PhoneSkill.Common
             }
 
             return PreProcess(requestedType.FreeForm).Equals(PreProcess(actualType.FreeForm), StringComparison.OrdinalIgnoreCase);
-        }
-
-        private string PreProcess(string raw)
-        {
-            var preprocessed = raw.Normalize(NormalizationForm.FormKC);
-            preprocessed = MultipleWhitespaceRegex.Replace(preprocessed.Trim(), " ");
-            return preprocessed;
         }
 
         private void SetPhoneNumber(PhoneSkillState state)

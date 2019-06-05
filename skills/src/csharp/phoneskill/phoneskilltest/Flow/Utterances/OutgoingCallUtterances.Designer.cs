@@ -151,6 +151,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to call not funny.
+        /// </summary>
+        internal static string OutgoingCallContactNameMultipleMatchesWithSpeechRecognitionError {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameMultipleMatchesWithSpeechRecognitionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to call andrew smith.
         /// </summary>
         internal static string OutgoingCallContactNameMultipleNumbers {

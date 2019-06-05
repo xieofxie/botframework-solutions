@@ -17,6 +17,7 @@ namespace PhoneSkill.Responses.OutgoingCall
         public const string ContactHasNoPhoneNumber = "ContactHasNoPhoneNumber";
         public const string ContactsHaveNoPhoneNumber = "ContactsHaveNoPhoneNumber";
         public const string ContactSelection = "ContactSelection";
+        public const string ContactSelectionWithoutName = "ContactSelectionWithoutName";
         public const string PhoneNumberSelection = "PhoneNumberSelection";
         public const string PhoneNumberSelectionWithPhoneNumberType = "PhoneNumberSelectionWithPhoneNumberType";
         public const string ExecuteCall = "ExecuteCall";

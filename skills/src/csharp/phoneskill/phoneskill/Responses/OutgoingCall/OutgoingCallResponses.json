@@ -44,6 +44,15 @@
     ],
     "inputHint": "expectingInput"
   },
+  "ContactSelectionWithoutName": {
+    "replies": [
+      {
+        "text": "Which contact?",
+        "speak": "Which contact?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
   "PhoneNumberSelection": {
     "replies": [
       {

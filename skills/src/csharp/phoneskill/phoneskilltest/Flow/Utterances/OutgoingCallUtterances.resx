@@ -147,6 +147,9 @@
   <data name="OutgoingCallContactNameMultipleMatchesSanchez" xml:space="preserve">
     <value>call sanchez</value>
   </data>
+  <data name="OutgoingCallContactNameMultipleMatchesWithSpeechRecognitionError" xml:space="preserve">
+    <value>call not funny</value>
+  </data>
   <data name="OutgoingCallContactNameMultipleNumbers" xml:space="preserve">
     <value>call andrew smith</value>
   </data>
