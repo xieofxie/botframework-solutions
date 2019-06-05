@@ -226,8 +226,26 @@ namespace PhoneSkill.Common
 
         private List<InstanceData> SortAndRemoveOverlappingEntities(List<InstanceData> entities)
         {
-            // TODO implement
-            return entities;
+            if (entities.Count < 2)
+            {
+                return entities;
+            }
+
+            var orderedEntities = entities.OrderBy(entity => entity.StartIndex).ThenByDescending(entity => entity.EndIndex).ToList();
+
+            var nonOverlappingEntities = new List<InstanceData>()
+            {
+                orderedEntities[0],
+            };
+            for (int i = 1; i < orderedEntities.Count; ++i)
+            {
+                if (orderedEntities[i - 1].EndIndex <= orderedEntities[i].StartIndex)
+                {
+                    nonOverlappingEntities.Add(orderedEntities[i]);
+                }
+            }
+
+            return nonOverlappingEntities;
         }
 
         private ContactFields ExtractContactFields(ContactCandidate contact)
