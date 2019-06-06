@@ -538,6 +538,46 @@ namespace PhoneSkillTest.Flow
         }
 
         [TestMethod]
+        public async Task Test_OutgoingCall_ContactNameWithPhoneNumberTypeNotFound_ContactSelectionByPartialName()
+        {
+            await GetTestFlow()
+               .Send(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberTypeMultipleMatches)
+               .AssertReply(ShowAuth())
+               .Send(GetAuthResponse())
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "narthwani" },
+               },
+               new List<string>()
+               {
+                   "Ditha Narthwani",
+                   "Sanjay Narthwani",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionPartialNameSanjay)
+               .AssertReply(Message(OutgoingCallResponses.ContactHasNoPhoneNumberOfRequestedType, new StringDictionary()
+               {
+                   { "contact", "Sanjay Narthwani" },
+                   { "phoneNumberType", "Home" },
+               }))
+               .AssertReply(Message(OutgoingCallResponses.ConfirmAlternativePhoneNumberType, new StringDictionary()
+               {
+                   { "phoneNumberType", "Mobile" },
+               }))
+               .Send(OutgoingCallUtterances.ConfirmationYes)
+               .AssertReply(Message(OutgoingCallResponses.ExecuteCallWithPhoneNumberType, new StringDictionary()
+               {
+                   { "contactOrPhoneNumber", "Sanjay Narthwani" },
+                   { "phoneNumberType", "Mobile" },
+               }))
+               .AssertReply(OutgoingCallEvent(new OutgoingCall
+               {
+                   Number = "555 888 8888",
+                   Contact = StubContactProvider.SanjayNarthwani,
+               }))
+               .StartTestAsync();
+        }
+
+        [TestMethod]
         public async Task Test_OutgoingCall_ContactNameMultipleMatchesWhereOnlyOneHasPhoneNumber()
         {
             await GetTestFlow()

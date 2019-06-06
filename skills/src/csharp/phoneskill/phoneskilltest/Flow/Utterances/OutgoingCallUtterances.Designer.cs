@@ -232,6 +232,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to call narthwani at home.
+        /// </summary>
+        internal static string OutgoingCallContactNameWithPhoneNumberTypeMultipleMatches {
+            get {
+                return ResourceManager.GetString("OutgoingCallContactNameWithPhoneNumberTypeMultipleMatches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to call eve smith at work.
         /// </summary>
         internal static string OutgoingCallContactNameWithPhoneNumberTypeNotFoundMultipleAlternatives {

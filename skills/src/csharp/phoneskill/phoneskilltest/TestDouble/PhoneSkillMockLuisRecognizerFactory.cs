@@ -154,6 +154,23 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberTypeMultipleMatches, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "narthwani",
+                    StartIndex = 5,
+                },
+                new MockLuisEntity
+                {
+                    Type = "phoneNumberType",
+                    Text = "home",
+                    StartIndex = 18,
+                    ResolvedValue = "HOME",
+                },
+            });
+
             builder.AddUtterance(OutgoingCallUtterances.OutgoingCallContactNameWithPhoneNumberTypeNotFoundMultipleAlternatives, PhoneLuis.Intent.OutgoingCall, new List<MockLuisEntity>()
             {
                 new MockLuisEntity
