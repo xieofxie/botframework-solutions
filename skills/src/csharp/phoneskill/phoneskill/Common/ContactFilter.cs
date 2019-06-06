@@ -30,20 +30,11 @@ namespace PhoneSkill.Common
         {
             var isFiltered = false;
 
-            var entities = state.LuisResult.Entities;
-            var entitiesForSearch = new List<InstanceData>();
-            if (entities._instance.contactName != null)
+            var searchQuery = string.Empty;
+            if (state.LuisResult.Entities.contactName != null)
             {
-                entitiesForSearch.AddRange(entities._instance.contactName);
+                searchQuery = string.Join(" ", state.LuisResult.Entities.contactName);
             }
-
-            if (entities._instance.contactRelation != null)
-            {
-                entitiesForSearch.AddRange(entities._instance.contactRelation);
-            }
-
-            entitiesForSearch = SortAndRemoveOverlappingEntities(entitiesForSearch);
-            var searchQuery = string.Join(" ", entitiesForSearch.Select(entity => entity.Text));
 
             if (searchQuery.Any() && !(searchQuery == state.ContactResult.SearchQuery && state.ContactResult.Matches.Any()))
             {
@@ -125,14 +116,11 @@ namespace PhoneSkill.Common
             state.LuisResult.Entities.contactName = phoneResult.Entities.contactName;
             state.LuisResult.Entities._instance.contactName = phoneResult.Entities._instance.contactName;
 
-            state.LuisResult.Entities.contactRelation = phoneResult.Entities.contactRelation;
-            state.LuisResult.Entities._instance.contactRelation = phoneResult.Entities._instance.contactRelation;
-
             state.LuisResult.Entities.phoneNumber = phoneResult.Entities.phoneNumber;
-            state.LuisResult.Entities._instance.contactRelation = phoneResult.Entities._instance.phoneNumber;
+            state.LuisResult.Entities._instance.phoneNumber = phoneResult.Entities._instance.phoneNumber;
 
             state.LuisResult.Entities.phoneNumberSpelledOut = phoneResult.Entities.phoneNumberSpelledOut;
-            state.LuisResult.Entities._instance.contactRelation = phoneResult.Entities._instance.phoneNumberSpelledOut;
+            state.LuisResult.Entities._instance.phoneNumberSpelledOut = phoneResult.Entities._instance.phoneNumberSpelledOut;
 
             if (state.LuisResult.Entities.phoneNumberType == null
                 || !state.LuisResult.Entities.phoneNumberType.Any()
@@ -153,14 +141,11 @@ namespace PhoneSkill.Common
             state.LuisResult.Entities.contactName = contactSelectionResult.Entities.contactName;
             state.LuisResult.Entities._instance.contactName = contactSelectionResult.Entities._instance.contactName;
 
-            state.LuisResult.Entities.contactRelation = new string[0][];
-            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
-
             state.LuisResult.Entities.phoneNumber = new string[0];
-            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+            state.LuisResult.Entities._instance.phoneNumber = new InstanceData[0];
 
             state.LuisResult.Entities.phoneNumberSpelledOut = new string[0];
-            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+            state.LuisResult.Entities._instance.phoneNumberSpelledOut = new InstanceData[0];
         }
 
         /// <summary>
@@ -171,10 +156,10 @@ namespace PhoneSkill.Common
         public void OverrideEntities(PhoneSkillState state, PhoneNumberSelectionLuis phoneNumberSelectionResult)
         {
             state.LuisResult.Entities.phoneNumber = new string[0];
-            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+            state.LuisResult.Entities._instance.phoneNumber = new InstanceData[0];
 
             state.LuisResult.Entities.phoneNumberSpelledOut = new string[0];
-            state.LuisResult.Entities._instance.contactRelation = new InstanceData[0];
+            state.LuisResult.Entities._instance.phoneNumberSpelledOut = new InstanceData[0];
 
             if (state.LuisResult.Entities.phoneNumberType == null
                 || !state.LuisResult.Entities.phoneNumberType.Any()
@@ -224,30 +209,6 @@ namespace PhoneSkill.Common
             var preprocessed = raw.Normalize(NormalizationForm.FormKC);
             preprocessed = MultipleWhitespaceRegex.Replace(preprocessed.Trim(), " ");
             return preprocessed;
-        }
-
-        private List<InstanceData> SortAndRemoveOverlappingEntities(List<InstanceData> entities)
-        {
-            if (entities.Count < 2)
-            {
-                return entities;
-            }
-
-            var orderedEntities = entities.OrderBy(entity => entity.StartIndex).ThenByDescending(entity => entity.EndIndex).ToList();
-
-            var nonOverlappingEntities = new List<InstanceData>()
-            {
-                orderedEntities[0],
-            };
-            for (int i = 1; i < orderedEntities.Count; ++i)
-            {
-                if (orderedEntities[i - 1].EndIndex <= orderedEntities[i].StartIndex)
-                {
-                    nonOverlappingEntities.Add(orderedEntities[i]);
-                }
-            }
-
-            return nonOverlappingEntities;
         }
 
         private ContactFields ExtractContactFields(ContactCandidate contact)

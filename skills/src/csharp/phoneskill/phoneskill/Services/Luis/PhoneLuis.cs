@@ -10,7 +10,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.Luis;
 namespace PhoneSkill.Services.Luis
 {
-    public class PhoneLuis: IRecognizerConvert
+    public partial class PhoneLuis: IRecognizerConvert
     {
         public string Text;
         public string AlteredText;
@@ -26,7 +26,6 @@ namespace PhoneSkill.Services.Luis
             public string[] contactName;
 
             // Lists
-            public string[][] contactRelation;
             public string[][] phoneNumberType;
 
             // Regex entities
@@ -37,7 +36,6 @@ namespace PhoneSkill.Services.Luis
             public class _Instance
             {
                 public InstanceData[] contactName;
-                public InstanceData[] contactRelation;
                 public InstanceData[] phoneNumberType;
                 public InstanceData[] phoneNumber;
                 public InstanceData[] phoneNumberSpelledOut;
@@ -52,7 +50,7 @@ namespace PhoneSkill.Services.Luis
 
         public void Convert(dynamic result)
         {
-            var app = JsonConvert.DeserializeObject<PhoneLuis>(JsonConvert.SerializeObject(result));
+            var app = JsonConvert.DeserializeObject<PhoneLuis>(JsonConvert.SerializeObject(result, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
             Text = app.Text;
             AlteredText = app.AlteredText;
             Intents = app.Intents;
