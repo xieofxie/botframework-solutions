@@ -129,6 +129,9 @@
   <data name="ContactSelectionFullNameWithSpeechRecognitionError" xml:space="preserve">
     <value>I want sunday not funny</value>
   </data>
+  <data name="ContactSelectionNoMatches" xml:space="preserve">
+    <value>qqq</value>
+  </data>
   <data name="ContactSelectionPartialNameAndrewJohn" xml:space="preserve">
     <value>andrew john please</value>
   </data>
@@ -195,6 +198,9 @@
   <data name="PhoneNumberSelectionFullNumber" xml:space="preserve">
     <value>555 222 2222</value>
   </data>
+  <data name="PhoneNumberSelectionNoMatches" xml:space="preserve">
+    <value>the fax number</value>
+  </data>
   <data name="PhoneNumberSelectionStandardizedType" xml:space="preserve">
     <value>call the cell phone</value>
   </data>
@@ -210,10 +216,10 @@
   <data name="RecipientPhoneNumber" xml:space="preserve">
     <value>0118 999 88199 9119 725 3</value>
   </data>
-  <data name="SelectionFailure" xml:space="preserve">
-    <value>all of them</value>
-  </data>
   <data name="SelectionFirst" xml:space="preserve">
     <value>the first one</value>
+  </data>
+  <data name="SelectionNoEntities" xml:space="preserve">
+    <value>all of them</value>
   </data>
 </root>

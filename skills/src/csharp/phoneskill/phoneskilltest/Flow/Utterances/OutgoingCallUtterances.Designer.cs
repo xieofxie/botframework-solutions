@@ -97,6 +97,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to qqq.
+        /// </summary>
+        internal static string ContactSelectionNoMatches {
+            get {
+                return ResourceManager.GetString("ContactSelectionNoMatches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to andrew john please.
         /// </summary>
         internal static string ContactSelectionPartialNameAndrewJohn {
@@ -295,6 +304,15 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to the fax number.
+        /// </summary>
+        internal static string PhoneNumberSelectionNoMatches {
+            get {
+                return ResourceManager.GetString("PhoneNumberSelectionNoMatches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to call the cell phone.
         /// </summary>
         internal static string PhoneNumberSelectionStandardizedType {
@@ -340,20 +358,20 @@ namespace PhoneSkillTest.Flow.Utterances {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to all of them.
-        /// </summary>
-        internal static string SelectionFailure {
-            get {
-                return ResourceManager.GetString("SelectionFailure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to the first one.
         /// </summary>
         internal static string SelectionFirst {
             get {
                 return ResourceManager.GetString("SelectionFirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to all of them.
+        /// </summary>
+        internal static string SelectionNoEntities {
+            get {
+                return ResourceManager.GetString("SelectionNoEntities", resourceCulture);
             }
         }
     }

@@ -301,6 +301,16 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
+            builder.AddUtterance(OutgoingCallUtterances.ContactSelectionNoMatches, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    Type = "contactName",
+                    Text = "qqq",
+                    StartIndex = 0,
+                },
+            });
+
             builder.AddUtterance(OutgoingCallUtterances.ContactSelectionPartialNameKeith, ContactSelectionLuis.Intent.ContactSelection, new List<MockLuisEntity>()
             {
                 new MockLuisEntity
@@ -331,9 +341,9 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.SelectionFailure, ContactSelectionLuis.Intent.ContactSelection);
-
             builder.AddUtterance(OutgoingCallUtterances.SelectionFirst, ContactSelectionLuis.Intent.ContactSelection);
+
+            builder.AddUtterance(OutgoingCallUtterances.SelectionNoEntities, ContactSelectionLuis.Intent.ContactSelection);
 
             return builder.Build();
         }
@@ -343,6 +353,17 @@ namespace PhoneSkillTest.TestDouble
             var builder = new MockLuisRecognizerBuilder<PhoneNumberSelectionLuis, PhoneNumberSelectionLuis.Intent>();
 
             builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionFullNumber, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
+
+            builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionNoMatches, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection, new List<MockLuisEntity>()
+            {
+                new MockLuisEntity
+                {
+                    // TODO Change entity type once we support custom phone number types.
+                    Type = "phoneNumberType",
+                    Text = "fax",
+                    StartIndex = 4,
+                },
+            });
 
             builder.AddUtterance(OutgoingCallUtterances.PhoneNumberSelectionStandardizedType, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection, new List<MockLuisEntity>()
             {
@@ -355,9 +376,9 @@ namespace PhoneSkillTest.TestDouble
                 },
             });
 
-            builder.AddUtterance(OutgoingCallUtterances.SelectionFailure, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
-
             builder.AddUtterance(OutgoingCallUtterances.SelectionFirst, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
+
+            builder.AddUtterance(OutgoingCallUtterances.SelectionNoEntities, PhoneNumberSelectionLuis.Intent.PhoneNumberSelection);
 
             return builder.Build();
         }

@@ -503,7 +503,18 @@ namespace PhoneSkillTest.Flow
                    "Andrew John Fitzroy",
                    "Andrew Smith",
                }))
-               .Send(OutgoingCallUtterances.SelectionFailure)
+               .Send(OutgoingCallUtterances.SelectionNoEntities)
+               .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
+               {
+                   { "contactName", "andrew" },
+               },
+               new List<string>()
+               {
+                   "Andrew John Keith",
+                   "Andrew John Fitzroy",
+                   "Andrew Smith",
+               }))
+               .Send(OutgoingCallUtterances.ContactSelectionNoMatches)
                .AssertReply(Message(OutgoingCallResponses.ContactSelection, new StringDictionary()
                {
                    { "contactName", "andrew" },
@@ -728,7 +739,18 @@ namespace PhoneSkillTest.Flow
                    "Mobile: 555 101 0101",
                    "Mobile: 555 121 2121",
                }))
-               .Send(OutgoingCallUtterances.SelectionFailure)
+               .Send(OutgoingCallUtterances.SelectionNoEntities)
+               .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelectionWithPhoneNumberType, new StringDictionary()
+               {
+                   { "contact", "Eve Smith" },
+                   { "phoneNumberType", "Mobile" },
+               },
+               new List<string>()
+               {
+                   "Mobile: 555 101 0101",
+                   "Mobile: 555 121 2121",
+               }))
+               .Send(OutgoingCallUtterances.PhoneNumberSelectionNoMatches)
                .AssertReply(Message(OutgoingCallResponses.PhoneNumberSelectionWithPhoneNumberType, new StringDictionary()
                {
                    { "contact", "Eve Smith" },
