@@ -22,6 +22,8 @@ namespace PhoneSkill.Services.Luis
 
         public class _Entities
         {
+            // Simple entities
+            public string[] index;
 
             // Lists
             public string[][] phoneNumberType;
@@ -29,6 +31,7 @@ namespace PhoneSkill.Services.Luis
             // Instance
             public class _Instance
             {
+                public InstanceData[] index;
                 public InstanceData[] phoneNumberType;
             }
             [JsonProperty("$instance")]
