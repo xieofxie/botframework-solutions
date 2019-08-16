@@ -12,8 +12,11 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Builder.Solutions;
+using Microsoft.Bot.Builder.Solutions.Authentication;
 using Microsoft.Bot.Builder.Solutions.Dialogs;
+using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
+using Microsoft.Graph;
 using Newtonsoft.Json.Linq;
 using SkillToggling.Models;
 using SkillToggling.Responses.Cancel;
@@ -31,6 +34,7 @@ namespace SkillToggling.Dialogs
         private MainResponses _responder = new MainResponses();
         private IStatePropertyAccessor<OnboardingState> _onboardingState;
         private IStatePropertyAccessor<SkillContext> _skillContextAccessor;
+        private IStatePropertyAccessor<ToggleState> _toggleStateAccessor;
 
         public MainDialog(
             BotSettings settings,
@@ -40,6 +44,8 @@ namespace SkillToggling.Dialogs
             CancelDialog cancelDialog,
             List<SkillDialog> skillDialogs,
             IBotTelemetryClient telemetryClient,
+            MicrosoftAppCredentials appCredentials,
+            ConversationState conversationState,
             UserState userState)
             : base(nameof(MainDialog), telemetryClient)
         {
@@ -48,6 +54,13 @@ namespace SkillToggling.Dialogs
             TelemetryClient = telemetryClient;
             _onboardingState = userState.CreateProperty<OnboardingState>(nameof(OnboardingState));
             _skillContextAccessor = userState.CreateProperty<SkillContext>(nameof(SkillContext));
+            _toggleStateAccessor = conversationState.CreateProperty<ToggleState>(nameof(ToggleState));
+
+            var route = new WaterfallStep[]
+            {
+                GetAuthToken,
+                AfterGetAuthToken
+            };
 
             AddDialog(onboardingDialog);
             AddDialog(escalateDialog);
@@ -57,6 +70,9 @@ namespace SkillToggling.Dialogs
             {
                 AddDialog(skillDialog);
             }
+
+            AddDialog(new MultiProviderAuthDialog(settings.OAuthConnections, appCredentials));
+            AddDialog(new WaterfallDialog("RouteAsync", route));
         }
 
         protected override async Task OnStartAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
@@ -74,14 +90,53 @@ namespace SkillToggling.Dialogs
             }
         }
 
-        protected override async Task RouteAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
+        protected async Task<DialogTurnResult> GetAuthToken(WaterfallStepContext sc, CancellationToken cancellationToken)
         {
+            var toggleState = await _toggleStateAccessor.GetAsync(sc.Context, () => new ToggleState());
+            toggleState.RouteText = sc.Context.Activity.Text;
+
+            return await sc.PromptAsync(nameof(MultiProviderAuthDialog), new PromptOptions());
+        }
+
+        protected async Task<DialogTurnResult> AfterGetAuthToken(WaterfallStepContext sc, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (!(sc.Result is ProviderTokenResponse))
+            {
+                return await sc.NextAsync();
+            }
+
+            var providerTokenResponse = sc.Result as ProviderTokenResponse;
+
+            var groupIds = await new MSGraphAPI(providerTokenResponse.TokenResponse.Token).GetGroupIds();
+            // TODO should not be put in UserState
+            var skillContext = await _skillContextAccessor.GetAsync(sc.Context, () => new SkillContext());
+            var groupApi = new GroupPermissionAPI(_settings);
+            var permissions = groupApi.DecodePermission(groupIds);
+            groupApi.Update(skillContext, permissions);
+
+            bool hasPermission = false;
+
+            foreach (var skill in permissions)
+            {
+                var result = string.Join(' ', skill.Value);
+                hasPermission = true;
+                await sc.Context.SendActivityAsync($"{skill.Key}: {result}");
+            }
+
+            if (!hasPermission)
+            {
+                await _responder.ReplyWith(sc.Context, MainResponses.ResponseIds.Confused);
+            }
+
+            var toggleState = await _toggleStateAccessor.GetAsync(sc.Context, () => new ToggleState());
+            sc.Context.Activity.Text = toggleState.RouteText;
+
             // Get cognitive models for locale
             var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
             var cognitiveModels = _services.CognitiveModelSets[locale];
 
             // Check dispatch result
-            var dispatchResult = await cognitiveModels.DispatchService.RecognizeAsync<DispatchLuis>(dc.Context, CancellationToken.None);
+            var dispatchResult = await cognitiveModels.DispatchService.RecognizeAsync<DispatchLuis>(sc.Context, CancellationToken.None);
             var intent = dispatchResult.TopIntent().intent;
 
             // Identify if the dispatch intent matches any Action within a Skill if so, we pass to the appropriate SkillDialog to hand-off
@@ -90,12 +145,7 @@ namespace SkillToggling.Dialogs
             if (identifiedSkill != null)
             {
                 // We have identiifed a skill so initialize the skill connection with the target skill
-                var result = await dc.BeginDialogAsync(identifiedSkill.Id);
-
-                if (result.Status == DialogTurnStatus.Complete)
-                {
-                    await CompleteAsync(dc);
-                }
+                return await sc.BeginDialogAsync(identifiedSkill.Id);
             }
             else if (intent == DispatchLuis.Intent.l_General)
             {
@@ -108,7 +158,7 @@ namespace SkillToggling.Dialogs
                 }
                 else
                 {
-                    var result = await luisService.RecognizeAsync<GeneralLuis>(dc.Context, CancellationToken.None);
+                    var result = await luisService.RecognizeAsync<GeneralLuis>(sc.Context, CancellationToken.None);
 
                     var generalIntent = result?.TopIntent().intent;
 
@@ -118,15 +168,14 @@ namespace SkillToggling.Dialogs
                         case GeneralLuis.Intent.Escalate:
                             {
                                 // start escalate dialog
-                                await dc.BeginDialogAsync(nameof(EscalateDialog));
-                                break;
+                                return await sc.BeginDialogAsync(nameof(EscalateDialog));
                             }
 
                         case GeneralLuis.Intent.None:
                         default:
                             {
                                 // No intent was identified, send confused message
-                                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                                await _responder.ReplyWith(sc.Context, MainResponses.ResponseIds.Confused);
                                 break;
                             }
                     }
@@ -142,15 +191,15 @@ namespace SkillToggling.Dialogs
                 }
                 else
                 {
-                    var answers = await qnaService.GetAnswersAsync(dc.Context, null, null);
+                    var answers = await qnaService.GetAnswersAsync(sc.Context, null, null);
 
                     if (answers != null && answers.Count() > 0)
                     {
-                        await dc.Context.SendActivityAsync(answers[0].Answer, speak: answers[0].Answer);
+                        await sc.Context.SendActivityAsync(answers[0].Answer, speak: answers[0].Answer);
                     }
                     else
                     {
-                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                        await _responder.ReplyWith(sc.Context, MainResponses.ResponseIds.Confused);
                     }
                 }
             }
@@ -164,15 +213,15 @@ namespace SkillToggling.Dialogs
                 }
                 else
                 {
-                    var answers = await qnaService.GetAnswersAsync(dc.Context, null, null);
+                    var answers = await qnaService.GetAnswersAsync(sc.Context, null, null);
 
                     if (answers != null && answers.Count() > 0)
                     {
-                        await dc.Context.SendActivityAsync(answers[0].Answer, speak: answers[0].Answer);
+                        await sc.Context.SendActivityAsync(answers[0].Answer, speak: answers[0].Answer);
                     }
                     else
                     {
-                        await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                        await _responder.ReplyWith(sc.Context, MainResponses.ResponseIds.Confused);
                     }
                 }
             }
@@ -180,8 +229,15 @@ namespace SkillToggling.Dialogs
             {
                 // If dispatch intent does not map to configured models, send "confused" response.
                 // Alternatively as a form of backup you can try QnAMaker for anything not understood by dispatch.
-                await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                await _responder.ReplyWith(sc.Context, MainResponses.ResponseIds.Confused);
             }
+
+            return await sc.NextAsync();
+        }
+
+        protected override async Task RouteAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await dc.BeginDialogAsync("RouteAsync");
         }
 
         protected override async Task OnEventAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))

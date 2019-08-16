@@ -317,6 +317,33 @@ namespace Microsoft.Bot.Builder.Skills
             {
                 // populate call id for auth purpose
                 activity.CallerId = _serviceClientCredentials.MicrosoftAppId;
+                // after SemanticAction
+                if (_skillManifest.Switches != null)
+                {
+                    // save this accessor
+                    var accessor = _userState.CreateProperty<SkillContext>(nameof(SkillContext));
+                    var skillContext = await accessor.GetAsync(innerDc.Context, () => new SkillContext());
+
+                    if (skillContext.ContainsKey(_skillManifest.Id))
+                    {
+                        if (activity.SemanticAction == null)
+                        {
+                            activity.SemanticAction = new SemanticAction
+                            {
+                                Entities = new Dictionary<string, Entity>()
+                            };
+                        }
+
+                        // or skip this check
+                        foreach (var sw in _skillManifest.Switches)
+                        {
+                            if (skillContext[_skillManifest.Id].ContainsKey(sw.Id))
+                            {
+                                activity.SemanticAction.Entities.Add(sw.Id, null);
+                            }
+                        }
+                    }
+                }
 
                 var endOfConversationActivity = await _skillTransport.ForwardToSkillAsync(_skillManifest, _serviceClientCredentials, innerDc.Context, activity, GetTokenRequestCallback(innerDc), GetFallbackCallback(innerDc));
 
