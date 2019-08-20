@@ -11,11 +11,13 @@ using Luis;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Skills;
+using Microsoft.Bot.Builder.Skills.Switch;
 using Microsoft.Bot.Builder.Solutions.Authentication;
 using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Builder.Solutions.Util;
 using Microsoft.Bot.Schema;
 using SkillSample.Models;
+using SkillSample.Responses.Main;
 using SkillSample.Responses.Shared;
 using SkillSample.Services;
 
@@ -55,8 +57,17 @@ namespace SkillSample.Dialogs
 
         protected ResponseManager ResponseManager { get; set; }
 
+        protected string Switch { get; set; }
+
         protected override async Task<DialogTurnResult> OnBeginDialogAsync(DialogContext dc, object options, CancellationToken cancellationToken = default(CancellationToken))
         {
+            // if do not set Switch, function fully
+            if (Switch != null && !dc.Context.Activity.HasSkillSwitch(Switch))
+            {
+                await dc.Context.SendActivityAsync(ResponseManager.GetResponse(MainResponses.FeatureNotAvailable));
+                return await dc.EndDialogAsync();
+            }
+
             await GetLuisResult(dc);
             return await base.OnBeginDialogAsync(dc, options, cancellationToken);
         }

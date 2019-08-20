@@ -1,6 +1,6 @@
 {
-  "id": "",
-  "name": "",
+  "id": "sampleSkill",
+  "name": "Sample Skill",
   "description": "",
   "iconUrl": "",
   "authenticationConnections": [
@@ -12,7 +12,7 @@
   ],
   "actions": [
     {
-      "id": "",
+      "id": "sampleSkill_sample",
       "definition": {
         "description": "",
         "slots": [
@@ -26,12 +26,19 @@
             {
               "locale": "en",
               "source": [
-                "luisModel#intent"
+                // luisModel#intent
+                "Skill#Sample"
               ]
             }
           ]
         }
       }
+    }
+  ],
+  "switches": [
+    {
+      "id": "sample",
+      "description": "turn on/off sample dialog"
     }
   ]
 }

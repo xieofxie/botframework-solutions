@@ -1,0 +1,33 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+﻿<#@ assembly name="Newtonsoft.Json.dll" #>
+<#
+  var className = System.IO.Path.GetFileNameWithoutExtension(Host.TemplateFile);
+  var namespaceName = System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint");
+  string myFile = System.IO.File.ReadAllText(this.Host.ResolvePath("../manifestTemplate.json"));
+  var json = Newtonsoft.Json.JsonConvert.DeserializeObject<System.Collections.Generic.Dictionary<string, dynamic>>(myFile);
+#>
+// https://docs.microsoft.com/en-us/visualstudio/modeling/t4-include-directive?view=vs-2017
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+namespace <#= namespaceName #>
+{
+    /// <summary>
+    /// Contains switch ids in manifest template.
+    /// </summary>
+    public class <#= className #>
+    {
+        // Generated ids
+<#
+// This code runs in the text json:  
+foreach (var propertyName in json) {
+    if (propertyName.Key == "switches") {
+        var switches = propertyName.Value as Newtonsoft.Json.Linq.JArray;
+        foreach (var sw in switches) {
+            var id = (sw as Newtonsoft.Json.Linq.JObject)["id"].ToObject<string>();
+#>
+        public const string <#= id.Substring(0, 1).ToUpperInvariant() + id.Substring(1) #> = "<#= id #>";
+<# }}} #>
+    }
+}

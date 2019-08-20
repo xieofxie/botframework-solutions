@@ -9,6 +9,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Solutions.Responses;
 using SkillSample.Responses.Sample;
 using SkillSample.Services;
+using SkillSample.Utilities;
 
 namespace SkillSample.Dialogs
 {
@@ -36,6 +37,8 @@ namespace SkillSample.Dialogs
             AddDialog(new TextPrompt(DialogIds.NamePrompt));
 
             InitialDialogId = nameof(SampleDialog);
+
+            Switch = SwitchIdCollection.Sample;
         }
 
         private async Task<DialogTurnResult> PromptForName(WaterfallStepContext stepContext, CancellationToken cancellationToken)

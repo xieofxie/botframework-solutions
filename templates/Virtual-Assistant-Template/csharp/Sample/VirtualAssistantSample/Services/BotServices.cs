@@ -28,6 +28,7 @@ namespace VirtualAssistantSample.Services
                 {
                     TelemetryClient = telemetryClient,
                     LogPersonalInformation = true,
+                    IncludeAllIntents = true
                 };
 
                 var dispatchApp = new LuisApplication(config.DispatchModel.AppId, config.DispatchModel.SubscriptionKey, config.DispatchModel.GetEndpoint());

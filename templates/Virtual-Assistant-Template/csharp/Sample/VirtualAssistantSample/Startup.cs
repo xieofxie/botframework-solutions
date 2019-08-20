@@ -17,6 +17,7 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Builder.Skills.Auth;
 using Microsoft.Bot.Builder.Skills.Models.Manifest;
+using Microsoft.Bot.Builder.Skills.Switch;
 using Microsoft.Bot.Builder.Solutions.Authentication;
 using Microsoft.Bot.Builder.StreamingExtensions;
 using Microsoft.Bot.Connector.Authentication;
@@ -127,6 +128,10 @@ namespace VirtualAssistantSample
 
             // Configure bot
             services.AddTransient<IBot, DialogBot<MainDialog>>();
+
+            services.AddSingleton<ISkillSwitchManager>(new SkillSwitchManager());
+
+            services.AddSingleton<SkillSwitchDispatchLuis>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

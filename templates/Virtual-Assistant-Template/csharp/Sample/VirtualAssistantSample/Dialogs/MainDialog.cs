@@ -11,6 +11,7 @@ using Luis;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Skills;
+using Microsoft.Bot.Builder.Skills.Switch;
 using Microsoft.Bot.Builder.Solutions;
 using Microsoft.Bot.Builder.Solutions.Dialogs;
 using Microsoft.Bot.Schema;
@@ -31,6 +32,7 @@ namespace VirtualAssistantSample.Dialogs
         private MainResponses _responder = new MainResponses();
         private IStatePropertyAccessor<OnboardingState> _onboardingState;
         private IStatePropertyAccessor<SkillContext> _skillContextAccessor;
+        private SkillSwitchDispatchLuis _skillSwitchDispatchLuis;
 
         public MainDialog(
             BotSettings settings,
@@ -40,7 +42,8 @@ namespace VirtualAssistantSample.Dialogs
             CancelDialog cancelDialog,
             List<SkillDialog> skillDialogs,
             IBotTelemetryClient telemetryClient,
-            UserState userState)
+            UserState userState,
+            SkillSwitchDispatchLuis skillSwitchDispatchLuis)
             : base(nameof(MainDialog), telemetryClient)
         {
             _settings = settings;
@@ -48,6 +51,7 @@ namespace VirtualAssistantSample.Dialogs
             TelemetryClient = telemetryClient;
             _onboardingState = userState.CreateProperty<OnboardingState>(nameof(OnboardingState));
             _skillContextAccessor = userState.CreateProperty<SkillContext>(nameof(SkillContext));
+            _skillSwitchDispatchLuis = skillSwitchDispatchLuis;
 
             AddDialog(onboardingDialog);
             AddDialog(escalateDialog);
@@ -82,7 +86,15 @@ namespace VirtualAssistantSample.Dialogs
 
             // Check dispatch result
             var dispatchResult = await cognitiveModels.DispatchService.RecognizeAsync<DispatchLuis>(dc.Context, CancellationToken.None);
-            var intent = dispatchResult.TopIntent().intent;
+
+            // Uncomment the following line for version without skill switch
+            // (var intent, var score) = dispatchResult.TopIntent();
+            (var intent, var score) = await _skillSwitchDispatchLuis.TopIntentWithSkillSwitch(dc.Context, _settings.Skills, dispatchResult.Intents, DispatchLuis.Intent.None);
+
+            if (score <= 0.5)
+            {
+                intent = DispatchLuis.Intent.None;
+            }
 
             // Identify if the dispatch intent matches any Action within a Skill if so, we pass to the appropriate SkillDialog to hand-off
             var identifiedSkill = SkillRouter.IsSkill(_settings.Skills, intent.ToString());
