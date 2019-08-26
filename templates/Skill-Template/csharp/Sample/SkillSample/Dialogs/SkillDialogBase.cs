@@ -62,7 +62,8 @@ namespace SkillSample.Dialogs
         protected override async Task<DialogTurnResult> OnBeginDialogAsync(DialogContext dc, object options, CancellationToken cancellationToken = default(CancellationToken))
         {
             // if do not set Switch, function fully
-            if (Switch != null && !dc.Context.Activity.HasSkillSwitch(Switch))
+            // if no switches, function fully
+            if (Switch != null && !(dc.Context.Activity.GetSwitches()?.Contains(Switch)).GetValueOrDefault(true))
             {
                 await dc.Context.SendActivityAsync(ResponseManager.GetResponse(MainResponses.FeatureNotAvailable));
                 return await dc.EndDialogAsync();

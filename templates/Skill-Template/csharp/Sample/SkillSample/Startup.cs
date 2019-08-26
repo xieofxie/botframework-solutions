@@ -133,7 +133,7 @@ namespace SkillSample
         private class SimpleWhitelistAuthenticationProvider : IWhitelistAuthenticationProvider
         {
             // Set VA id here
-            public List<string> AppsWhitelist { get; } = new List<string>() { };
+            public HashSet<string> AppsWhitelist { get; } = new HashSet<string>() { };
         }
     }
 }

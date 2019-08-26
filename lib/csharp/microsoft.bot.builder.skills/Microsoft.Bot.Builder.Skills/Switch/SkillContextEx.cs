@@ -62,12 +62,9 @@ namespace Microsoft.Bot.Builder.Skills.Switch
                 if (skillContext[NameInSkillContext].ContainsKey(skillManifest.Id))
                 {
                     var switches = skillContext[NameInSkillContext][skillManifest.Id] as JObject;
-                    foreach (var sw in skillManifest.Switches)
+                    foreach (var sw in switches)
                     {
-                        if (switches.ContainsKey(sw.Id))
-                        {
-                            entity.Properties.Add(sw.Id, null);
-                        }
+                        entity.Properties.Add(sw.Key, null);
                     }                    
                 }
 

@@ -14,7 +14,7 @@
     {
       "id": "sampleSkill_sample",
       "definition": {
-        "description": "",
+        "description": "could also be used as a switch for sample dialog",
         "slots": [
           {
             "name": "",
@@ -33,12 +33,6 @@
           ]
         }
       }
-    }
-  ],
-  "switches": [
-    {
-      "id": "sample",
-      "description": "turn on/off sample dialog"
     }
   ]
 }

@@ -17,7 +17,7 @@ namespace VirtualAssistantSample.Services
             {
                 return new SkillSwitchData
                 {
-                    { "sampleSkill", new HashSet<string> { "sample" } }
+                    { "sampleSkill", new HashSet<string> { "sampleSkill_sample" } }
                 };
             }
 

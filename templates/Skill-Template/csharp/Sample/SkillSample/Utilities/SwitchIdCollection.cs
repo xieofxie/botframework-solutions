@@ -10,6 +10,6 @@ namespace SkillSample.Utilities
     public class SwitchIdCollection
     {
         // Generated ids
-        public const string Sample = "sample";
+        public const string SampleSkill_sample = "sampleSkill_sample";
     }
 }

@@ -22,7 +22,7 @@ namespace <#= namespaceName #>
 <#
 // This code runs in the text json:  
 foreach (var propertyName in json) {
-    if (propertyName.Key == "switches") {
+    if (propertyName.Key == "actions") {
         var switches = propertyName.Value as Newtonsoft.Json.Linq.JArray;
         foreach (var sw in switches) {
             var id = (sw as Newtonsoft.Json.Linq.JObject)["id"].ToObject<string>();

@@ -33,8 +33,5 @@ namespace Microsoft.Bot.Builder.Skills.Models.Manifest
 
         [JsonProperty(PropertyName = "actions")]
         public List<Action> Actions { get; set; } = new List<Action>();
-
-        [JsonProperty(PropertyName = "switches")]
-        public List<Switch> Switches { get; set; } = new List<Switch>();
     }
 }

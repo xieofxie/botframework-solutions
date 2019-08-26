@@ -38,7 +38,7 @@ namespace SkillSample.Dialogs
 
             InitialDialogId = nameof(SampleDialog);
 
-            Switch = SwitchIdCollection.Sample;
+            Switch = SwitchIdCollection.SampleSkill_sample;
         }
 
         private async Task<DialogTurnResult> PromptForName(WaterfallStepContext stepContext, CancellationToken cancellationToken)
