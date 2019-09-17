@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using PointOfInterestSkillTests.Flow.Utterances;
 using System.Collections.Generic;
 using Luis;
 using Microsoft.Bot.Builder;
@@ -30,10 +31,16 @@ namespace VirtualAssistantSample.Tests.Utilities
             { ChitchatUtterances.Greeting, CreateIntent(ChitchatUtterances.Greeting, DispatchLuis.Intent.q_Chitchat) },
         };
 
+        private static Dictionary<string, IRecognizerConvert> _poiUtterances = new Dictionary<string, IRecognizerConvert>
+        {
+            { FindPointOfInterestUtterances.WhatsNearby, CreateIntent(FindPointOfInterestUtterances.WhatsNearby, DispatchLuis.Intent.poiSkill) }
+        };
+
         public static MockLuisRecognizer CreateRecognizer()
         {
             var recognizer = new MockLuisRecognizer(defaultIntent: CreateIntent(string.Empty, DispatchLuis.Intent.None));
             recognizer.RegisterUtterances(_utterances);
+            recognizer.RegisterUtterances(_poiUtterances);
             return recognizer;
         }
 

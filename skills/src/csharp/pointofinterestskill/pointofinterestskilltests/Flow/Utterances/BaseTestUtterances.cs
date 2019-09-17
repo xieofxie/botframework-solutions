@@ -14,6 +14,8 @@ namespace PointOfInterestSkillTests.Flow.Utterances
 
         public static string LocationEvent { get; } = "/event:{ \"Name\": \"Location\", \"Value\": \"47.639620,-122.130610\" }";
 
+        public static string LocationEventInVA { get; } = "/event:{ \"Name\": \"VA.Location\", \"Value\": \"47.639620,-122.130610\" }";
+
         public static string OptionOne { get; } = "option 1";
 
         public static string OptionTwo { get; } = "option 2";
