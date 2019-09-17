@@ -33,7 +33,7 @@ namespace VirtualAssistantSample.Tests.Utilities
 
         private static Dictionary<string, IRecognizerConvert> _poiUtterances = new Dictionary<string, IRecognizerConvert>
         {
-            { FindPointOfInterestUtterances.WhatsNearby, CreateIntent(FindPointOfInterestUtterances.WhatsNearby, DispatchLuis.Intent.poiSkill) }
+            { FindPointOfInterestUtterances.WhatsNearby, CreateIntent(FindPointOfInterestUtterances.WhatsNearby, MockDispatchLuis.Intent.poiSkill) }
         };
 
         public static MockLuisRecognizer CreateRecognizer()
@@ -57,6 +57,24 @@ namespace VirtualAssistantSample.Tests.Utilities
             result.Entities = new DispatchLuis._Entities
             {
                 _instance = new DispatchLuis._Entities._Instance()
+            };
+
+            return result;
+        }
+
+        public static MockDispatchLuis CreateIntent(string userInput, MockDispatchLuis.Intent intent)
+        {
+            var result = new MockDispatchLuis
+            {
+                Text = userInput,
+                Intents = new Dictionary<MockDispatchLuis.Intent, IntentScore>()
+            };
+
+            result.Intents.Add(intent, new IntentScore() { Score = 0.9 });
+
+            result.Entities = new MockDispatchLuis._Entities
+            {
+                _instance = new MockDispatchLuis._Entities._Instance()
             };
 
             return result;

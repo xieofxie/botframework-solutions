@@ -29,6 +29,7 @@ using PointOfInterestSkill.Responses.Shared;
 using VirtualAssistantSample.Bots;
 using VirtualAssistantSample.Dialogs;
 using VirtualAssistantSample.Services;
+using VirtualAssistantSample.Tests.Mocks;
 using VirtualAssistantSample.Tests.Utilities;
 
 namespace VirtualAssistantSample.Tests
@@ -42,8 +43,8 @@ namespace VirtualAssistantSample.Tests
         [TestInitialize]
         public override void Initialize()
         {
-            var id = "real_app_id";
-            var password = "real_app_pw";
+            var id = "appId";
+            var password = "password";
             var port = 3980;
 
             Skills.Add(PointOfInterestSkillTests.Flow.PointOfInterestStartup.StartSkill(id, password, port));
@@ -137,7 +138,7 @@ namespace VirtualAssistantSample.Tests
             // Register dialogs
             Services.AddTransient<CancelDialog>();
             Services.AddTransient<EscalateDialog>();
-            Services.AddTransient<MainDialog>();
+            Services.AddTransient<MainDialog, MockMainDialog>();
             Services.AddTransient<OnboardingDialog>();
 
             // Register skill dialogs
@@ -149,7 +150,7 @@ namespace VirtualAssistantSample.Tests
                 foreach (var skill in settings.Skills)
                 {
                     var authDialog = BuildAuthDialog(skill, settings, appCredentials);
-                    var credentials = new MicrosoftAppCredentialsEx(settings.MicrosoftAppId, settings.MicrosoftAppPassword, skill.MSAappId);
+                    var credentials = new MockMicrosoftAppCredentialsEx(settings.MicrosoftAppId, settings.MicrosoftAppPassword, skill.MSAappId);
                     skillDialogs.Add(new SkillDialog(skill, credentials, telemetryClient, userState, authDialog));
                 }
 

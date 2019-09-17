@@ -37,6 +37,7 @@ using PointOfInterestSkill.Responses.Route;
 using PointOfInterestSkill.Responses.Shared;
 using PointOfInterestSkill.Services;
 using PointOfInterestSkillTests.API.Fakes;
+using PointOfInterestSkillTests.Flow.Fakes;
 using PointOfInterestSkillTests.Flow.Utterances;
 
 namespace PointOfInterestSkillTests.Flow
@@ -148,7 +149,7 @@ namespace PointOfInterestSkillTests.Flow
             // Configure adapters
             //services.AddTransient<IBotFrameworkHttpAdapter, DefaultAdapter>();
             services.AddTransient<SkillWebSocketBotAdapter, POISkillWebSocketBotAdapter>();
-            services.AddTransient<SkillWebSocketAdapter>();
+            services.AddTransient<SkillWebSocketAdapter, MockSkillWebSocketAdapter>();
 
             // Register WhiteListAuthProvider
             services.AddSingleton<IWhitelistAuthenticationProvider, WhitelistAuthenticationProvider>();
