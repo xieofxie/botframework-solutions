@@ -16,6 +16,7 @@ namespace VirtualAssistantSample.Tests.Mocks
             q_Chitchat,
             q_Faq,
             poiSkill,
+            emailSkill,
             None
         };
         [JsonProperty("intents")]

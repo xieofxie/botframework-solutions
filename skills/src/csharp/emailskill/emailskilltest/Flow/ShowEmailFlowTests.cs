@@ -385,12 +385,12 @@ namespace EmailSkillTest.Flow
                 .StartTestAsync();
         }
 
-        private string[] NotShowingMessage()
+        public string[] NotShowingMessage()
         {
             return this.ParseReplies(EmailSharedResponses.CancellingMessage, new StringDictionary());
         }
 
-        private Action<IActivity> ActionEndMessage()
+        public Action<IActivity> ActionEndMessage()
         {
             return activity =>
             {
@@ -398,7 +398,7 @@ namespace EmailSkillTest.Flow
             };
         }
 
-        private string[] ReadOutPrompt()
+        public string[] ReadOutPrompt()
         {
             return this.ParseReplies(ShowEmailResponses.ReadOutPrompt, new StringDictionary());
         }
@@ -470,7 +470,7 @@ namespace EmailSkillTest.Flow
             };
         }
 
-        private Action<IActivity> ShowEmailList(int expectCount = 3, int page = 0)
+        public Action<IActivity> ShowEmailList(int expectCount = 3, int page = 0)
         {
             return activity =>
             {
@@ -576,7 +576,7 @@ namespace EmailSkillTest.Flow
             };
         }
 
-        private Action<IActivity> ShowAuth()
+        public Action<IActivity> ShowAuth()
         {
             return activity =>
             {

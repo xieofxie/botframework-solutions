@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Bot.Builder.Skills.Auth;
 
-namespace PointOfInterestSkillTests.Flow.Fakes
+namespace SkillTest
 {
     public class MockAuthenticator : IAuthenticator
     {

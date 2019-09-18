@@ -6,6 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EmailSkill.Adapters;
+using EmailSkill.Bots;
+using EmailSkill.Dialogs;
+using EmailSkill.Responses.DeleteEmail;
+using EmailSkill.Responses.FindContact;
+using EmailSkill.Responses.ForwardEmail;
+using EmailSkill.Responses.Main;
+using EmailSkill.Responses.ReplyEmail;
+using EmailSkill.Responses.SendEmail;
+using EmailSkill.Responses.Shared;
+using EmailSkill.Responses.ShowEmail;
+using EmailSkill.Services;
+using EmailSkillTest.Flow.Fakes;
+using EmailSkillTest.Flow.Utterances;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,31 +33,20 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.Skills;
 using Microsoft.Bot.Builder.Skills.Auth;
 using Microsoft.Bot.Builder.Solutions;
+using Microsoft.Bot.Builder.Solutions.Authentication;
 using Microsoft.Bot.Builder.Solutions.Proactive;
 using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Builder.Solutions.TaskExtensions;
 using Microsoft.Bot.Builder.Solutions.Testing;
+using Microsoft.Bot.Builder.Solutions.Util;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PointOfInterestSkill.Adapters;
-using PointOfInterestSkill.Bots;
-using PointOfInterestSkill.Controllers;
-using PointOfInterestSkill.Dialogs;
-using PointOfInterestSkill.Responses.CancelRoute;
-using PointOfInterestSkill.Responses.FindPointOfInterest;
-using PointOfInterestSkill.Responses.Main;
-using PointOfInterestSkill.Responses.Route;
-using PointOfInterestSkill.Responses.Shared;
-using PointOfInterestSkill.Services;
-using PointOfInterestSkillTests.API.Fakes;
-using PointOfInterestSkillTests.Flow.Fakes;
-using PointOfInterestSkillTests.Flow.Utterances;
 using SkillTest;
 
-namespace PointOfInterestSkillTests.Flow
+namespace EmailSkillTest.Flow
 {
-    public class PointOfInterestStartup : MockSkillStartupBase
+    public class EmailBotStartup : MockSkillStartupBase
     {
         protected override void ConfigureServices(IServiceCollection services, string id, string password)
         {
@@ -53,7 +56,10 @@ namespace PointOfInterestSkillTests.Flow
             var settings = new BotSettings();
             settings.MicrosoftAppId = id;
             settings.MicrosoftAppPassword = password;
-            settings.AzureMapsKey = MockData.Key;
+            settings.OAuthConnections = new List<OAuthConnection>()
+            {
+                new OAuthConnection() { Name = AuthenticationProvider, Provider = AuthenticationProvider }
+            };
             services.AddSingleton<BotSettings>(settings);
             services.AddSingleton<BotSettingsBase>(settings);
 
@@ -78,7 +84,7 @@ namespace PointOfInterestSkillTests.Flow
             services.AddSingleton<IBotTelemetryClient>(telemetryClient);
             //Services.AddBotApplicationInsights(telemetryClient);
 
-            // Configure bot Services
+            // Configure bot services
             services.AddSingleton(new BotServices()
             {
                 CognitiveModelSets = new Dictionary<string, CognitiveModelSet>
@@ -88,12 +94,14 @@ namespace PointOfInterestSkillTests.Flow
                         {
                             LuisServices = new Dictionary<string, ITelemetryRecognizer>
                             {
-                                { "General", new Fakes.MockGeneralLuisRecognizer() },
+                                { "General", new MockGeneralLuisRecognizer() },
                                 {
-                                    "PointOfInterest", new Fakes.MockPointOfInterestLuisRecognizer(
-                                    new FindParkingUtterances(),
-                                    new FindPointOfInterestUtterances(),
-                                    new RouteFromXToYUtterances())
+                                    "Email", new MockEmailLuisRecognizer(
+                                        new ForwardEmailUtterances(),
+                                        new ReplyEmailUtterances(),
+                                        new DeleteEmailUtterances(),
+                                        new SendEmailUtterances(),
+                                        new ShowEmailUtterances())
                                 }
                             }
                         }
@@ -108,29 +116,30 @@ namespace PointOfInterestSkillTests.Flow
             // Configure service manager
             services.AddSingleton<IServiceManager, MockServiceManager>();
 
-            // Configure HttpContext required for path resolution
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             // Configure responses
             services.AddSingleton(sp => new ResponseManager(
                 new string[] { "en", "de", "es", "fr", "it", "zh" },
-                new CancelRouteResponses(),
-                new FindPointOfInterestResponses(),
-                new POIMainResponses(),
-                new RouteResponses(),
-                new POISharedResponses()));
+                new FindContactResponses(),
+                new DeleteEmailResponses(),
+                new ForwardEmailResponses(),
+                new EmailMainResponses(),
+                new ReplyEmailResponses(),
+                new SendEmailResponses(),
+                new EmailSharedResponses(),
+                new ShowEmailResponses()));
 
             // register dialogs
             services.AddTransient<MainDialog>();
-            services.AddTransient<CancelRouteDialog>();
-            services.AddTransient<FindParkingDialog>();
-            services.AddTransient<FindPointOfInterestDialog>();
-            services.AddTransient<RouteDialog>();
-            services.AddTransient<GetDirectionsDialog>();
+            services.AddTransient<DeleteEmailDialog>();
+            services.AddTransient<FindContactDialog>();
+            services.AddTransient<ForwardEmailDialog>();
+            services.AddTransient<ReplyEmailDialog>();
+            services.AddTransient<SendEmailDialog>();
+            services.AddTransient<ShowEmailDialog>();
 
             // Configure adapters
             //services.AddTransient<IBotFrameworkHttpAdapter, DefaultAdapter>();
-            services.AddTransient<SkillWebSocketBotAdapter, POISkillWebSocketBotAdapter>();
+            services.AddTransient<SkillWebSocketBotAdapter, EmailSkillWebSocketBotAdapter>();
             services.AddTransient<SkillWebSocketAdapter, MockSkillWebSocketAdapter>();
 
             // Register WhiteListAuthProvider
@@ -139,6 +148,9 @@ namespace PointOfInterestSkillTests.Flow
             // Configure bot
             services.AddTransient<MainDialog>();
             services.AddTransient<IBot, DialogBot<MainDialog>>();
+
+            ConfigData.GetInstance().MaxDisplaySize = 3;
+            ConfigData.GetInstance().MaxReadSize = 3;
         }
     }
 }

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\skills\src\csharp\emailskill\emailskilltest\EmailSkillTest.csproj" />
     <ProjectReference Include="..\..\..\..\..\skills\src\csharp\pointofinterestskill\pointofinterestskilltests\PointOfInterestSkillTests.csproj" />
     <ProjectReference Include="..\VirtualAssistantSample\VirtualAssistantSample.csproj" />
   </ItemGroup>

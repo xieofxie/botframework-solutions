@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading.Tasks;
+using EmailSkill.Responses.Shared;
+using EmailSkill.Responses.ShowEmail;
+using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Builder.Solutions.Testing;
 using Microsoft.Bot.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,6 +17,7 @@ using PointOfInterestSkill.Dialogs;
 using PointOfInterestSkill.Models;
 using PointOfInterestSkill.Responses.Shared;
 using PointOfInterestSkillTests.Flow.Strings;
+using SkillTest;
 using VirtualAssistantSample.Responses.Main;
 using VirtualAssistantSample.Tests.Utterances;
 
@@ -22,9 +26,19 @@ namespace VirtualAssistantSample.Tests
     [TestClass]
     public class SkillTests : SkillTestBase
     {
-        [TestMethod]
-        public async Task Test_PoiSkill()
+        [ClassInitialize]
+        public static new void Initialize(TestContext testContext)
         {
+            SkillTestBase.Initialize(testContext);
+        }
+
+        [TestMethod]
+        public async Task Test_PoiSkill_RouteToPointOfInterestByIndexTest()
+        {
+            ResponseManager = new ResponseManager(
+                new string[] { "en", "de", "es", "fr", "it", "zh" },
+                new POISharedResponses());
+
             await GetTestFlow()
                 .Send(PointOfInterestSkillTests.Flow.Utterances.BaseTestUtterances.LocationEventInVA)
                 .Send(PointOfInterestSkillTests.Flow.Utterances.FindPointOfInterestUtterances.WhatsNearby)
@@ -38,6 +52,29 @@ namespace VirtualAssistantSample.Tests
                 .AssertReply(CompleteDialog())
                 .StartTestAsync();
         }
+
+        [TestMethod]
+        public async Task Test_EmailSkill_ShowEmail()
+        {
+            var test = new EmailSkillTest.Flow.ShowEmailFlowTests();
+            test.ResponseManager = new ResponseManager(
+                new string[] { "en", "de", "es", "fr", "it", "zh" },
+                new EmailSharedResponses(),
+                new ShowEmailResponses());
+            test.ServiceManager = new EmailSkillTest.Flow.Fakes.MockServiceManager();
+
+            await this.GetTestFlow()
+                .Send(EmailSkillTest.Flow.Utterances.ShowEmailUtterances.ShowEmails)
+                .AssertReply(test.ShowAuth())
+                .Send(MockSkillStartupBase.MagicCode)
+                .AssertReply(test.ShowEmailList())
+                .AssertReplyOneOf(test.ReadOutPrompt())
+                .Send(EmailSkillTest.Flow.Utterances.GeneralTestUtterances.No)
+                .AssertReplyOneOf(test.NotShowingMessage())
+                .AssertReply(test.ActionEndMessage())
+                .StartTestAsync();
+        }
+
 
         private Action<IActivity> AssertContains(string response, IList<string> cardIds)
         {

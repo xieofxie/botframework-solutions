@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using PointOfInterestSkillTests.Flow.Utterances;
 using System.Collections.Generic;
+using EmailSkillTest.Flow.Utterances;
 using Luis;
 using Microsoft.Bot.Builder;
+using PointOfInterestSkillTests.Flow.Utterances;
 using VirtualAssistantSample.Tests.Mocks;
 using VirtualAssistantSample.Tests.Utterances;
 
@@ -36,11 +37,17 @@ namespace VirtualAssistantSample.Tests.Utilities
             { FindPointOfInterestUtterances.WhatsNearby, CreateIntent(FindPointOfInterestUtterances.WhatsNearby, MockDispatchLuis.Intent.poiSkill) }
         };
 
+        private static Dictionary<string, IRecognizerConvert> _emailUtterances = new Dictionary<string, IRecognizerConvert>
+        {
+            { ShowEmailUtterances.ShowEmails, CreateIntent(ShowEmailUtterances.ShowEmails, MockDispatchLuis.Intent.emailSkill) }
+        };
+
         public static MockLuisRecognizer CreateRecognizer()
         {
             var recognizer = new MockLuisRecognizer(defaultIntent: CreateIntent(string.Empty, DispatchLuis.Intent.None));
             recognizer.RegisterUtterances(_utterances);
             recognizer.RegisterUtterances(_poiUtterances);
+            recognizer.RegisterUtterances(_emailUtterances);
             return recognizer;
         }
 

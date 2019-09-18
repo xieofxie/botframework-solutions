@@ -18,7 +18,7 @@ using Microsoft.Bot.Builder.Solutions;
 using Microsoft.Bot.StreamingExtensions.Transport;
 using Microsoft.Bot.StreamingExtensions.Transport.WebSockets;
 
-namespace PointOfInterestSkillTests.Flow.Fakes
+namespace SkillTest
 {
     public class MockSkillWebSocketAdapter : SkillWebSocketAdapter
     {

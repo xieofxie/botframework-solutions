@@ -2,10 +2,13 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EmailSkill.Responses.Shared;
+using EmailSkill.Responses.ShowEmail;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Builder;
@@ -22,10 +25,12 @@ using Microsoft.Bot.Builder.Solutions.Feedback;
 using Microsoft.Bot.Builder.Solutions.Middleware;
 using Microsoft.Bot.Builder.Solutions.Responses;
 using Microsoft.Bot.Builder.Solutions.Testing;
+using Microsoft.Bot.Connector;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PointOfInterestSkill.Responses.Shared;
+using SkillTest;
 using VirtualAssistantSample.Bots;
 using VirtualAssistantSample.Dialogs;
 using VirtualAssistantSample.Services;
@@ -36,18 +41,27 @@ namespace VirtualAssistantSample.Tests
 {
     public class SkillTestBase : Microsoft.Bot.Builder.Solutions.Testing.BotTestBase
     {
-        public IServiceCollection Services { get; set; }
+        private static BlockingCollection<int> portCollection;
 
-        public List<Tuple<CancellationTokenSource, Task>> Skills { get; set; } = new List<Tuple<CancellationTokenSource, Task>>();
+        private IServiceCollection Services { get; set; }
+
+        private List<Tuple<CancellationTokenSource, Task, int>> Skills { get; set; } = new List<Tuple<CancellationTokenSource, Task, int>>();
+
+        // https://stackoverflow.com/questions/15944504/mstest-classinitialize-and-inheritance/56634082#56634082
+        public static void Initialize(TestContext testContext)
+        {
+            portCollection = new BlockingCollection<int>();
+            for (int i = 3000; i < 3010; ++i)
+            {
+                portCollection.Add(i);
+            }
+        }
 
         [TestInitialize]
         public override void Initialize()
         {
             var id = "appId";
             var password = "password";
-            var port = 3980;
-
-            Skills.Add(PointOfInterestSkillTests.Flow.PointOfInterestStartup.StartSkill(id, password, port));
 
             // Follow Startup
             Services = new ServiceCollection();
@@ -56,7 +70,13 @@ namespace VirtualAssistantSample.Tests
             var settings = new BotSettings();
             settings.MicrosoftAppId = id;
             settings.MicrosoftAppPassword = password;
+            settings.OAuthConnections = new List<OAuthConnection>()
+            {
+                new OAuthConnection() { Name = MockSkillStartupBase.AuthenticationProvider, Provider = MockSkillStartupBase.AuthenticationProvider }
+            };
             settings.Skills = new List<SkillManifest>();
+
+            var port = portCollection.Take();
             settings.Skills.Add(new SkillManifest
             {
                 Id = "poiSkill",
@@ -81,6 +101,25 @@ namespace VirtualAssistantSample.Tests
                     }
                 }
             });
+            Skills.Add(new PointOfInterestSkillTests.Flow.PointOfInterestStartup().StartSkill(id, password, port));
+
+            port = portCollection.Take();
+            settings.Skills.Add(new SkillManifest
+            {
+                Id = "emailSkill",
+                MSAappId = settings.MicrosoftAppId,
+                Endpoint = new Uri($"http://localhost:{port}/api/skill/messages"),
+                AuthenticationConnections = new AuthenticationConnection[]
+                {
+                    new AuthenticationConnection
+                    {
+                        Id = MockSkillStartupBase.AuthenticationProvider,
+                        ServiceProviderId = MockSkillStartupBase.AuthenticationProvider
+                    }
+                }
+            });
+            Skills.Add(new EmailSkillTest.Flow.EmailBotStartup().StartSkill(id, password, port));
+
             Services.AddSingleton(settings);
 
             // Configure credentials
@@ -118,12 +157,6 @@ namespace VirtualAssistantSample.Tests
                 }
             });
 
-            // Configure responses
-            ResponseManager = new ResponseManager(
-                new string[] { "en", "de", "es", "fr", "it", "zh" },
-                new POISharedResponses());
-            Services.AddSingleton(ResponseManager);
-
             // Configure storage
             Services.AddSingleton<IStorage, MemoryStorage>();
             Services.AddSingleton<UserState>();
@@ -158,7 +191,9 @@ namespace VirtualAssistantSample.Tests
             });
 
             // Configure adapters
-            Services.AddSingleton<TestAdapter, DefaultTestAdapter>();
+            var adapter = new DefaultTestAdapter();
+            adapter.AddUserToken(MockSkillStartupBase.AuthenticationProvider, Channels.Test, "user1", "test", MockSkillStartupBase.MagicCode);
+            Services.AddSingleton<TestAdapter>(adapter);
 
             // Configure bot
             Services.AddTransient<IBot, DialogBot<MainDialog>>();
@@ -181,6 +216,8 @@ namespace VirtualAssistantSample.Tests
                 {
                     tuple.Item1.Dispose();
                 }
+
+                portCollection.Add(tuple.Item3);
             }
         }
 

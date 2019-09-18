@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\SkillTest\SkillTest.csproj" />
     <ProjectReference Include="..\pointofinterestskill\PointOfInterestSkill.csproj" />
   </ItemGroup>
 

@@ -28,7 +28,11 @@ namespace EmailSkill.Adapters
                 telemetryClient.TrackException(exception);
             };
 
-            Use(new TranscriptLoggerMiddleware(new AzureBlobTranscriptStore(settings.BlobStorage.ConnectionString, settings.BlobStorage.Container)));
+            if (settings.BlobStorage != null && settings.BlobStorage.ConnectionString != null && settings.BlobStorage.Container != null)
+            {
+                Use(new TranscriptLoggerMiddleware(new AzureBlobTranscriptStore(settings.BlobStorage.ConnectionString, settings.BlobStorage.Container)));
+            }
+
             Use(new TelemetryLoggerMiddleware(telemetryClient, logPersonalInformation: true));
             Use(new SetLocaleMiddleware(settings.DefaultLocale ?? "en-us"));
             Use(new EventDebuggerMiddleware());
