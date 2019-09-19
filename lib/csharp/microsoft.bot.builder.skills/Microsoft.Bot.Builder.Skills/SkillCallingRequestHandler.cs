@@ -77,7 +77,15 @@ namespace Microsoft.Bot.Builder.Skills
                                     }
                                     else if (activity.Type == ActivityTypes.Handoff)
                                     {
-                                        var result = await _turnContext.SendActivityAsync(activity).ConfigureAwait(false);
+                                        try
+                                        {
+                                            var result = await _turnContext.SendActivityAsync(activity).ConfigureAwait(false);
+                                        }
+                                        catch
+                                        {
+
+                                        }
+                                        
                                         if (_handoffActivityHandler != null)
                                         {
                                             _handoffActivityHandler(activity);

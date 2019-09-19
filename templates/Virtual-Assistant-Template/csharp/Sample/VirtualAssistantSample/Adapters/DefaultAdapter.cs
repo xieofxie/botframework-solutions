@@ -35,7 +35,7 @@ namespace VirtualAssistantSample.Adapters
             Use(new TranscriptLoggerMiddleware(new AzureBlobTranscriptStore(settings.BlobStorage.ConnectionString, settings.BlobStorage.Container)));
             Use(new TelemetryLoggerMiddleware(telemetryClient, logPersonalInformation: true));
             Use(new ShowTypingMiddleware());
-            Use(new FeedbackMiddleware(conversationState, telemetryClient));
+            // Use(new FeedbackMiddleware(conversationState, telemetryClient));
             Use(new SetLocaleMiddleware(settings.DefaultLocale ?? "en-us"));
             Use(new EventDebuggerMiddleware());
         }

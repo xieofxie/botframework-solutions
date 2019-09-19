@@ -10,39 +10,47 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.AI.Luis;
 namespace Luis
 {
-    public class BingSearchSkillLuis: IRecognizerConvert
+    public partial class BingSearchSkillLuis: IRecognizerConvert
     {
+        [JsonProperty("text")]
         public string Text;
+
+        [JsonProperty("alteredText")]
         public string AlteredText;
+
         public enum Intent {
             GetCelebrityInfo, 
             None, 
             QueryQna, 
             SearchMovieInfo
         };
+        [JsonProperty("intents")]
         public Dictionary<Intent, IntentScore> Intents;
 
         public class _Entities
         {
             // Simple entities
             public string[] CelebrityName;
+
             public string[] MovieTitle;
 
             // Pattern.any
             public string[] CelebrityNamePatten;
+
             public string[] MovieTitlePatten;
 
             // Instance
             public class _Instance
             {
                 public InstanceData[] CelebrityName;
-                public InstanceData[] MovieTitle;
                 public InstanceData[] CelebrityNamePatten;
+                public InstanceData[] MovieTitle;
                 public InstanceData[] MovieTitlePatten;
             }
             [JsonProperty("$instance")]
             public _Instance _instance;
         }
+        [JsonProperty("entities")]
         public _Entities Entities;
 
         [JsonExtensionData(ReadData = true, WriteData = true)]
@@ -50,7 +58,7 @@ namespace Luis
 
         public void Convert(dynamic result)
         {
-            var app = JsonConvert.DeserializeObject<BingSearchSkillLuis>(JsonConvert.SerializeObject(result));
+            var app = JsonConvert.DeserializeObject<BingSearchSkillLuis>(JsonConvert.SerializeObject(result, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
             Text = app.Text;
             AlteredText = app.AlteredText;
             Intents = app.Intents;

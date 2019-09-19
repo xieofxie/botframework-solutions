@@ -22,6 +22,12 @@
     <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>..\..\build\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug - NuGet Packages|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+    <NoWarn>;NU5125;NU1701;8002</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

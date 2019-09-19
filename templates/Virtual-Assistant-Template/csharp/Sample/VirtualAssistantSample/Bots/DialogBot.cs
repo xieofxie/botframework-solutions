@@ -2,6 +2,8 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
@@ -35,6 +37,42 @@ namespace VirtualAssistantSample.Bots
                 _telemetryClient.TrackTrace($"Timeout in {turnContext.Activity.ChannelId} channel: Bot took too long to respond.", Severity.Information, null);
                 return;
             }
+
+            do
+            {
+                Activity activity = turnContext.Activity;
+
+                // Case 0. Not message
+                if (activity.Type != ActivityTypes.Message || string.IsNullOrEmpty(activity.Text))
+                {
+                    break;
+                }
+
+                // Case 1. No entities.
+                if (activity.Entities == null || activity.Entities.Count == 0)
+                {
+                    break;
+                }
+
+                IEnumerable<Entity> mentionEntities = activity.Entities.Where(entity => entity.Type.Equals("mention", StringComparison.OrdinalIgnoreCase));
+
+                // Case 2. No Mention entities.
+                if (!mentionEntities.Any())
+                {
+                    break;
+                }
+
+                // Case 3. Mention entities.
+                string strippedText = activity.Text;
+
+                mentionEntities.ToList()
+                    .ForEach(entity =>
+                    {
+                        strippedText = strippedText.Replace(entity.GetAs<Mention>().Text, string.Empty);
+                    });
+
+                activity.Text = strippedText.Trim();
+            } while (false);
 
             await _dialog.RunAsync(turnContext, _conversationState.CreateProperty<DialogState>(nameof(DialogState)), cancellationToken);
 

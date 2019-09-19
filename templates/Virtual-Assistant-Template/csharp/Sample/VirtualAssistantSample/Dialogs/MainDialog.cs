@@ -95,7 +95,7 @@ namespace VirtualAssistantSample.Dialogs
 
                 if (result.Status == DialogTurnStatus.Complete)
                 {
-                    await CompleteAsync(dc);
+                    // await CompleteAsync(dc);
                 }
             }
             else if (intent == DispatchLuis.Intent.l_General)
@@ -290,7 +290,7 @@ namespace VirtualAssistantSample.Dialogs
             await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Completed);
 
             // Request feedback on the last activity.
-            await FeedbackMiddleware.RequestFeedbackAsync(dc.Context, Id);
+            // await FeedbackMiddleware.RequestFeedbackAsync(dc.Context, Id);
         }
 
         protected override async Task<InterruptionAction> OnInterruptDialogAsync(DialogContext dc, CancellationToken cancellationToken)

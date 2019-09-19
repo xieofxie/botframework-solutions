@@ -1,10 +1,4 @@
 {
-  "luis_schema_version": "3.2.0",
-  "versionId": "0.1",
-  "name": "qiowuBingSearchSkillen_BingSearchSkill",
-  "desc": "",
-  "culture": "en-us",
-  "tokenizerVersion": "1.0.0",
   "intents": [
     {
       "name": "GetCelebrityInfo"
@@ -31,61 +25,52 @@
   ],
   "composites": [],
   "closedLists": [],
-  "patternAnyEntities": [
-    {
-      "name": "CelebrityNamePatten",
-      "roles": [],
-      "explicitList": []
-    },
-    {
-      "name": "MovieTitlePatten",
-      "roles": [],
-      "explicitList": []
-    }
-  ],
   "regex_entities": [],
-  "prebuiltEntities": [],
   "model_features": [],
   "regex_features": [],
-  "patterns": [
-    {
-      "pattern": "how is {MovieTitlePatten}",
-      "intent": "SearchMovieInfo"
-    },
-    {
-      "pattern": "tell me about the {MovieTitlePatten} movie",
-      "intent": "SearchMovieInfo"
-    },
-    {
-      "pattern": "what's {MovieTitlePatten} about?",
-      "intent": "SearchMovieInfo"
-    },
-    {
-      "pattern": "who is {CelebrityNamePatten}",
-      "intent": "GetCelebrityInfo"
-    },
-    {
-      "pattern": "what’s the move {MovieTitlePatten} about?",
-      "intent": "SearchMovieInfo"
-    },
-    {
-      "pattern": "what’s {MovieTitlePatten} about",
-      "intent": "SearchMovieInfo"
-    },
-    {
-      "pattern": "what’s {MovieTitlePatten} about?",
-      "intent": "SearchMovieInfo"
-    },
-    {
-      "pattern": "tell me about the movie {MovieTitlePatten}",
-      "intent": "SearchMovieInfo"
-    },
-    {
-      "pattern": "what's {MovieTitlePatten} about",
-      "intent": "SearchMovieInfo"
-    }
-  ],
   "utterances": [
+    {
+      "text": "who is bill gates",
+      "intent": "GetCelebrityInfo",
+      "entities": [
+        {
+          "entity": "CelebrityName",
+          "startPos": 7,
+          "endPos": 16
+        }
+      ]
+    },
+    {
+      "text": "who is tom hanks",
+      "intent": "GetCelebrityInfo",
+      "entities": [
+        {
+          "entity": "CelebrityName",
+          "startPos": 7,
+          "endPos": 15
+        }
+      ]
+    },
+    {
+      "text": "how large is switzerland?",
+      "intent": "QueryQna",
+      "entities": []
+    },
+    {
+      "text": "what is the capital of switzerland",
+      "intent": "QueryQna",
+      "entities": []
+    },
+    {
+      "text": "what the gdp of switzerland",
+      "intent": "QueryQna",
+      "entities": []
+    },
+    {
+      "text": "what's the population of switzerland?",
+      "intent": "QueryQna",
+      "entities": []
+    },
     {
       "text": "how about harry potter",
       "intent": "SearchMovieInfo",
@@ -96,11 +81,6 @@
           "endPos": 21
         }
       ]
-    },
-    {
-      "text": "how large is swizerland?",
-      "intent": "QueryQna",
-      "entities": []
     },
     {
       "text": "tell me about the jurassic park movie",
@@ -136,17 +116,7 @@
       ]
     },
     {
-      "text": "what is the capital of switzerland",
-      "intent": "QueryQna",
-      "entities": []
-    },
-    {
-      "text": "what the gdp of switzerland",
-      "intent": "QueryQna",
-      "entities": []
-    },
-    {
-      "text": "what’s hello about?",
+      "text": "what's hello about?",
       "intent": "SearchMovieInfo",
       "entities": [
         {
@@ -157,7 +127,7 @@
       ]
     },
     {
-      "text": "what’s the move harry potter about?",
+      "text": "what's the move harry potter about?",
       "intent": "SearchMovieInfo",
       "entities": [
         {
@@ -166,34 +136,54 @@
           "endPos": 27
         }
       ]
-    },
-    {
-      "text": "what's the population of switzerland?",
-      "intent": "QueryQna",
-      "entities": []
-    },
-    {
-      "text": "who is bill gates",
-      "intent": "GetCelebrityInfo",
-      "entities": [
-        {
-          "entity": "CelebrityName",
-          "startPos": 7,
-          "endPos": 16
-        }
-      ]
-    },
-    {
-      "text": "who is tom hanks",
-      "intent": "GetCelebrityInfo",
-      "entities": [
-        {
-          "entity": "CelebrityName",
-          "startPos": 7,
-          "endPos": 15
-        }
-      ]
     }
   ],
-  "settings": []
+  "patterns": [
+    {
+      "pattern": "who is {CelebrityNamePatten}",
+      "intent": "GetCelebrityInfo"
+    },
+    {
+      "pattern": "how is {MovieTitlePatten}",
+      "intent": "SearchMovieInfo"
+    },
+    {
+      "pattern": "tell me about the {MovieTitlePatten} movie",
+      "intent": "SearchMovieInfo"
+    },
+    {
+      "pattern": "what's {MovieTitlePatten} about?",
+      "intent": "SearchMovieInfo"
+    },
+    {
+      "pattern": "what's the move {MovieTitlePatten} about?",
+      "intent": "SearchMovieInfo"
+    },
+    {
+      "pattern": "what's {MovieTitlePatten} about",
+      "intent": "SearchMovieInfo"
+    },
+    {
+      "pattern": "tell me about the movie {MovieTitlePatten}",
+      "intent": "SearchMovieInfo"
+    }
+  ],
+  "patternAnyEntities": [
+    {
+      "name": "CelebrityNamePatten",
+      "explicitList": [],
+      "roles": []
+    },
+    {
+      "name": "MovieTitlePatten",
+      "explicitList": [],
+      "roles": []
+    }
+  ],
+  "prebuiltEntities": [],
+  "luis_schema_version": "3.0.0",
+  "versionId": "0.1",
+  "name": "BingSearchSkill",
+  "desc": "",
+  "culture": "en-us"
 }
