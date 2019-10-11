@@ -9,6 +9,8 @@ namespace HospitalitySkill.Models
     {
         public string Name { get; set; }
 
+        public string NamePlural { get; set; }
+
         public string[] AllNames { get; set; }
 
         public bool GlutenFree { get; set; }

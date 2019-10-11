@@ -82,11 +82,13 @@ namespace HospitalitySkill.Dialogs
                     prompt.SuggestedActions = new SuggestedActions { Actions = actions };
                 }
 
-                return await sc.PromptAsync(DialogIds.MenuPrompt, new PromptOptions()
+                var options = new PromptOptions()
                 {
                     Prompt = prompt,
                     RetryPrompt = ResponseManager.GetResponse(RoomServiceResponses.ChooseOneMenu)
-                });
+                };
+
+                return await sc.PromptAsync(DialogIds.MenuPrompt, options);
             }
 
             return await sc.NextAsync();
@@ -225,7 +227,11 @@ namespace HospitalitySkill.Dialogs
             foreach (var foodRequest in convState.FoodList.ToList())
             {
                 // get full name of requested item and check availability
+<<<<<<< HEAD
                 var foodItem = HotelService.CheckMenuItemAvailability(foodRequest.Food[0]);
+=======
+                var foodItem = _hotelService.CheckMenuItemAvailability(foodRequest.Food[0], (int)foodRequest.number[0]);
+>>>>>>> [Hospitality] add plural
 
                 if (foodItem == null)
                 {
@@ -244,6 +250,11 @@ namespace HospitalitySkill.Dialogs
                     Quantity = foodRequest.number == null ? 1 : (int)foodRequest.number[0],
                     SpecialRequest = foodRequest.SpecialRequest == null ? null : foodRequest.SpecialRequest[0]
                 };
+
+                if (foodItemData.Quantity > 1)
+                {
+                    foodItemData.Name = foodItem.NamePlural;
+                }
 
                 foodItems.Add(new Card(GetCardName(turnContext, "FoodItemCard"), foodItemData));
 
@@ -279,7 +290,7 @@ namespace HospitalitySkill.Dialogs
                 // food without quantity or special request
                 for (int i = 0; i < entities.Food.Length; i++)
                 {
-                    var foodRequest = new FoodRequestClass { Food = new string[] { entities.Food[i] } };
+                    var foodRequest = new FoodRequestClass { Food = new string[] { entities.Food[i] }, number = new double[] { 1 } };
                     convState.FoodList.Add(foodRequest);
                 }
             }

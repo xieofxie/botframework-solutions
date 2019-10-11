@@ -17,6 +17,7 @@
   },
   {
     "item": "Body Wash",
+    "itemPlural": "Body Washes",
     "names": [ "body wash", "bodywash", "body soap", "bodysoap", "bottle of body wash", "body washes", "body soaps", "bottles of body wash" ]
   },
   {
@@ -49,6 +50,7 @@
   },
   {
     "item": "Toothbrush",
+    "itemPlural": "Toothbrushes",
     "names": [ "toothbrush", "toothbrushes", "tooth brush", "tooth brushes" ]
   },
   {
@@ -61,14 +63,17 @@
   },
   {
     "item": "Tissue Box",
+    "itemPlural": "Tissue Boxes",
     "names": [ "tissue box", "tissue boxes", "tissues", "tissue", "box of tissue", "box of tissues" ]
   },
   {
     "item": "Workout Clothes",
+    "itemPlural": "Workout Clothes",
     "names": [ "workout clothes", "work out clothes", "work out clothing", "workout clothing", "gym clothes", "exercise clothes" ]
   },
   {
     "item": "Running Shoes",
+    "itemPlural": "Running Shoes",
     "names": [ "running shoes", "exercise shoes", "workout shoes", "workout shoes", "tennis shoes" ]
   },
   {

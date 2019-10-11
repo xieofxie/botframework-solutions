@@ -14,7 +14,7 @@
               "items": [
                 {
                   "type": "TextBlock",
-                  "text": "{Name} {Price}",
+                  "text": "{Name} ${Price}",
                   "weight": "Bolder"
                 }
               ]

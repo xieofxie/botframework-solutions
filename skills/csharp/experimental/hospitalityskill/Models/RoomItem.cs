@@ -9,6 +9,8 @@ namespace HospitalitySkill.Models
     {
         public string Item { get; set; }
 
+        public string ItemPlural { get; set; }
+
         public string[] Names { get; set; }
 
         public int Quantity { get; set; }

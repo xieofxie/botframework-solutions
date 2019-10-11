@@ -71,8 +71,9 @@ namespace HospitalitySkill.Services
             return await Task.FromResult(true);
         }
 
-        public RoomItem CheckRoomItemAvailability(string item)
+        public RoomItem CheckRoomItemAvailability(string item, int number)
         {
+            // TODO optimize?
             using (var r = new StreamReader(typeof(HotelService).Assembly.GetManifestResourceStream(_availableItemsFilePath)))
             {
                 string json = r.ReadToEnd();
@@ -81,6 +82,11 @@ namespace HospitalitySkill.Services
                 // check all item names
                 foreach (var roomItem in roomItems)
                 {
+                    if (roomItem.ItemPlural == null)
+                    {
+                        roomItem.ItemPlural = $"{roomItem.Item}s";
+                    }
+
                     if (Array.Exists(roomItem.Names, x => string.Equals(x, item, StringComparison.CurrentCultureIgnoreCase)))
                     {
                         return roomItem;
@@ -92,7 +98,7 @@ namespace HospitalitySkill.Services
         }
 
         // returns full name of menu item if found
-        public MenuItem CheckMenuItemAvailability(string item)
+        public MenuItem CheckMenuItemAvailability(string item, int number)
         {
             using (var r = new StreamReader(typeof(HotelService).Assembly.GetManifestResourceStream(_menuFilePath)))
             {
@@ -104,6 +110,11 @@ namespace HospitalitySkill.Services
                 {
                     foreach (var menuItem in menu.Items)
                     {
+                        if (menuItem.NamePlural == null)
+                        {
+                            menuItem.NamePlural = $"{menuItem.Name}s";
+                        }
+
                         if (Array.Exists(menuItem.AllNames, x => string.Equals(x, item, StringComparison.CurrentCultureIgnoreCase)))
                         {
                             return menuItem;

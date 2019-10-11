@@ -79,7 +79,7 @@ namespace HospitalitySkill.Dialogs
                 // items identified without specified quantity
                 for (int i = 0; i < entities.Item.Length; i++)
                 {
-                    var itemRequest = new ItemRequestClass { Item = new string[] { entities.Item[i] } };
+                    var itemRequest = new ItemRequestClass { Item = new string[] { entities.Item[i] }, number = new double[] { 1 } };
                     convState.ItemList.Add(itemRequest);
                 }
             }
@@ -96,7 +96,7 @@ namespace HospitalitySkill.Dialogs
                 // TODO handle if item not recognized as entity
                 if (convState.ItemList.Count == 0 && (numWords == 1 || numWords == 2))
                 {
-                    var itemRequest = new ItemRequestClass { Item = new string[] { promptContext.Recognized.Value } };
+                    var itemRequest = new ItemRequestClass { Item = new string[] { promptContext.Recognized.Value }, number = new double[] { 1 } };
                     convState.ItemList.Add(itemRequest);
                 }
 
@@ -118,7 +118,7 @@ namespace HospitalitySkill.Dialogs
 
             foreach (var itemRequest in convState.ItemList.ToList())
             {
-                var roomItem = HotelService.CheckRoomItemAvailability(itemRequest.Item[0]);
+                var roomItem = HotelService.CheckRoomItemAvailability(itemRequest.Item[0], (int)itemRequest.number[0]);
 
                 if (roomItem == null)
                 {
@@ -128,7 +128,7 @@ namespace HospitalitySkill.Dialogs
                 }
                 else
                 {
-                    itemRequest.Item[0] = roomItem.Item;
+                    itemRequest.Item[0] = itemRequest.number[0] > 1 ? roomItem.ItemPlural : roomItem.Item;
                 }
             }
 

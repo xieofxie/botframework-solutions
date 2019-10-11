@@ -11,6 +11,7 @@
       },
       {
         "name": "Toasted Bagel Sandwich",
+        "namePlural": "Toasted Bagel Sandwiches",
         "allNames": [ "toasted bagel sandwich", "toasted bagel sandwiches", "bagel sandwich", "bagel sandwiches", "breakfast sandwich", "breakfast sandwiches" ],
         "price": 15,
         "description": "Pork sausage patty, fried egg, cheddar cheese and cup of fruit"
@@ -50,6 +51,7 @@
       },
       {
         "name": "Smoking Turkey Sandwich",
+        "namePlural": "Smoking Turkey Sandwiches",
         "allNames": [ "smoking turkey sandwich", "smoking turkey sandwiches", "turkey sandwich", "turkey sandwiches" ],
         "price": 17,
         "description": "Sourdough bread, mayo, bacon, lettuce, tomato"
@@ -68,6 +70,7 @@
     "items": [
       {
         "name": "Smoking Turkey Sandwich",
+        "namePlural": "Smoking Turkey Sandwiches",
         "allNames": [ "smoking turkey sandwich", "smoking turkey sandwiches", "turkey sandwich", "turkey sandwiches" ],
         "price": 17,
         "description": "Sourdough bread, mayo, bacon, lettuce, tomato"
@@ -99,6 +102,7 @@
     "items": [
       {
         "name": "French Fries",
+        "namePlural": "French Fries",
         "allNames": [ "french fries", "french fry" ],
         "glutenFree": true,
         "vegetarian": true,
@@ -111,6 +115,7 @@
       },
       {
         "name": "Red Pepper Hummus",
+        "namePlural": "Red Pepper Hummus",
         "allNames": [ "red pepper hummus", "hummus" ],
         "glutenFree": true,
         "vegetarian": true,
