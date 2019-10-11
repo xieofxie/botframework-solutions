@@ -12,8 +12,12 @@ namespace Luis
 {
     public partial class GeneralLuis: IRecognizerConvert
     {
+        [JsonProperty("text")]
         public string Text;
+
+        [JsonProperty("alteredText")]
         public string AlteredText;
+
         public enum Intent {
             Cancel, 
             Confirm, 
@@ -34,6 +38,7 @@ namespace Luis
             StartOver, 
             Stop
         };
+        [JsonProperty("intents")]
         public Dictionary<Intent, IntentScore> Intents;
 
         public class _Entities
@@ -43,6 +48,7 @@ namespace Luis
 
             // Built-in entities
             public double[] number;
+
             public double[] ordinal;
 
             // Instance
@@ -55,6 +61,7 @@ namespace Luis
             [JsonProperty("$instance")]
             public _Instance _instance;
         }
+        [JsonProperty("entities")]
         public _Entities Entities;
 
         [JsonExtensionData(ReadData = true, WriteData = true)]

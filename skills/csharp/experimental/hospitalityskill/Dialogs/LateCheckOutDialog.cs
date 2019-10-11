@@ -39,6 +39,8 @@ namespace HospitalitySkill.Dialogs
 
             AddDialog(new WaterfallDialog(nameof(LateCheckOutDialog), lateCheckOut));
             AddDialog(new ConfirmPrompt(DialogIds.LateCheckOutPrompt, ValidateLateCheckOutAsync));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.LateCheckOut;
         }
 
         private async Task<DialogTurnResult> LateCheckOutPrompt(WaterfallStepContext sc, CancellationToken cancellationToken)

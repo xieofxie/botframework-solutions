@@ -19,6 +19,10 @@ namespace HospitalitySkill.Models
 
         public List<FoodRequestClass> FoodList { get; set; }
 
+        public HospitalityLuis.Intent CurrentIntent { get; set; }
+
+        public bool ShouldInterrupt { get; set; }
+
         public void Clear()
         {
         }

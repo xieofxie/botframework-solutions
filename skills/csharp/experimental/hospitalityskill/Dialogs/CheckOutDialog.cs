@@ -37,6 +37,8 @@ namespace HospitalitySkill.Dialogs
             AddDialog(new WaterfallDialog(nameof(CheckOutDialog), checkOut));
             AddDialog(new ConfirmPrompt(DialogIds.CheckOutPrompt, ValidateCheckOutAsync));
             AddDialog(new TextPrompt(DialogIds.EmailPrompt, ValidateEmailAsync));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.CheckOut;
         }
 
         private async Task<DialogTurnResult> CheckOutPrompt(WaterfallStepContext sc, CancellationToken cancellationToken)

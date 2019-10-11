@@ -1,6 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
@@ -34,6 +35,8 @@ namespace HospitalitySkill.Dialogs
             HotelService = hotelService;
 
             AddDialog(new WaterfallDialog(nameof(GetReservationDialog), getReservation));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.GetReservationDetails;
         }
 
         private async Task<DialogTurnResult> ShowReservation(WaterfallStepContext sc, CancellationToken cancellationToken)
@@ -43,7 +46,14 @@ namespace HospitalitySkill.Dialogs
             cardData.Title = string.Format(HospitalityStrings.ReservationDetails);
 
             // send card with reservation details
-            var reply = ResponseManager.GetCardResponse(GetReservationResponses.ShowReservationDetails, new Card(GetCardName(sc.Context, "ReservationDetails"), cardData), null);
+            var tokens = new StringDictionary
+            {
+                { "CheckIn", cardData.CheckInDate },
+                { "CheckOut", cardData.CheckOutDate }
+            };
+
+            var reply = ResponseManager.GetCardResponse(GetReservationResponses.ShowReservationDetails, new Card(GetCardName(sc.Context, "ReservationDetails"), cardData), tokens);
+
             await sc.Context.SendActivityAsync(reply);
             return await sc.EndDialogAsync();
         }

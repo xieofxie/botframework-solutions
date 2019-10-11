@@ -9,6 +9,23 @@
 
 > # Intent definitions
 
+## DeviceControl
+- turn off lights
+- turn on lights
+- switch on bulbs
+- switch off bubs
+- power on the lamp
+- power off the lamp
+- make room warmer
+- make room cooler
+- i want to be hotter
+- i want to be colder
+- turn down the temperature
+- turn up the temperature
+- turn down air conditioner
+- turn up air conditioner
+
+
 ## CheckOut
 - can i check out
 - can you check me out
@@ -258,6 +275,45 @@ $Menu:24 hour=
 - all day
 - allday
 
+$Device:light=
+- light
+- lights
+- bulb
+- bulbs
+- lightbulb
+- lightbulbs
+- lamp
+- lamps
+
+$Device:temperature=
+- temperature
+- air conditioner
+
+$Control:on=
+- on
+- turn on
+- switch on
+- power on
+
+$Control:off=
+- off
+- turn off
+- switch off
+- power off
+
+$Control:higher=
+- higher
+- warmer
+- hotter
+- turn up
+- tune up
+
+$Control:lower=
+- lower
+- cooler
+- colder
+- turn down
+- tune down
 
 
 > # RegEx entities

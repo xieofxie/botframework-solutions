@@ -16,6 +16,7 @@ namespace HospitalitySkill.Responses.RoomService
         public const string ChooseOneMenu = "ChooseOneMenu";
         public const string FoodOrder = "FoodOrder";
         public const string RetryFoodOrder = "RetryFoodOrder";
+        public const string CurrentFoodOrder = "CurrentFoodOrder";
         public const string ItemsNotAvailable = "ItemsNotAvailable";
         public const string AddMore = "AddMore";
         public const string ConfirmOrder = "ConfirmOrder";

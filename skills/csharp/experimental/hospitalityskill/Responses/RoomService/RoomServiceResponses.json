@@ -20,8 +20,8 @@
   "FoodOrder": {
     "replies": [
       {
-        "text": "What would you like to order?",
-        "speak": "What would you like to order?"
+        "text": "In {Menu}, we have {Foods}. What would you like to order?",
+        "speak": "In {Menu}, we have {Foods}. What would you like to order?"
       }
     ],
     "inputHint": "expectingInput"
@@ -31,6 +31,15 @@
       {
         "text": "Sorry I didn't get that. What would you like to order?",
         "speak": "Sorry I didn't get that. What would you like to order?"
+      }
+    ],
+    "inputHint": "expectingInput"
+  },
+  "CurrentFoodOrder": {
+    "replies": [
+      {
+        "text": "You have ordered {Foods}. Totally {BillTotal}.",
+        "speak": "You have ordered {Foods}. Totally {BillTotal}."
       }
     ],
     "inputHint": "expectingInput"

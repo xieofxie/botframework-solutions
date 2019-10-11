@@ -44,6 +44,8 @@ namespace HospitalitySkill.Dialogs
             AddDialog(new ConfirmPrompt(DialogIds.CheckNumNights, ValidateCheckNumNightsPrompt));
             AddDialog(new DateTimePrompt(DialogIds.ExtendDatePrompt, ValidateDateAsync));
             AddDialog(new ConfirmPrompt(DialogIds.ConfirmExtendStay, ValidateConfirmExtensionAsync));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.ExtendStay;
         }
 
         private async Task<DialogTurnResult> CheckEntities(WaterfallStepContext sc, CancellationToken cancellationToken)

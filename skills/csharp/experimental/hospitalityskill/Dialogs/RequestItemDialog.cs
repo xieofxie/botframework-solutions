@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
@@ -42,6 +43,8 @@ namespace HospitalitySkill.Dialogs
             AddDialog(new WaterfallDialog(nameof(RequestItemDialog), requestItem));
             AddDialog(new TextPrompt(DialogIds.ItemPrompt, ValidateItemPrompt));
             AddDialog(new ConfirmPrompt(DialogIds.GuestServicesPrompt, ValidateGuestServicesPrompt));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.RequestItem;
         }
 
         private async Task<DialogTurnResult> ItemPrompt(WaterfallStepContext sc, CancellationToken cancellationToken)
@@ -189,8 +192,12 @@ namespace HospitalitySkill.Dialogs
                 await HotelService.RequestItems(convState.ItemList);
 
                 // if at least one item was available send this card reply
-                await sc.Context.SendActivityAsync(ResponseManager.GetCardResponse(null, new Card(GetCardName(sc.Context, "RequestItemCard")), null, "items", roomItems));
-                await sc.Context.SendActivityAsync(ResponseManager.GetResponse(RequestItemResponses.ItemsRequested));
+                var tokens = new StringDictionary
+                {
+                    { "Items", GetCombinedList(roomItems, (item) => { return $"{((RoomItem)item.Data).Quantity} {((RoomItem)item.Data).Item}"; }) }
+                };
+
+                await sc.Context.SendActivityAsync(ResponseManager.GetCardResponse(RequestItemResponses.ItemsRequested, new Card(GetCardName(sc.Context, "RequestItemCard")), tokens, "items", roomItems));
             }
 
             return await sc.EndDialogAsync();

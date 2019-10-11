@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
@@ -64,15 +65,52 @@ namespace HospitalitySkill.Dialogs
 
         protected IHotelService HotelService { get; set; }
 
+        protected HospitalityLuis.Intent ThisIntent { get; set; } = HospitalityLuis.Intent.None;
+
+        public override async Task<DialogTurnResult> ContinueDialogAsync(DialogContext outerDc, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var result = await base.ContinueDialogAsync(outerDc, cancellationToken);
+            var state = await StateAccessor.GetAsync(outerDc.Context);
+            if (state.ShouldInterrupt)
+            {
+                // Assume already call CancelAllDialogsAsync
+                // TODO Empty indicates RouteAsync in RouterDialog
+                state.ShouldInterrupt = false;
+                return new DialogTurnResult(DialogTurnStatus.Empty);
+            }
+            else
+            {
+                return result;
+            }
+        }
+
         protected override async Task<DialogTurnResult> OnBeginDialogAsync(DialogContext dc, object options, CancellationToken cancellationToken = default(CancellationToken))
         {
+            // Clear interrupt state
+            var state = await StateAccessor.GetAsync(dc.Context, () => new HospitalitySkillState());
+            state.ShouldInterrupt = false;
+
+            state.CurrentIntent = ThisIntent;
+
             await GetLuisResult(dc);
             return await base.OnBeginDialogAsync(dc, options, cancellationToken);
         }
 
         protected override async Task<DialogTurnResult> OnContinueDialogAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await GetLuisResult(dc);
+            var luis = await GetLuisResult(dc);
+
+            if (luis != null)
+            {
+                var top = luis.TopIntent();
+                var state = await StateAccessor.GetAsync(dc.Context, () => new HospitalitySkillState());
+                if (top.score > 0.5 && top.intent != HospitalityLuis.Intent.None && top.intent != state.CurrentIntent)
+                {
+                    state.ShouldInterrupt = true;
+                    return await dc.CancelAllDialogsAsync();
+                }
+            }
+
             return await base.OnContinueDialogAsync(dc, cancellationToken);
         }
 
@@ -149,13 +187,16 @@ namespace HospitalitySkill.Dialogs
         }
 
         // Helpers
-        protected async Task GetLuisResult(DialogContext dc)
+        protected async Task<HospitalityLuis> GetLuisResult(DialogContext dc)
         {
             if (dc.Context.Activity.Type == ActivityTypes.Message)
             {
                 var state = await StateAccessor.GetAsync(dc.Context, () => new HospitalitySkillState());
                 state.LuisResult = dc.Context.TurnState.Get<HospitalityLuis>(StateProperties.SkillLuisResult);
+                return result;
             }
+
+            return null;
         }
 
         // This method is called by any waterfall step that throws an exception to ensure consistency
@@ -199,6 +240,29 @@ namespace HospitalitySkill.Dialogs
             }
 
             return name;
+        }
+
+        protected string GetCombinedList<T>(IList<T> list, Func<T, string> func)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < list.Count; ++i)
+            {
+                if (list.Count > 1)
+                {
+                    if (i == list.Count - 1)
+                    {
+                        sb.Append(" and ");
+                    }
+                    else if (i >= 1)
+                    {
+                        sb.Append(", ");
+                    }
+                }
+
+                sb.Append(func(list[i]));
+            }
+
+            return sb.ToString();
         }
     }
 }

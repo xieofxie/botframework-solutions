@@ -12,9 +12,14 @@ namespace Luis
 {
     public partial class HospitalityLuis: IRecognizerConvert
     {
+        [JsonProperty("text")]
         public string Text;
+
+        [JsonProperty("alteredText")]
         public string AlteredText;
+
         public enum Intent {
+            DeviceControl, 
             CheckOut, 
             ExtendStay, 
             GetReservationDetails, 
@@ -23,21 +28,30 @@ namespace Luis
             RequestItem, 
             RoomService
         };
+        [JsonProperty("intents")]
         public Dictionary<Intent, IntentScore> Intents;
 
         public class _Entities
         {
             // Simple entities
-            public string[] HotelNights;
-            public string[] Item;
-            public string[] SpecialRequest;
             public string[] Food;
+
+            public string[] HotelNights;
+
+            public string[] Item;
+
+            public string[] SpecialRequest;
 
             // Built-in entities
             public DateTimeSpec[] datetime;
+
             public double[] number;
 
             // Lists
+            public string[][] Control;
+
+            public string[][] Device;
+
             public string[][] Menu;
 
             // Composites
@@ -88,20 +102,23 @@ namespace Luis
             // Instance
             public class _Instance
             {
+                public InstanceData[] Control;
+                public InstanceData[] Device;
+                public InstanceData[] Food;
+                public InstanceData[] FoodRequest;
                 public InstanceData[] HotelNights;
                 public InstanceData[] Item;
+                public InstanceData[] ItemRequest;
+                public InstanceData[] Menu;
+                public InstanceData[] NumNights;
                 public InstanceData[] SpecialRequest;
-                public InstanceData[] Food;
                 public InstanceData[] datetime;
                 public InstanceData[] number;
-                public InstanceData[] Menu;
-                public InstanceData[] FoodRequest;
-                public InstanceData[] ItemRequest;
-                public InstanceData[] NumNights;
             }
             [JsonProperty("$instance")]
             public _Instance _instance;
         }
+        [JsonProperty("entities")]
         public _Entities Entities;
 
         [JsonExtensionData(ReadData = true, WriteData = true)]

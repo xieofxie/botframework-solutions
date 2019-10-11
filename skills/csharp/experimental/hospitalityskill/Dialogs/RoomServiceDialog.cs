@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,6 +49,8 @@ namespace HospitalitySkill.Dialogs
             AddDialog(new TextPrompt(DialogIds.AddMore, ValidateAddItems));
             AddDialog(new ConfirmPrompt(DialogIds.ConfirmOrder));
             AddDialog(new TextPrompt(DialogIds.FoodOrderPrompt, ValidateFoodOrder));
+
+            ThisIntent = Luis.HospitalityLuis.Intent.RoomService;
         }
 
         private async Task<DialogTurnResult> MenuPrompt(WaterfallStepContext sc, CancellationToken cancellationToken)
@@ -132,12 +135,16 @@ namespace HospitalitySkill.Dialogs
                 }
 
                 // show menu card
-                await sc.Context.SendActivityAsync(ResponseManager.GetCardResponse(null, new Card(GetCardName(sc.Context, "MenuCard"), menu), null, "items", menuItems));
+                var tokens = new StringDictionary
+                {
+                    { "Menu", menu.Type },
+                    { "Foods", GetCombinedList(menu.Items, item => { return $"{item.Name} for ${item.Price}"; }) }
+                };
 
                 // prompt for order
                 return await sc.PromptAsync(DialogIds.FoodOrderPrompt, new PromptOptions()
                 {
-                    Prompt = ResponseManager.GetResponse(RoomServiceResponses.FoodOrder),
+                    Prompt = ResponseManager.GetCardResponse(RoomServiceResponses.FoodOrder, new Card(GetCardName(sc.Context, "MenuCard"), menu), tokens, "items", menuItems),
                     RetryPrompt = ResponseManager.GetResponse(RoomServiceResponses.RetryFoodOrder)
                 });
             }
@@ -166,6 +173,7 @@ namespace HospitalitySkill.Dialogs
             // ask if they want to add more items
             return await sc.PromptAsync(DialogIds.AddMore, new PromptOptions()
             {
+                // TODO do not handle yes..
                 Prompt = ResponseManager.GetResponse(RoomServiceResponses.AddMore)
             });
         }
@@ -270,7 +278,20 @@ namespace HospitalitySkill.Dialogs
 
             if (convState.FoodList.Count > 0)
             {
-                await turnContext.SendActivityAsync(ResponseManager.GetCardResponse(null, new Card(GetCardName(turnContext, "FoodOrderCard"), totalFoodOrder), null, "items", foodItems));
+                var tokens = new StringDictionary
+                {
+                    { "BillTotal", $"${totalFoodOrder.BillTotal}" },
+                    {
+                        "Foods",
+                        GetCombinedList(foodItems, item =>
+                        {
+                            var data = item.Data as FoodOrderData;
+                            return $"{data.Quantity} {data.Name}";
+                        })
+                    }
+                };
+
+                await turnContext.SendActivityAsync(ResponseManager.GetCardResponse(RoomServiceResponses.CurrentFoodOrder, new Card(GetCardName(turnContext, "FoodOrderCard"), totalFoodOrder), tokens, "items", foodItems));
             }
         }
 

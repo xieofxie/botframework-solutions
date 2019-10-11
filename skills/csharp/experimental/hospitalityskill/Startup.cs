@@ -132,6 +132,7 @@ namespace HospitalitySkill
             services.AddTransient<GetReservationDialog>();
             services.AddTransient<RequestItemDialog>();
             services.AddTransient<RoomServiceDialog>();
+            services.AddTransient<DeviceControlDialog>();
             services.AddTransient<MainDialog>();
 
             // Configure adapters
