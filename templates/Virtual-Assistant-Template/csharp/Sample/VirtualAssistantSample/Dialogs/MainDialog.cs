@@ -229,6 +229,7 @@ namespace VirtualAssistantSample.Dialogs
         // Runs when the dialog stack is empty, and a new member is added to the conversation. Can be used to send an introduction activity.
         protected override async Task OnMembersAddedAsync(DialogContext innerDc, CancellationToken cancellationToken = default)
         {
+            return;
             var userProfile = await _userProfileState.GetAsync(innerDc.Context, () => new UserProfileState());
 
             if (string.IsNullOrEmpty(userProfile.Name))
@@ -281,6 +282,10 @@ namespace VirtualAssistantSample.Dialogs
                     innerDc.SuppressCompletionMessage(true);
 
                     await CallQnAMaker(innerDc, localizedServices.QnAServices["Chitchat"]);
+                }
+                else if (dispatchIntent == DispatchLuis.Intent.q_hotel_FAQ)
+                {
+                    await CallQnAMaker(innerDc, localizedServices.QnAServices["hotel_FAQ"]);
                 }
                 else
                 {
@@ -362,7 +367,7 @@ namespace VirtualAssistantSample.Dialogs
             // Only send a completion message if the user sent a message activity.
             if (outerDc.Context.Activity.Type == ActivityTypes.Message && !outerDc.SuppressCompletionMessage())
             {
-                await outerDc.Context.SendActivityAsync(_templateEngine.GenerateActivityForLocale("CompletedMessage", userProfile));
+                // await outerDc.Context.SendActivityAsync(_templateEngine.GenerateActivityForLocale("CompletedMessage", userProfile));
             }
         }
 

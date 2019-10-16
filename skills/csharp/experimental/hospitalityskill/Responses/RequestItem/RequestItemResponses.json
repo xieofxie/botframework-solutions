@@ -53,6 +53,15 @@
     ],
     "inputHint": "ignoringInput"
   },
+  "GuestServicesCancel": {
+    "replies": [
+      {
+        "text": "Ok, you could request later.",
+        "speak": "Ok, you could request later."
+      }
+    ],
+    "inputHint": "ignoringInput"
+  },
   "ItemsRequested": {
     "replies": [
       {

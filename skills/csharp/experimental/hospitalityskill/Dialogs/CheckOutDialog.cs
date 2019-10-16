@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
 using HospitalitySkill.Responses.CheckOut;
+using HospitalitySkill.Responses.Shared;
 using HospitalitySkill.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
@@ -118,6 +119,10 @@ namespace HospitalitySkill.Dialogs
                 // checked out confirmation message
                 await sc.Context.SendActivityAsync(ResponseManager.GetResponse(CheckOutResponses.SendEmailMessage, tokens));
                 await sc.Context.SendActivityAsync(ResponseManager.GetResponse(CheckOutResponses.CheckOutSuccess));
+            }
+            else
+            {
+                await sc.Context.SendActivityAsync(ResponseManager.GetResponse(SharedResponses.CancellingMessage));
             }
 
             return await sc.EndDialogAsync();

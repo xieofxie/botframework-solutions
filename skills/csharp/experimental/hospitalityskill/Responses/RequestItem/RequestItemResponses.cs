@@ -18,6 +18,7 @@ namespace HospitalitySkill.Responses.RequestItem
         public const string GuestServicesPrompt = "GuestServicesPrompt";
         public const string RetryGuestServicesPrompt = "RetryGuestServicesPrompt";
         public const string GuestServicesConfirm = "GuestServicesConfirm";
+        public const string GuestServicesCancel = "GuestServicesCancel";
         public const string ItemsRequested = "ItemsRequested";
     }
 }

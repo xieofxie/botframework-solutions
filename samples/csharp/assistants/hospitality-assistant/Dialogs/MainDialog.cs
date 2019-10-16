@@ -61,6 +61,7 @@ namespace HospitalitySample.Dialogs
 
         protected override async Task OnStartAsync(DialogContext dc, CancellationToken cancellationToken = default(CancellationToken))
         {
+            return;
             var view = new MainResponses();
             var onboardingState = await _onboardingState.GetAsync(dc.Context, () => new OnboardingState());
 
@@ -303,7 +304,7 @@ namespace HospitalitySample.Dialogs
         protected override async Task CompleteAsync(DialogContext dc, DialogTurnResult result = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // The active dialog's stack ended with a complete status
-            await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Completed);
+            // await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Completed);
         }
 
         protected override async Task<InterruptionAction> OnInterruptDialogAsync(DialogContext dc, CancellationToken cancellationToken)

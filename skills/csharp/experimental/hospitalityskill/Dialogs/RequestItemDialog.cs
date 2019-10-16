@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
 using HospitalitySkill.Responses.RequestItem;
+using HospitalitySkill.Responses.Shared;
 using HospitalitySkill.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
@@ -163,6 +164,10 @@ namespace HospitalitySkill.Dialogs
                     // send request to guest services here
                     await promptContext.Context.SendActivityAsync(ResponseManager.GetResponse(RequestItemResponses.GuestServicesConfirm));
                 }
+                else
+                {
+                    await promptContext.Context.SendActivityAsync(ResponseManager.GetResponse(RequestItemResponses.GuestServicesCancel));
+                }
 
                 return await Task.FromResult(true);
             }
@@ -198,6 +203,10 @@ namespace HospitalitySkill.Dialogs
                 };
 
                 await sc.Context.SendActivityAsync(ResponseManager.GetCardResponse(RequestItemResponses.ItemsRequested, new Card(GetCardName(sc.Context, "RequestItemCard")), tokens, "items", roomItems));
+            }
+            else
+            {
+                // await sc.Context.SendActivityAsync(ResponseManager.GetResponse(SharedResponses.CancellingMessage));
             }
 
             return await sc.EndDialogAsync();

@@ -1,4 +1,7 @@
-﻿using System.Collections.Specialized;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
@@ -14,15 +17,13 @@ namespace HospitalitySkill.Dialogs
 {
     public class DeviceControlDialog : HospitalityDialogBase
     {
-        private HotelService _hotelService;
-
         public DeviceControlDialog(
             BotSettings settings,
             BotServices services,
             ResponseManager responseManager,
             ConversationState conversationState,
             UserState userState,
-            HotelService hotelService,
+            IHotelService hotelService,
             IBotTelemetryClient telemetryClient)
             : base(nameof(DeviceControlDialog), settings, services, responseManager, conversationState, userState, hotelService, telemetryClient)
         {
@@ -31,8 +32,6 @@ namespace HospitalitySkill.Dialogs
                 HasCheckedOut,
                 DeviceControl
             };
-
-            _hotelService = hotelService;
 
             AddDialog(new WaterfallDialog(nameof(DeviceControlDialog), deviceControl));
 

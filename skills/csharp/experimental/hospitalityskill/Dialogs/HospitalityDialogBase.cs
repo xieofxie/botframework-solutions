@@ -193,7 +193,7 @@ namespace HospitalitySkill.Dialogs
             {
                 var state = await StateAccessor.GetAsync(dc.Context, () => new HospitalitySkillState());
                 state.LuisResult = dc.Context.TurnState.Get<HospitalityLuis>(StateProperties.SkillLuisResult);
-                return result;
+                return state.LuisResult;
             }
 
             return null;

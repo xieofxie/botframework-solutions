@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HospitalitySkill.Models;
 using HospitalitySkill.Responses.RoomService;
+using HospitalitySkill.Responses.Shared;
 using HospitalitySkill.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
@@ -216,6 +217,10 @@ namespace HospitalitySkill.Dialogs
             {
                 await sc.Context.SendActivityAsync(ResponseManager.GetResponse(RoomServiceResponses.FinalOrderConfirmation));
             }
+            else
+            {
+                await sc.Context.SendActivityAsync(ResponseManager.GetResponse(SharedResponses.CancellingMessage));
+            }
 
             return await sc.EndDialogAsync();
         }
@@ -235,11 +240,7 @@ namespace HospitalitySkill.Dialogs
             foreach (var foodRequest in convState.FoodList.ToList())
             {
                 // get full name of requested item and check availability
-<<<<<<< HEAD
-                var foodItem = HotelService.CheckMenuItemAvailability(foodRequest.Food[0]);
-=======
-                var foodItem = _hotelService.CheckMenuItemAvailability(foodRequest.Food[0], (int)foodRequest.number[0]);
->>>>>>> [Hospitality] add plural
+                var foodItem = HotelService.CheckMenuItemAvailability(foodRequest.Food[0], (int)foodRequest.number[0]);
 
                 if (foodItem == null)
                 {
