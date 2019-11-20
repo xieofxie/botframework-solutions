@@ -19,6 +19,7 @@ using HospitalitySample.Models;
 using HospitalitySample.Responses.Cancel;
 using HospitalitySample.Responses.Main;
 using HospitalitySample.Services;
+using Microsoft.Bot.Builder.AI.QnA;
 
 namespace HospitalitySample.Dialogs
 {
@@ -313,6 +314,39 @@ namespace HospitalitySample.Dialogs
                 // get current activity locale
                 var locale = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
                 var cognitiveModels = _services.CognitiveModelSets[locale];
+
+                // parse
+                cognitiveModels.LuisServices.TryGetValue("Parse", out var parseService);
+                var parseResult = await parseService.RecognizeAsync<ParseLuis>(dc.Context, cancellationToken);
+                var metadata = new List<Metadata>();
+                var topIntent = parseResult.TopIntent().intent;
+                if (topIntent != ParseLuis.Intent.None)
+                {
+                    metadata.Add(new Metadata { Name = topIntent.ToString(), Value = topIntent.ToString() });
+                }
+
+                foreach (var entity in parseResult.Entities.Entity)
+                {
+                    metadata.Add(new Metadata { Name = entity[0], Value = entity[0] });
+                }
+
+                var options = new QnAMakerOptions();
+                options.StrictFilters = metadata.ToArray();
+
+                // qna
+                cognitiveModels.QnAServices.TryGetValue("hotel_FAQ", out var qnaService);
+                var answers = await qnaService.GetAnswersAsync(dc.Context, options, null);
+
+                if (answers != null && answers.Count() > 0)
+                {
+                    await dc.Context.SendActivityAsync(answers[0].Answer, speak: answers[0].Answer);
+                }
+                else
+                {
+                    await _responder.ReplyWith(dc.Context, MainResponses.ResponseIds.Confused);
+                }
+
+                return InterruptionAction.StartedDialog;
 
                 // check luis intent
                 cognitiveModels.LuisServices.TryGetValue("General", out var luisService);

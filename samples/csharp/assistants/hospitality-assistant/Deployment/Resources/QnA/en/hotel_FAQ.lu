@@ -10,11 +10,11 @@
 
 > Source: Editorial
 ## ? Where is the gym?
-- Is there a gym?
-- Where is the fitness center?
-- When is the fitness center open
-- What hours is the gym open
-- Where is the gymnasium?
+
+**Filters:**
+- gym = gym
+- when = when
+- where = where
 
 ```markdown
 Our fitness center is located on the 2nd floor, and is open 24 hours, 7 days a week.
@@ -22,8 +22,10 @@ Our fitness center is located on the 2nd floor, and is open 24 hours, 7 days a w
 
 > Source: Editorial
 ## ? When does the bar close?
-- When is the bar open?
-- What hours is the bar open? 
+
+**Filters:**
+- bar = bar
+- when = when
 
 ```markdown
 The bar is open from 5:00pm to 10:00pm everyday.
@@ -31,10 +33,9 @@ The bar is open from 5:00pm to 10:00pm everyday.
 
 > Source: Editorial
 ## ? What's the wifi password?
-- Do you have wifi?
-- What is the wifi?
-- Is there wifi
-- How can I get on the internet
+
+**Filters:**
+- internet = internet
 
 ```markdown
 The Wi-Fi network name is Hotel_WiFi and the password is hotelsummer2019.
@@ -42,8 +43,10 @@ The Wi-Fi network name is Hotel_WiFi and the password is hotelsummer2019.
 
 > Source: Editorial
 ## ? What amenities does the hotel have?
-- What amenities do you have? 
-- hotel services and amenities
+
+**Filters:**
+- hotel = hotel
+- amenities = amenities
 
 ```markdown
 We provide the following services and amenities:
@@ -64,11 +67,10 @@ We provide the following services and amenities:
 
 > Source: Editorial
 ## ? Where is the printer?
-- Do you have a printer and copier
-- Can I print something
-- Can I copy something
-- Do you have fax machines
-- Can I fax something
+
+**Filters:**
+- where = where
+- printer = printer
 
 ```markdown
 There are printers, copiers, and fax machines available in the 24-hour business center on the 1st floor.
@@ -76,8 +78,10 @@ There are printers, copiers, and fax machines available in the 24-hour business 
 
 > Source: Editorial
 ## ? What time is breakfast?
-- When does the breakfast restaurant open?
-- When does breakfast close?
+
+**Filters:**
+- breakfast = breakfast
+- when = when
 
 ```markdown
 Complimentary breakfast is served in our restaurant from 6:30am to 9:00am Monday through Friday, and from 7:00am to 9:30am on Saturday and Sunday.
@@ -85,11 +89,11 @@ Complimentary breakfast is served in our restaurant from 6:30am to 9:00am Monday
 
 > Source: Editorial
 ## ? Is there a pool?
-- Where is the pool?
-- When is the pool open?
-- does this hotel have a pool
-- I want to swim
-- Please tell me where is the swimming pool
+
+**Filters:**
+- pool = pool
+- when = when
+- where = where
 
 ```markdown
 We have a seasonal outdoor pool on the 1st floor that is open Monday-Sunday from 7:00am to 11:00pm.
@@ -97,9 +101,10 @@ We have a seasonal outdoor pool on the 1st floor that is open Monday-Sunday from
 
 > Source: Editorial
 ## ? Is there onsite parking available?
-- Do you have parking?
-- Can I park at the hotel?
-- How much does parking cost?
+
+**Filters:**
+- park = park
+- where = where
 
 ```markdown
 We have onsite parking available to hotel guests for $14 a day.
@@ -107,9 +112,10 @@ We have onsite parking available to hotel guests for $14 a day.
 
 > Source: Editorial
 ## ? Pool amenities
-- Is the pool heated?
-- Are there towels at the pool?
-- What amenities does the pool have?
+
+**Filters:**
+- pool = pool
+- amenities = amenities
 
 ```markdown
 The pool is heated and towels are provided.
@@ -117,8 +123,10 @@ The pool is heated and towels are provided.
 
 > Source: Editorial
 ## ? What is your address?
-- What is the hotel address
-- What's the hotel's address
+
+**Filters:**
+- where = where
+- hotel = hotel
 
 ```markdown
 200 110th Avenue NE
@@ -127,9 +135,10 @@ The pool is heated and towels are provided.
 
 > Source: Editorial
 ## ? gym amenities
-- What amenities does the gym have?
-- What equipment does the gym have?
-- What gym equipment is there?
+
+**Filters:**
+- gym = gym
+- amenities = amenities
 
 ```markdown
 Our 24-hour fitness center has a variety of cardiovascular equipment. Towels, water, and headphones are also provided.
@@ -137,8 +146,10 @@ Our 24-hour fitness center has a variety of cardiovascular equipment. Towels, wa
 
 > Source: Editorial
 ## ? Do you have a shuttle to the airport?
-- Do you provide a shuttle service?
-- Can I book a hotel shuttle
+
+**Filters:**
+- shuttle = shuttle
+- where = where
 
 ```markdown
 I'm sorry, this hotel does not provide a shuttle service. We would be happy to recommend public transportation routes or book you a taxi.
@@ -146,8 +157,10 @@ I'm sorry, this hotel does not provide a shuttle service. We would be happy to r
 
 > Source: Editorial
 ## ? Can I smoke somewhere
-- Is there somewhere I can smoke in the hotel
-- Am I allowed to smoke in my room
+
+**Filters:**
+- smoke = smoke
+- where = where
 
 ```markdown
 This hotel has a smoke-free policy.
@@ -155,8 +168,9 @@ This hotel has a smoke-free policy.
 
 > Source: Editorial
 ## ? What TV channels are there?
-- available television channels
-- What TV channels can I watch
+
+**Filters:**
+- TV = TV
 
 ```markdown
 We provide cable TV, with many channels including CNN, ESPN, and HBO.
@@ -164,9 +178,9 @@ We provide cable TV, with many channels including CNN, ESPN, and HBO.
 
 > Source: Editorial
 ## ? What's your pet policy
-- Do you allow pets
-- Are you pet friendly?
-- Does this hotel accommodate pets?
+
+**Filters:**
+- pet = pet
 
 ```markdown
 We are a pet-friendly hotel. There can be at most 2 pets per room, and there is a $75 cleaning fee per stay.
@@ -174,7 +188,9 @@ We are a pet-friendly hotel. There can be at most 2 pets per room, and there is 
 
 > Source: Editorial
 ## ? Can I get mail sent here?
-- Can I have a package shipped to the hotel
+
+**Filters:**
+- mail = mail
 
 ```markdown
 Yes! Mail can be dropped off at the front desk. As long as your full name is on the package, we will have it dropped off in your room.
@@ -182,10 +198,10 @@ Yes! Mail can be dropped off at the front desk. As long as your full name is on 
 
 > Source: Editorial
 ## ? property details
-- how big is the hotel
-- how many rooms are there in total
-- how much property does the hotel have
-- how many floors are there in this hotel
+
+**Filters:**
+- amenities = amenities
+- hotel = hotel
 
 ```markdown
 Our hotel has 17 floors, 381 rooms, 3 suites, and 17 meeting rooms.
@@ -193,9 +209,10 @@ Our hotel has 17 floors, 381 rooms, 3 suites, and 17 meeting rooms.
 
 > Source: Editorial
 ## ? Do you have a dry-cleaning service?
-- Can I get something dry cleaned
-- Is there dry cleaning?
-- How can I get my clothes dry cleaned?
+
+**Filters:**
+- drycleaning = drycleaning
+- where = where
 
 ```markdown
 For valet dry-cleaning, please fill out the dry-cleaning form in your closet and put your clothing in the provided bag. Same day service is provided if your clothing is dropped off at the front desk before 9:00am.
@@ -203,8 +220,11 @@ For valet dry-cleaning, please fill out the dry-cleaning form in your closet and
 
 > Source: Editorial
 ## ? Is there housekeeping
-- How often is my room cleaned
-- When do I get housekeeping services
+
+**Filters:**
+- housekeeping = housekeeping
+- where = where
+- when = when
 
 ```markdown
 There is a daily housekeeping service for all rooms.
@@ -212,13 +232,18 @@ There is a daily housekeeping service for all rooms.
 
 > Source: Editorial
 ## ? Is there public transportation nearby
-- Is there a bus stop nearby
-- Is there a train station close by
-- what public transportation is close
+
+**Filters:**
+- transportation = transportation
+- where = where
 
 ```markdown
 The closest bus station is Bellevue Transit Center, which is 0.2 miles N from the hotel. The closest train station is King Street Station, which is 17 miles E from the hotel.
 ```
+
+
+
+
 
 > Source: Editorial
 ## ? Is there a spa?
