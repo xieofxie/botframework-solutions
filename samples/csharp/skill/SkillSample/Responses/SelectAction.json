@@ -1,0 +1,52 @@
+﻿{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "You can ask me..",
+          "size": "Large",
+          "wrap": true
+        }
+      ],
+      "bleed": true
+    },
+    {
+      "type": "Container",
+      "separator": true,
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "What's on my agenda today?",
+          "wrap": true
+        }
+      ],
+      "selectAction": {
+        "type": "Action.Submit",
+        "data": "What's on my agenda today?"
+      },
+      "bleed": true
+    },
+    {
+      "type": "Container",
+      "items": [
+        {
+          "type": "TextBlock",
+          "text": "Do I have any new email?",
+          "wrap": true
+        }
+      ],
+      "selectAction": {
+        "type": "Action.Submit",
+        "data": "Do I have any new email?"
+      },
+      "bleed": true
+    }
+  ],
+  "actions": [
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.0"
+}

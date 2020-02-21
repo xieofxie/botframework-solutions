@@ -1,23 +1,42 @@
 ﻿> ------------ Activity templates ------------
 
-# NamePrompt
+# TestPrompt
 [Activity
-    Text = @{NamePromptText()}
-    InputHint = expectingInput
+    Text = @{TestPromptText()}
 ]
 
-# HaveNameMessage
+# MessageWithCard(Text, Card)
 [Activity
-    Text = @{HaveNameMessageText()}
-    InputHint = acceptingInput
+    Text = @{Text}
+    Attachments = @{ActivityAttachment(json(fromFile(Card)), 'adaptiveCard')}
 ]
 
+# SuggestAction
+[Activity
+    Text = Do you want to see tomorrow's schedule?
+    SuggestedActions = Yes | No
+]
+
+# HerocardYesNo
+[herocard
+    Buttons = Yes | No
+]
+
+# HeroCardForSuggestAction
+[Activity
+    Text = Do you want to see tomorrow's schedule?
+    Attachments = @{HerocardYesNo()}
+]
 
 > ------------ Text templates ------------
 
-# NamePromptText
-- What is your name?
-
-# HaveNameMessageText
-- Hi, @{Name}!
-- Nice to meet you, @{Name}!
+> it has markdown!!
+# TestPromptText
+- ```1. SelectAction
+2. SuggestAction
+3. HeroCard
+4. Action
+5. ActionSet
+6. Toggle & ChoiceSet
+7. ToggleVisibility
+```

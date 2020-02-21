@@ -1,0 +1,30 @@
+﻿{
+  "type": "AdaptiveCard",
+  "version": "1.2",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Customer requests"
+    },
+    {
+      "type": "TextBlock",
+      "text": "I have added our Sr Program Manager...",
+      "isVisible": true,
+      "id": "textToToggleFalse"
+    },
+    {
+      "type": "TextBlock",
+      "text": "I have added our Sr Program Manager, Jane, to this thread. She’s been working with Kate on your side to support the in-car experience. She can explain the planned updates and extenisibility model.",
+      "isVisible": false,
+      "wrap": true,
+      "id": "textToToggle"
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.ToggleVisibility",
+      "title": "View Content",
+      "targetElements": [ "textToToggle", "textToToggleFalse" ]
+    }
+  ]
+}

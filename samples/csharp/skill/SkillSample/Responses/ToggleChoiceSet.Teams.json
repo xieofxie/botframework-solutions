@@ -1,0 +1,75 @@
+﻿{
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "To Do by Toggle",
+      "size": "Large"
+    },
+    {
+      "type": "Input.Toggle",
+      "id": "toggle0",
+      "title": "Submit proposal",
+      "value": "false",
+      "valueOn": "true",
+      "valueOff": "false"
+    },
+    {
+      "type": "Input.Toggle",
+      "id": "toggle1",
+      "title": "Book dog sitter for Feb",
+      "value": "true",
+      "valueOn": "true",
+      "valueOff": "false"
+    },
+    {
+      "type": "Input.Toggle",
+      "id": "toggle2",
+      "title": "Review documentation for CSE",
+      "value": "true",
+      "valueOn": "true",
+      "valueOff": "false"
+    },
+    {
+      "type": "TextBlock",
+      "text": "To Do by ChoiceSet",
+      "size": "Large"
+    },
+    {
+      "type": "Input.ChoiceSet",
+      "id": "todo",
+      "isMultiSelect": true,
+      "value": "1,2",
+      "style": "expanded",
+      "choices": [
+        {
+          "title": "Submit proposal",
+          "value": "0"
+        },
+        {
+          "title": "Book dog sitter for Feb",
+          "value": "1"
+        },
+        {
+          "title": "Review documentation for CSE",
+          "value": "2"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.Submit",
+      "title": "OK",
+      "data": {
+        "msteams": {
+          "type": "messageBack",
+          "displayText": "OK - displayText",
+          "text": "OK - text"
+        }
+      }
+    }
+  ]
+}
