@@ -14,7 +14,7 @@
 # SuggestAction
 [Activity
     Text = Do you want to see tomorrow's schedule?
-    SuggestedActions = Yes | No
+    SuggestedActions = Yes | No | OpenUrl
 ]
 
 # HerocardYesNo

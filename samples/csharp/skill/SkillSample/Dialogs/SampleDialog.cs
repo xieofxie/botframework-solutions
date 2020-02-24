@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
@@ -55,6 +56,12 @@ namespace SkillSample.Dialogs
             else if (index == 2)
             {
                 prompt = TemplateEngine.GenerateActivityForLocale("SuggestAction");
+                var action = prompt.SuggestedActions.Actions.Last();
+                if (action != null)
+                {
+                    action.Type = "openUrl";
+                    action.Value = "https://www.bing.com";
+                }
             }
             else if (index == 3)
             {
