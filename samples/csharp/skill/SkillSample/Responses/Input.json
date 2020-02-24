@@ -1,0 +1,78 @@
+﻿{
+  "type": "AdaptiveCard",
+  "body": [
+    {
+      "type": "TextBlock",
+      "size": "Medium",
+      "weight": "Bolder",
+      "text": "Customer requests"
+    },
+    {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "type": "Column",
+          "items": [
+            {
+              "type": "TextBlock",
+              "weight": "Bolder",
+              "text": "to:",
+              "wrap": true
+            }
+          ],
+          "width": "auto"
+        },
+        {
+          "type": "Column",
+          "items": [
+            {
+              "type": "Input.Text",
+              "id": "recipient",
+              "value": "emily@auto.com",
+              "maxLength": 500
+            }
+          ],
+          "width": "stretch"
+        }
+      ]
+    },
+    {
+      "type": "TextBlock",
+      "weight": "Bolder",
+      "text": "Email content:",
+      "wrap": true
+    },
+    {
+      "type": "Input.Text",
+      "id": "input2",
+      "value": "I have added our Sr Program Manager, Jane, to this thread. She’s been working with Kate on your side to support the in-car experience. She can explain the planned updates and extenisibility model.",
+      "maxLength": 500,
+      "isMultiline": true
+    }
+  ],
+  "actions": [
+    {
+      "type": "Action.Submit",
+      "title": "Send email",
+      "data": {
+        "type": "Send email"
+      }
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Edit content",
+      "data": {
+        "type": "Edit content"
+      }
+    },
+    {
+      "type": "Action.Submit",
+      "title": "Edit recipients",
+      "data": {
+        "type": "Edit recipients"
+      }
+    }
+  ],
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.0"
+}

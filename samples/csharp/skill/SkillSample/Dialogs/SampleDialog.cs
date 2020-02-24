@@ -76,6 +76,10 @@ namespace SkillSample.Dialogs
             {
                 prompt = TemplateEngine.GenerateActivityForLocale("MessageWithCard", CreateCardInput(stepContext.Context, "ToggleVisibility"));
             }
+            else if (index == 8)
+            {
+                prompt = TemplateEngine.GenerateActivityForLocale("MessageWithCard", CreateCardInput(stepContext.Context, "Input"));
+            }
 
             await stepContext.Context.SendActivityAsync(prompt);
             return new DialogTurnResult(DialogTurnStatus.Waiting);
