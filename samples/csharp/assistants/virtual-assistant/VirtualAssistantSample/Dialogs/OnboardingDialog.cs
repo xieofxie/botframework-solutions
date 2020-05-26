@@ -12,6 +12,7 @@ using Microsoft.Bot.Solutions.Responses;
 using Microsoft.Extensions.DependencyInjection;
 using VirtualAssistantSample.Models;
 using VirtualAssistantSample.Services;
+using VirtualAssistantSample.Utilities;
 
 namespace VirtualAssistantSample.Dialogs
 {
@@ -21,6 +22,7 @@ namespace VirtualAssistantSample.Dialogs
         private readonly BotServices _services;
         private readonly LocaleTemplateManager _templateManager;
         private readonly IStatePropertyAccessor<UserProfileState> _accessor;
+        private readonly IStatePropertyAccessor<UserReferenceState> _userReferenceAccessor;
 
         public OnboardingDialog(
             IServiceProvider serviceProvider)
@@ -30,6 +32,8 @@ namespace VirtualAssistantSample.Dialogs
 
             var userState = serviceProvider.GetService<UserState>();
             _accessor = userState.CreateProperty<UserProfileState>(nameof(UserProfileState));
+            var appState = serviceProvider.GetService<AppState>();
+            _userReferenceAccessor = appState.CreateProperty<UserReferenceState>(nameof(UserReferenceState));
             _services = serviceProvider.GetService<BotServices>();
 
             var onboarding = new WaterfallStep[]
@@ -61,6 +65,9 @@ namespace VirtualAssistantSample.Dialogs
         {
             var userProfile = await _accessor.GetAsync(sc.Context, () => new UserProfileState(), cancellationToken);
             var name = (string)sc.Result;
+
+            var userReference = await _userReferenceAccessor.GetAsync(sc.Context, () => new UserReferenceState(), cancellationToken);
+            userReference.References[name] = new UserReference { Reference = sc.Context.Activity.GetConversationReference() };
 
             var generalResult = sc.Context.TurnState.Get<GeneralLuis>(StateProperties.GeneralResult);
             if (generalResult == null)

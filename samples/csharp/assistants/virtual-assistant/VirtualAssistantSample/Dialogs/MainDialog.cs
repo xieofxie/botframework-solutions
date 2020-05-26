@@ -324,7 +324,7 @@ namespace VirtualAssistantSample.Dialogs
         private async Task<DialogTurnResult> OnboardingStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var userProfile = await _userProfileState.GetAsync(stepContext.Context, () => new UserProfileState(), cancellationToken);
-            if (string.IsNullOrEmpty(userProfile.Name))
+            // if (string.IsNullOrEmpty(userProfile.Name))
             {
                 return await stepContext.BeginDialogAsync(_onboardingDialog.Id, cancellationToken: cancellationToken);
             }

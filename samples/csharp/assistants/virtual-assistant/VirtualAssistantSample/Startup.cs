@@ -27,8 +27,10 @@ using VirtualAssistantSample.Adapters;
 using VirtualAssistantSample.Authentication;
 using VirtualAssistantSample.Bots;
 using VirtualAssistantSample.Dialogs;
+using VirtualAssistantSample.Models;
 using VirtualAssistantSample.Services;
 using VirtualAssistantSample.TokenExchange;
+using VirtualAssistantSample.Utilities;
 
 namespace VirtualAssistantSample
 {
@@ -92,6 +94,8 @@ namespace VirtualAssistantSample
             services.AddSingleton<IStorage>(new CosmosDbPartitionedStorage(settings.CosmosDb));
             services.AddSingleton<UserState>();
             services.AddSingleton<ConversationState>();
+            services.AddSingleton<AppState>();
+            services.AddSingleton<UserReferenceState>();
 
             // Configure localized responses
             var localizedTemplates = new Dictionary<string, string>();
