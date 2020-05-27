@@ -137,7 +137,7 @@ namespace VirtualAssistantSample.Models
         {
             var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(botSettings.MicrosoftAppId));
             client.Credentials = new Octokit.Credentials(token);
-            string lastETag = string.Empty;
+            var ids = new HashSet<string>();
 
             try
             {
@@ -149,21 +149,25 @@ namespace VirtualAssistantSample.Models
                         var results = await client.Activity.Notifications.GetAllForCurrent();
                         var info = client.GetLastApiInfo();
 
-                        // TODO: this doesn't change. Use a naive etag.
-                        var etag = info.Etag;
-
-                        etag = results.Count.ToString();
+                        var newIds = new HashSet<string>();
+                        int newCount = 0;
                         foreach (var result in results)
                         {
-                            etag += result.Id.Length > 4 ? result.Id.Substring(result.Id.Length - 4) : result.Id;
+                            if (!ids.Contains(result.Id))
+                            {
+                                newCount++;
+                            }
+
+                            newIds.Add(result.Id);
                         }
 
-                        if (results.Count > 0 && etag != lastETag)
+                        ids = newIds;
+
+                        if (newCount > 0)
                         {
                             var activity = (Activity)Activity.CreateMessageActivity();
-                            activity.Text = $"You got {results.Count} unread notification(s).";
+                            activity.Text = $"You got {results.Count} new unread notification(s).";
                             await Send(name, activity);
-                            lastETag = etag;
                         }
 
                         if (info.RateLimit != null)
