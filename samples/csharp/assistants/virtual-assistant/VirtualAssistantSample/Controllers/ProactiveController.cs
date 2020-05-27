@@ -35,33 +35,12 @@ namespace VirtualAssistantSample.Controllers
         [HttpGet, Route("proactive")]
         public string Send(string name)
         {
-            name = name == null ? string.Empty : name;
-            if (_userReferenceState.References.TryGetValue(name, out UserReference reference))
+            var activity = (Activity)Activity.CreateMessageActivity();
+            activity.Text = "Proactive Message";
+            var response = _userReferenceState.Send(name, activity).Result;
+            if (response != null)
             {
-                var activity = (Activity)Activity.CreateMessageActivity();
-                activity.Text = "Proactive Message";
-                activity.ApplyConversationReference(reference.Reference);
-
-                ResourceResponse response = null;
-
-                if (reference.Reference.ChannelId == Channels.Msteams)
-                {
-                    // https://docs.microsoft.com/en-us/microsoftteams/platform/bots/how-to/conversations/send-proactive-messages?tabs=dotnet
-                    var client = new ConnectorClient(new Uri(activity.ServiceUrl), _botSettings.MicrosoftAppId, _botSettings.MicrosoftAppPassword);
-
-                    // Post the message to chat conversation with user
-                    response = client.Conversations.SendToConversationAsync(activity.Conversation.Id, activity).Result;
-                }
-                else
-                {
-                    // https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-howto-proactive-message?view=azure-bot-service-4.0&tabs=csharp
-                    ((BotAdapter)_adapter).ContinueConversationAsync(_botSettings.MicrosoftAppId, reference.Reference, async (tc, ct) =>
-                    {
-                        response = await tc.SendActivityAsync(activity);
-                    }, default(CancellationToken)).Wait();
-                }
-
-                return $"Should send to {name} proactively. {response?.Id}";
+                return $"Should send to {name} proactively. {response.Id}";
             }
             else
             {

@@ -34,8 +34,10 @@ namespace VirtualAssistantSample.Dialogs
         private readonly LocaleTemplateManager _templateManager;
         private readonly BotServices _services;
         private readonly OnboardingDialog _onboardingDialog;
+        private readonly LoginDialog _loginDialog;
         private readonly SwitchSkillDialog _switchSkillDialog;
         private readonly SkillsConfiguration _skillsConfig;
+        private readonly UserReferenceState _userReference;
         private readonly IStatePropertyAccessor<UserProfileState> _userProfileState;
         private readonly IStatePropertyAccessor<List<Activity>> _previousResponseAccessor;
         private readonly IStatePropertyAccessor<BotFrameworkSkill> _activeSkillProperty;
@@ -47,6 +49,7 @@ namespace VirtualAssistantSample.Dialogs
             _services = serviceProvider.GetService<BotServices>();
             _templateManager = serviceProvider.GetService<LocaleTemplateManager>();
             _skillsConfig = serviceProvider.GetService<SkillsConfiguration>();
+            _userReference = serviceProvider.GetService<UserReferenceState>();
 
             var userState = serviceProvider.GetService<UserState>();
             _userProfileState = userState.CreateProperty<UserProfileState>(nameof(UserProfileState));
@@ -71,8 +74,10 @@ namespace VirtualAssistantSample.Dialogs
 
             // Register dialogs
             _onboardingDialog = serviceProvider.GetService<OnboardingDialog>();
+            _loginDialog = serviceProvider.GetService<LoginDialog>();
             _switchSkillDialog = serviceProvider.GetService<SwitchSkillDialog>();
             AddDialog(_onboardingDialog);
+            AddDialog(_loginDialog);
             AddDialog(_switchSkillDialog);
 
             // Register skill dialogs
@@ -324,7 +329,7 @@ namespace VirtualAssistantSample.Dialogs
         private async Task<DialogTurnResult> OnboardingStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var userProfile = await _userProfileState.GetAsync(stepContext.Context, () => new UserProfileState(), cancellationToken);
-            // if (string.IsNullOrEmpty(userProfile.Name))
+            if (string.IsNullOrEmpty(userProfile.Name))
             {
                 return await stepContext.BeginDialogAsync(_onboardingDialog.Id, cancellationToken: cancellationToken);
             }
@@ -387,6 +392,24 @@ namespace VirtualAssistantSample.Dialogs
                     }
 
                     return await stepContext.BeginDialogAsync(knowledgebaseId, cancellationToken: cancellationToken);
+                }
+
+                if (activity.Text == "name")
+                {
+                    return await stepContext.BeginDialogAsync(_onboardingDialog.Id, cancellationToken: cancellationToken);
+                }
+                else if (activity.Text == "noti-on")
+                {
+                    return await stepContext.BeginDialogAsync(_loginDialog.Id, cancellationToken: cancellationToken);
+                }
+                else if (activity.Text == "noti-off")
+                {
+                    if (_userReference.StopPollNotification(userProfile.Name))
+                    {
+                        await stepContext.Context.SendActivityAsync("Notification off");
+                    }
+
+                    return await stepContext.NextAsync(cancellationToken: cancellationToken);
                 }
 
                 if (ShouldBeginChitChatDialog(stepContext, dispatchIntent, dispatchScore))

@@ -15,7 +15,6 @@ using Microsoft.Bot.Solutions;
 using Microsoft.Bot.Solutions.Responses;
 using Microsoft.Extensions.DependencyInjection;
 using VirtualAssistantSample.Models;
-using VirtualAssistantSample.Utilities;
 
 namespace VirtualAssistantSample.Bots
 {
@@ -25,10 +24,8 @@ namespace VirtualAssistantSample.Bots
         private readonly Dialog _dialog;
         private readonly BotState _conversationState;
         private readonly BotState _userState;
-        private readonly BotState _appState;
         private readonly IStatePropertyAccessor<DialogState> _dialogStateAccessor;
         private readonly IStatePropertyAccessor<UserProfileState> _userProfileState;
-        private readonly IStatePropertyAccessor<UserReferenceState> _userReferenceStateAccessor;
         private readonly UserReferenceState _userReferenceState;
         private readonly LocaleTemplateManager _templateManager;
 
@@ -38,10 +35,8 @@ namespace VirtualAssistantSample.Bots
             _dialog.TelemetryClient = serviceProvider.GetService<IBotTelemetryClient>();
             _conversationState = serviceProvider.GetService<ConversationState>();
             _userState = serviceProvider.GetService<UserState>();
-            _appState = serviceProvider.GetService<AppState>();
             _dialogStateAccessor = _conversationState.CreateProperty<DialogState>(nameof(DialogState));
             _userProfileState = _userState.CreateProperty<UserProfileState>(nameof(UserProfileState));
-            _userReferenceStateAccessor = _appState.CreateProperty<UserReferenceState>(nameof(UserReferenceState));
             _userReferenceState = serviceProvider.GetService<UserReferenceState>();
             _templateManager = serviceProvider.GetService<LocaleTemplateManager>();
         }
@@ -53,10 +48,6 @@ namespace VirtualAssistantSample.Bots
             // Save any state changes that might have occured during the turn.
             await _conversationState.SaveChangesAsync(turnContext, false, cancellationToken);
             await _userState.SaveChangesAsync(turnContext, false, cancellationToken);
-            var state = await _userReferenceStateAccessor.GetAsync(turnContext, () => new UserReferenceState(), cancellationToken);
-            // TODO: sync value from state to global
-            _userReferenceState.References = state.References;
-            await _appState.SaveChangesAsync(turnContext, false, cancellationToken);
         }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)

@@ -30,7 +30,6 @@ using VirtualAssistantSample.Dialogs;
 using VirtualAssistantSample.Models;
 using VirtualAssistantSample.Services;
 using VirtualAssistantSample.TokenExchange;
-using VirtualAssistantSample.Utilities;
 
 namespace VirtualAssistantSample
 {
@@ -94,7 +93,6 @@ namespace VirtualAssistantSample
             services.AddSingleton<IStorage>(new CosmosDbPartitionedStorage(settings.CosmosDb));
             services.AddSingleton<UserState>();
             services.AddSingleton<ConversationState>();
-            services.AddSingleton<AppState>();
             services.AddSingleton<UserReferenceState>();
 
             // Configure localized responses
@@ -128,6 +126,7 @@ namespace VirtualAssistantSample
             services.AddTransient<MainDialog>();
             services.AddTransient<SwitchSkillDialog>();
             services.AddTransient<OnboardingDialog>();
+            services.AddTransient<LoginDialog>();
 
             // Register the SkillDialogs (remote skills).
             var botId = Configuration.GetSection(MicrosoftAppCredentials.MicrosoftAppIdKey)?.Value;
