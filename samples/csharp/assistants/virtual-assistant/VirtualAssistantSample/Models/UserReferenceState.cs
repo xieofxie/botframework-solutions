@@ -112,11 +112,9 @@ namespace VirtualAssistantSample.Models
                 reference.Cancel();
 
                 reference.CTS = new CancellationTokenSource();
-                var cancellationToken = new CancellationToken();
-                cancellationToken.Register(() => reference.CTS.Cancel());
 
                 // do not await task - we want this to run in the background and we will cancel it when its done
-                var task = Task.Run(() => PollNotification(token, reference.CTS.Token), cancellationToken);
+                var task = Task.Run(() => PollNotification(name, token, reference.CTS), reference.CTS.Token);
                 return true;
             }
 
@@ -135,31 +133,58 @@ namespace VirtualAssistantSample.Models
             return false;
         }
 
-        private async Task PollNotification(string token, CancellationToken cancellationToken)
+        private async Task PollNotification(string name, string token, CancellationTokenSource CTS)
         {
             var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(botSettings.MicrosoftAppId));
             client.Credentials = new Octokit.Credentials(token);
+            string lastETag = string.Empty;
 
             try
             {
-                while (!cancellationToken.IsCancellationRequested)
+                while (!CTS.Token.IsCancellationRequested)
                 {
-                    if (!cancellationToken.IsCancellationRequested)
+                    int delayInMill = 100 * 1000;
+                    try
                     {
-                        try
-                        {
-                            var result = await client.Activity.Notifications.GetAllForCurrent();
-                            var limit = client.GetLastApiInfo();
-                        }
-                        catch (Exception ex)
-                        {
+                        var results = await client.Activity.Notifications.GetAllForCurrent();
+                        var info = client.GetLastApiInfo();
 
+                        // TODO: this doesn't change. Use a naive etag.
+                        var etag = info.Etag;
+
+                        etag = results.Count.ToString();
+                        foreach (var result in results)
+                        {
+                            etag += result.Id.Length > 4 ? result.Id.Substring(result.Id.Length - 4) : result.Id;
                         }
+
+                        if (results.Count > 0 && etag != lastETag)
+                        {
+                            var activity = (Activity)Activity.CreateMessageActivity();
+                            activity.Text = $"You got {results.Count} unread notification(s).";
+                            await Send(name, activity);
+                            lastETag = etag;
+                        }
+
+                        if (info.RateLimit != null)
+                        {
+                            delayInMill = Math.Max(delayInMill, 3600 * 1000 / info.RateLimit.Limit);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        var activity = (Activity)Activity.CreateMessageActivity();
+                        activity.Text = ex.Message;
+                        await Send(name, activity);
+                        activity = (Activity)Activity.CreateMessageActivity();
+                        activity.Text = "Please start notification again";
+                        await Send(name, activity);
+                        CTS.Cancel();
+                        break;
                     }
 
                     // if we happen to cancel when in the delay we will get a TaskCanceledException
-                    await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
-                    break;
+                    await Task.Delay(delayInMill, CTS.Token).ConfigureAwait(false);
                 }
             }
             catch (TaskCanceledException)

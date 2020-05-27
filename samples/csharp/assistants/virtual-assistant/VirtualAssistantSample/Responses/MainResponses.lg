@@ -215,7 +215,7 @@
 ]
 
 # HelpText
-- This can be used to display information to help your user interact with your Virtual Assistant.
+- 'Turn on', 'turn off' for github notifications.
 
 # RandomName 
 - IF: ${Name && rand(0, 1000) > 500}
