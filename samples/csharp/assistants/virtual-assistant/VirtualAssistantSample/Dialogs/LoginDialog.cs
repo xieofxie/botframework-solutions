@@ -77,8 +77,7 @@ namespace VirtualAssistantSample.Dialogs
                 // When the token is cached we get a TokenResponse object.
                 if (sc.Result is ProviderTokenResponse providerTokenResponse)
                 {
-                    var state = await _accessor.GetAsync(sc.Context, () => new UserProfileState(), cancellationToken);
-                    if (_userReference.StartPollNotification(state.Name, providerTokenResponse.TokenResponse.Token))
+                    if (_userReference.StartPollNotification(sc.Context, providerTokenResponse.TokenResponse.Token))
                     {
                         await sc.Context.SendActivityAsync("Notification on");
                     }

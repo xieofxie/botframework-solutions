@@ -1,5 +1,19 @@
 > # Intent definitions
 
+## TurnOn
+- turn on
+- turn on notification
+- switch on
+- switch on notification
+- start notification
+
+## TurnOff
+- turn off
+- turn off notification
+- switch off
+- switch off notification
+- stop notification
+
 ## Cancel
 - cancel
 - cancel app

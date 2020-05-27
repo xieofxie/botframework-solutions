@@ -53,7 +53,7 @@ function DeployLUIS ($name, $luFile, $endpoint, $subscriptionKey, $culture, $log
     }
 }
 
-function UpdateLUIS ($luFile, $appId, $endpoint, $subscriptionKey, $culture, $version, $log)
+function UpdateLUIS ($appName, $luFile, $appId, $endpoint, $subscriptionKey, $culture, $version, $log)
 {
    $id = $luFile.BaseName
     $outFile = Join-Path $luFile.DirectoryName "$($id).json"

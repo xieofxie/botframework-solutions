@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Builder.Teams;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,34 +28,45 @@ namespace VirtualAssistantSample.Models
         {
             var adapter = serviceProvider.GetService<BotFrameworkHttpAdapter>();
             this.adapter = adapter;
-            storage = serviceProvider.GetService<IStorage>();
+            storage = null; // serviceProvider.GetService<IStorage>();
             botSettings = serviceProvider.GetService<BotSettings>();
             key = $"{botSettings.MicrosoftAppId}/{nameof(UserReferenceState)}";
 
-            var values = storage.ReadAsync(new string[] { key }).Result;
-            values.TryGetValue(key, out object value);
-            if (value is Dictionary<string, UserReference> references)
+            if (storage != null)
             {
-                References = references;
+                var values = storage.ReadAsync(new string[] { key }).Result;
+                values.TryGetValue(key, out object value);
+                if (value is Dictionary<string, UserReference> references)
+                {
+                    References = references;
+                }
             }
         }
 
         public Dictionary<string, UserReference> References { get; set; } = new Dictionary<string, UserReference>();
 
-        public UserReference Update(string oldName, string newName, ITurnContext turnContext)
+        public bool Update(ITurnContext turnContext)
         {
             lock (this)
             {
-                References.TryGetValue(oldName == null ? string.Empty : oldName, out UserReference previous);
-                References[newName] = new UserReference
+                var name = GetName(turnContext);
+                References.TryGetValue(name, out UserReference previous);
+                if (previous == null)
                 {
-                    Reference = turnContext.Activity.GetConversationReference(),
-                };
+                    References.Add(name, new UserReference(turnContext));
+                }
+                else
+                {
+                    previous.Update(turnContext);
+                }
 
-                var changes = new Dictionary<string, object> { { key, References } };
-                storage.WriteAsync(changes).Wait();
+                if (storage != null)
+                {
+                    var changes = new Dictionary<string, object> { { key, References } };
+                    storage.WriteAsync(changes).Wait();
+                }
 
-                return previous;
+                return previous == null;
             }
         }
 
@@ -91,8 +103,9 @@ namespace VirtualAssistantSample.Models
             return null;
         }
 
-        public bool StartPollNotification(string name, string token)
+        public bool StartPollNotification(ITurnContext turnContext, string token)
         {
+            var name = GetName(turnContext);
             UserReference reference = GetLock(name);
             if (reference != null)
             {
@@ -110,8 +123,9 @@ namespace VirtualAssistantSample.Models
             return false;
         }
 
-        public bool StopPollNotification(string name)
+        public bool StopPollNotification(ITurnContext turnContext)
         {
+            var name = GetName(turnContext);
             UserReference reference = GetLock(name);
             if (reference != null)
             {
@@ -152,6 +166,11 @@ namespace VirtualAssistantSample.Models
             {
                 // do nothing
             }
+        }
+
+        private string GetName(ITurnContext turnContext)
+        {
+            return turnContext.Activity.From.Id;
         }
 
         private UserReference GetLock(string name)

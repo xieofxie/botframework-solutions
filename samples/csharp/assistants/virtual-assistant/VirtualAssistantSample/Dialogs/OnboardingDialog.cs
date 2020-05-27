@@ -64,8 +64,6 @@ namespace VirtualAssistantSample.Dialogs
             var userProfile = await _accessor.GetAsync(sc.Context, () => new UserProfileState(), cancellationToken);
             var name = (string)sc.Result;
 
-            _userReference.Update(userProfile.Name, name, sc.Context);
-
             var generalResult = sc.Context.TurnState.Get<GeneralLuis>(StateProperties.GeneralResult);
             if (generalResult == null)
             {

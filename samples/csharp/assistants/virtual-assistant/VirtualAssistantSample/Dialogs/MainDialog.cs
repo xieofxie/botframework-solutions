@@ -90,6 +90,7 @@ namespace VirtualAssistantSample.Dialogs
 
         protected override async Task<DialogTurnResult> OnBeginDialogAsync(DialogContext innerDc, object options, CancellationToken cancellationToken = default)
         {
+            _userReference.Update(innerDc.Context);
             var activity = innerDc.Context.Activity;
 
             if (activity.Type == ActivityTypes.Message && !string.IsNullOrEmpty(activity.Text))
@@ -98,7 +99,13 @@ namespace VirtualAssistantSample.Dialogs
                 var localizedServices = _services.GetCognitiveModels();
 
                 // Run LUIS recognition and store result in turn state.
-                var dispatchResult = await localizedServices.DispatchService.RecognizeAsync<DispatchLuis>(innerDc.Context, cancellationToken);
+                var dispatchResult = new DispatchLuis
+                {
+                    Intents = new Dictionary<DispatchLuis.Intent, IntentScore>
+                    {
+                        { DispatchLuis.Intent.l_General, new IntentScore { Score = 1.0 } }
+                    },
+                };
                 innerDc.Context.TurnState.Add(StateProperties.DispatchResult, dispatchResult);
 
                 if (dispatchResult.TopIntent().intent == DispatchLuis.Intent.l_General)
@@ -125,6 +132,7 @@ namespace VirtualAssistantSample.Dialogs
 
         protected override async Task<DialogTurnResult> OnContinueDialogAsync(DialogContext innerDc, CancellationToken cancellationToken = default)
         {
+            _userReference.Update(innerDc.Context);
             var activity = innerDc.Context.Activity;
 
             // Get cognitive models for the current locale.
@@ -133,7 +141,13 @@ namespace VirtualAssistantSample.Dialogs
             if (activity.Type == ActivityTypes.Message && !string.IsNullOrEmpty(activity.Text))
             {
                 // Run LUIS recognition and store result in turn state.
-                var dispatchResult = await localizedServices.DispatchService.RecognizeAsync<DispatchLuis>(innerDc.Context, cancellationToken);
+                var dispatchResult = new DispatchLuis
+                {
+                    Intents = new Dictionary<DispatchLuis.Intent, IntentScore>
+                    {
+                        { DispatchLuis.Intent.l_General, new IntentScore { Score = 1.0 } }
+                    },
+                };
                 innerDc.Context.TurnState.Add(StateProperties.DispatchResult, dispatchResult);
 
                 if (dispatchResult.TopIntent().intent == DispatchLuis.Intent.l_General)
@@ -393,23 +407,23 @@ namespace VirtualAssistantSample.Dialogs
 
                     return await stepContext.BeginDialogAsync(knowledgebaseId, cancellationToken: cancellationToken);
                 }
-
-                if (activity.Text == "name")
+                else if (dispatchIntent == DispatchLuis.Intent.l_General)
                 {
-                    return await stepContext.BeginDialogAsync(_onboardingDialog.Id, cancellationToken: cancellationToken);
-                }
-                else if (activity.Text == "noti-on")
-                {
-                    return await stepContext.BeginDialogAsync(_loginDialog.Id, cancellationToken: cancellationToken);
-                }
-                else if (activity.Text == "noti-off")
-                {
-                    if (_userReference.StopPollNotification(userProfile.Name))
+                    var generalResult = stepContext.Context.TurnState.Get<GeneralLuis>(StateProperties.GeneralResult);
+                    (var generalIntent, var generalScore) = generalResult.TopIntent();
+                    if (generalIntent == GeneralLuis.Intent.TurnOn)
                     {
-                        await stepContext.Context.SendActivityAsync("Notification off");
+                        return await stepContext.BeginDialogAsync(_loginDialog.Id, cancellationToken: cancellationToken);
                     }
+                    else if (generalIntent == GeneralLuis.Intent.TurnOff)
+                    {
+                        if (_userReference.StopPollNotification(stepContext.Context))
+                        {
+                            await stepContext.Context.SendActivityAsync("Notification off");
+                        }
 
-                    return await stepContext.NextAsync(cancellationToken: cancellationToken);
+                        return await stepContext.NextAsync(cancellationToken: cancellationToken);
+                    }
                 }
 
                 if (ShouldBeginChitChatDialog(stepContext, dispatchIntent, dispatchScore))

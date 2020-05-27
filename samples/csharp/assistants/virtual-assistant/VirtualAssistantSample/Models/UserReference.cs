@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Threading;
+using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Newtonsoft.Json;
 
@@ -9,6 +10,16 @@ namespace VirtualAssistantSample.Models
 {
     public class UserReference
     {
+        [JsonConstructor]
+        public UserReference()
+        {
+        }
+
+        public UserReference(ITurnContext turnContext)
+        {
+            Update(turnContext);
+        }
+
         [JsonIgnore]
         public CancellationTokenSource CTS { get; set; }
 
@@ -23,6 +34,11 @@ namespace VirtualAssistantSample.Models
             }
 
             return false;
+        }
+
+        public void Update(ITurnContext turnContext)
+        {
+            Reference = turnContext.Activity.GetConversationReference();
         }
     }
 }
