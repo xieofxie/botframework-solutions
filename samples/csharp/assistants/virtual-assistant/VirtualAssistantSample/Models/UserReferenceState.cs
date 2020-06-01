@@ -166,7 +166,7 @@ namespace VirtualAssistantSample.Models
                         if (newCount > 0)
                         {
                             var activity = (Activity)Activity.CreateMessageActivity();
-                            activity.Text = $"You got {results.Count} new unread notification(s).";
+                            activity.Text = $"You got {newCount} new unread notification(s).";
                             await Send(name, activity);
                         }
 
